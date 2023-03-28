@@ -2,11 +2,18 @@
   import { enhance } from "$app/forms";
   import { user } from "$lib/stores/user";
   import { compressImg } from "$lib/utils";
+  import type { Class, Student } from "@prisma/client";
   import type { PageData } from "./$types";
 
   export let data: PageData;
   let isAlert: boolean = false;
   let message: string;
+
+  let student:
+    | (Student & {
+        Class: Class | null;
+      })
+    | null;
 
   type FormInput = {
     data: FormData;
@@ -25,7 +32,8 @@
   // });
 
   const onAdd = async ({ data, cancel, action }: FormInput) => {
-    let file = data.getAll("avatar")[0] as File;
+    let file = data.getAll("avatarUrl")[0] as File;
+    data.delete("avatarUrl");
     file = (await compressImg(file)) as File;
     if (!file && !action.searchParams.get("id")) {
       message = "Error: No student photo selected, please choose an photo";
@@ -33,17 +41,24 @@
       setTimeout(() => (isAlert = false), 3000);
       cancel();
     }
-    data.set("avatar", file);
+    if (file) data.set("avatarUrl", file);
     data.set("userId", $user.id);
 
     return async ({ result, update }: any) => {
       console.log(result);
       if (result.type == "failure") {
+        student = null;
         message = result.data.message;
         isAlert = true;
         setTimeout(() => (isAlert = false), 3000);
       }
       update();
+    };
+  };
+
+  const handleEdit = (id: string) => {
+    student = students.find((student) => student.id == id) as Student & {
+      Class: Class | null;
     };
   };
 </script>
@@ -109,14 +124,11 @@
                           <div class="mr-1 i-mdi:eye-outline text-2xl" />
                         </a>
                       </div>
-                      <div class="tooltip" data-tip="Delete">
-                        <form
-                          action="?/create&id={student.id}"
-                          method="post"
-                          use:enhance
-                        >
-                          <button class="i-bx:bxs-edit" />
-                        </form>
+                      <div class="tooltip mr-3" data-tip="Edit">
+                        <button
+                          on:click={() => handleEdit(student.id)}
+                          class="i-bx:bxs-edit"
+                        />
                       </div>
                       <div class="tooltip" data-tip="Delete">
                         <form
@@ -148,9 +160,14 @@
           </div>
         {/if}
 
-        <form action="?/create" method="POST" use:enhance={onAdd}>
+        <form
+          action="?/create&id={student?.id || ''}"
+          method="POST"
+          use:enhance={onAdd}
+        >
           <input
             name="fullName"
+            value={student?.fullName || ""}
             placeholder="Full Name"
             class="input input-bordered w-full max-w-lg mb-3"
           />
@@ -187,11 +204,13 @@
 
           <input
             name="parentEmail"
+            value={student?.parentEmail || ""}
             placeholder="Parent Email"
             class="input input-bordered w-full max-w-lg mb-3"
           />
           <input
             name="admissionNo"
+            value={student?.admissionNo?.split("/")[0] || ""}
             placeholder="Addmission Number"
             class="input input-bordered w-full max-w-lg mb-3"
           />
@@ -199,7 +218,13 @@
             name="classId"
             class="select select-bordered w-full max-w-xs mb-3"
           >
-            <option disabled selected>Select a Class</option>
+            <option
+              disabled={!!!student?.Class?.name}
+              selected
+              value={student?.classId}
+            >
+              {student?.Class?.name || "Select a Class"}
+            </option>
             {#each classes as cls}
               <option value={cls.id}>{cls.name}({cls.section})</option>
             {/each}
@@ -209,7 +234,7 @@
               <span class="label-text">Avarter</span>
             </label>
             <input
-              name="avatar"
+              name="avatarUrl"
               type="file"
               class="file-input file-input-bordered w-full max-w-xs"
             />
@@ -221,11 +246,13 @@
           </div>
           <input
             name="present"
+            value={student?.present || ""}
             placeholder="Days Present"
             class="input input-bordered w-full max-w-lg mb-3"
           />
           <input
             name="absent"
+            value={student?.absent || ""}
             placeholder="Days Absent"
             class="input input-bordered w-full max-w-lg mb-3"
           />

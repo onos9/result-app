@@ -15,7 +15,12 @@ export const load: PageServerLoad = async ({ locals }) => {
 const login: Action = async ({ cookies, request }) => {
   const { email, password } = Object.fromEntries(await request.formData());
 
-  if (typeof email !== "string" || typeof password !== "string" || !email || !password) {
+  if (
+    typeof email !== "string" ||
+    typeof password !== "string" ||
+    !email ||
+    !password
+  ) {
     return fail(400, { invalid: true, email, password });
   }
 
@@ -25,7 +30,10 @@ const login: Action = async ({ cookies, request }) => {
     return fail(400, { credentials: true });
   }
 
-  const userPassword = await bcrypt.compare(password, user.passwordHash as string);
+  const userPassword = await bcrypt.compare(
+    password,
+    user.passwordHash as string
+  );
 
   if (!userPassword) {
     return fail(400, { credentials: true, email, password });
@@ -40,7 +48,7 @@ const login: Action = async ({ cookies, request }) => {
     path: "/",
     httpOnly: true,
     sameSite: "strict",
-    secure: process.env.NODE_ENV === "production",
+    secure: false,
     maxAge: 60 * 60 * 24 * 30,
   });
 
