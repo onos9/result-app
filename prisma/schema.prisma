@@ -1,0 +1,185 @@
+// This is your Prisma schema file,
+// learn more about it in the docs https//pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Config {
+  id        String   @id @unique @default(uuid())
+  key       String   @unique
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Role {
+  id    String @id @unique @default(uuid())
+  name  String @default("USER")
+  users User[]
+}
+
+model User {
+  id            String   @id @unique @default(uuid())
+  firstName     String?
+  lastName      String?
+  email         String?  @unique
+  phone         String?
+  arm           String?
+  passwordHash  String?
+  userAuthToken String   @unique
+  gender        String?
+  avatarUrl     String?
+  role          Role?    @relation(fields: [roleId], references: [id])
+  roleId        String
+  address       String?
+  state         String?
+  city          String?
+  zip           String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  schoolId      String?
+}
+
+model Class {
+  id        String    @id @unique @default(uuid())
+  userId    String
+  arm       String?
+  name      String?
+  section   String?
+  students  Student[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Student {
+  id           String   @id @unique @default(uuid())
+  fullName     String?
+  gender       String?
+  email        String?
+  avatarUrl    String?
+  location     String?
+  parentEmail  String?
+  classId      String
+  userId       String
+  admissionNo  String?
+  academicYear String?
+  present      String?
+  absent       String?
+  result       Result[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  Class        Class?   @relation(fields: [classId], references: [id])
+}
+
+model Subject {
+  id             String   @id @unique @default(uuid())
+  arm            String
+  classId        String?
+  name           String
+  max_ca         String?
+  max_report     String?
+  max_oral_point String?
+  max_exam       String?
+  objective      String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Grade {
+  id        String   @id @unique @default(uuid())
+  arm       String?
+  classId   String?
+  point     String?
+  maxScore  String?  @default("0")
+  minScore  String?  @default("0")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Result {
+  id           String   @id @unique @default(uuid())
+  term         String?
+  academicYear String?
+  studentId    String
+  classId      String
+  records      Record[]
+  scores       Score[]
+  ratings      Rating[]
+  remarks      Remark[]
+  Student      Student  @relation(fields: [studentId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Record {
+  id         String   @id @default(uuid())
+  resultId   String
+  arm        String
+  subject    String?
+  objectives String?
+  outcome    String?
+  mta        String?
+  ca         String?
+  report     String?
+  exam       String?
+  score      String?
+  grade      String?
+  action     String?
+  color      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  Result     Result?  @relation(fields: [resultId], references: [id])
+}
+
+model Score {
+  id        String   @id @unique @default(uuid())
+  arm       String
+  resultId  String
+  total     String?
+  average   String?
+  higest    String?
+  lowest    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Result    Result   @relation(fields: [resultId], references: [id])
+}
+
+model Rating {
+  id        String   @id @unique @default(uuid())
+  arm       String
+  resultId  String
+  attribute String?
+  rate      String?
+  level     String?
+  comment   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Result    Result?  @relation(fields: [resultId], references: [id])
+}
+
+model Remark {
+  id        String   @id @unique @default(uuid())
+  arm       String
+  resultId  String
+  comment   String?
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Result    Result?  @relation(fields: [resultId], references: [id])
+}
+
+model Comment {
+  id        String   @id @unique @default(uuid())
+  text      String
+  type      String
+  tags      String
+  flagged   Boolean
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
