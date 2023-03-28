@@ -10,7 +10,7 @@ node_modules
 .output
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
-prisma/*.sqlite
+# prisma/*.sqlite
 static/uploads
 static/results
 extension.pem

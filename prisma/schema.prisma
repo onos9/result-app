@@ -35,7 +35,7 @@ model User {
   userAuthToken String?  @unique
   gender        String?
   avatarUrl     String?
-  role          Role?    @relation(fields: [roleId], references: [id])
+  role          Role?    @relation(fields: [roleId], references: [id], onDelete: Cascade)
   roleId        String
   address       String?
   state         String?
@@ -74,7 +74,7 @@ model Student {
   result       Result[]
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  Class        Class?   @relation(fields: [classId], references: [id])
+  Class        Class?   @relation(fields: [classId], references: [id], onDelete: Cascade)
 }
 
 model Subject {
@@ -134,7 +134,7 @@ model Record {
   color      String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-  Result     Result?  @relation(fields: [resultId], references: [id])
+  Result     Result?  @relation(fields: [resultId], references: [id], onDelete: Cascade)
 }
 
 model Score {
@@ -147,7 +147,7 @@ model Score {
   lowest    String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Result    Result   @relation(fields: [resultId], references: [id])
+  Result    Result   @relation(fields: [resultId], references: [id], onDelete: Cascade)
 }
 
 model Rating {
@@ -160,7 +160,7 @@ model Rating {
   comment   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Result    Result?  @relation(fields: [resultId], references: [id])
+  Result    Result?  @relation(fields: [resultId], references: [id], onDelete: Cascade)
 }
 
 model Remark {
@@ -171,7 +171,7 @@ model Remark {
   name      String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Result    Result?  @relation(fields: [resultId], references: [id])
+  Result    Result?  @relation(fields: [resultId], references: [id], onDelete: Cascade)
 }
 
 model Comment {
