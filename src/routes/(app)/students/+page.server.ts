@@ -4,12 +4,12 @@ import { fail, redirect } from "@sveltejs/kit";
 import type { Student, Prisma } from "@prisma/client";
 import { mkdirSync, writeFileSync } from "fs";
 import { customAlphabet } from "nanoid";
-import { loadRemoteStudents } from "$lib/utils";
+
 
 export const load: PageServerLoad = async ({ locals }) => {
   if (!locals.user?.arm) throw redirect(302, "/settings");
 
-  // const remoteStudents = await loadRemoteStudents();
+  
 
   return {
     students: await db.student.findMany({

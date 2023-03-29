@@ -93,7 +93,7 @@ export const clearConfig = async () => {
 };
 
 async function main() {
-  createComment();
+  createUser();
 }
 
 main()

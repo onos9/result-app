@@ -3,11 +3,13 @@
   import { user } from "$lib/stores/user";
   import { compressImg } from "$lib/utils";
   import type { Class, Student } from "@prisma/client";
+  import { onMount } from "svelte";
   import type { PageData } from "./$types";
 
   export let data: PageData;
   let isAlert: boolean = false;
   let message: string;
+  let remoteStudents: any[];
 
   let student:
     | (Student & {
@@ -24,23 +26,32 @@
 
   $: ({ classes, students } = data);
 
-  // onMount(() => {
-  //   let year = new Date().getFullYear().toString().substring(2);
-  //   let nanoid = customAlphabet("0123456789", 4);
-  //   let admissionNo = "01" + year + "-" + nanoid();
-  //   console.log({ admissionNo});
-  // });
+  onMount(async () => {
+    const resp = await fetch("/api/printjob");
+    const { students } = await resp.json();
+    remoteStudents = students;
+  });
 
   const onAdd = async ({ data, cancel, action }: FormInput) => {
+    let id = action.searchParams.get("id");
     let file = data.getAll("avatarUrl")[0] as File;
     data.delete("avatarUrl");
+    const admissionNo = data.get("admissionNo") as string;
     file = (await compressImg(file)) as File;
+
     if (!file && !action.searchParams.get("id")) {
       message = "Error: No student photo selected, please choose an photo";
       isAlert = true;
       setTimeout(() => (isAlert = false), 3000);
       cancel();
     }
+
+    if (id && admissionNo) {
+      const remotStudent = remoteStudents.find((item) => item?.admission_no == Number(admissionNo));
+      const student = students.find((item) => item?.id == id);
+      data.set("admissionNo", `${remotStudent.id}/${student?.admissionNo?.split("/")[1]}`);
+    }
+
     if (file) data.set("avatarUrl", file);
     data.set("userId", $user.id);
 
@@ -50,7 +61,7 @@
         student = null;
         message = result.data.message;
         isAlert = true;
-        setTimeout(() => (isAlert = false), 3000);
+        setTimeout(() => (isAlert = false), 5000);
       }
       update();
     };
@@ -64,7 +75,7 @@
 </script>
 
 <div class="md:container md:mx-auto">
-  <div class="grid grid-cols-3 gap-6 w-full mt-10">
+  <div class="grid grid-cols-3 gap-6 w-full">
     <div class="col-span-2">
       <div class="card bg-base-100 shadow-xl col-span-2 mb-10 w-full">
         <div class="card-body">

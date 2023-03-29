@@ -7,5 +7,6 @@ export const load = (async ({ data, fetch }) => {
   results.set(data?.results || []);
   student.set(data?.student);
   subjects.set(data?.subjects || []);
+
   return {};
 }) satisfies PageLoad;

@@ -68,7 +68,6 @@ export const compressImg = (file: File) => {
 };
 
 export const loadRemoteStudents = async () => {
-  let data: any;
   let response = await fetch(`https://llacademy.ng/api/auth/login`, {
     method: "POST",
     headers: {
@@ -81,15 +80,12 @@ export const loadRemoteStudents = async () => {
     }),
   });
 
-  data = await response.json();
-    console.log(data);
-
+  const { data } = await response.json();
   response = await fetch(`https://llacademy.ng/api/student-list`, {
     headers: {
       Authorization: data.token,
     },
   });
 
-  data = await response.json();
-  console.log(data);
+  return await response.json();
 };
