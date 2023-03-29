@@ -12,7 +12,7 @@ export const actions: Actions = {
   async default({ cookies, locals }) {
     await db.user.update({
       where: { email: locals.user?.email } as Prisma.UserWhereUniqueInput,
-      data: { userAuthToken: "" },
+      data: { userAuthToken: null },
     });
 
     // eat the cookie
