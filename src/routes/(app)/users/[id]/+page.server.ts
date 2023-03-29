@@ -4,23 +4,19 @@ import { fail, redirect } from "@sveltejs/kit";
 import type { Student, Prisma } from "@prisma/client";
 import { mkdirSync, writeFileSync } from "fs";
 import { customAlphabet } from "nanoid";
-import { loadRemoteStudents } from "$lib/utils";
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async ({ locals, params }) => {
   if (!locals.user?.arm) throw redirect(302, "/settings");
-
-  const remoteStudents = await loadRemoteStudents();
 
   return {
     students: await db.student.findMany({
-      where: { userId: locals.user?.id },
+      where: { userId: params.id },
       include: { Class: true },
     }),
     classes: await db.class.findMany({
       where: { arm: locals.user?.arm } as any,
     }),
     user: locals.user,
-    remoteStudents,
   };
 };
 

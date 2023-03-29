@@ -24,12 +24,10 @@
 
   $: ({ classes, students } = data);
 
-  // onMount(() => {
-  //   let year = new Date().getFullYear().toString().substring(2);
-  //   let nanoid = customAlphabet("0123456789", 4);
-  //   let admissionNo = "01" + year + "-" + nanoid();
-  //   console.log({ admissionNo});
-  // });
+//   onMount(async () => {
+//     await loadRemotStudents();
+//     console.log("REMOTE STUDENTS LOADED");
+//   });
 
   const onAdd = async ({ data, cancel, action }: FormInput) => {
     let file = data.getAll("avatarUrl")[0] as File;
@@ -110,9 +108,9 @@
                         class="tooltip tooltip-right cursor-help"
                         data-tip="Supports responsive prefixes (sm:, lg:, …)"
                       >
-                        <span class="badge badge-sm badge-success w-20">
-                          {student.admissionNo?.split("/")[1]}
-                        </span>
+                        <span class="badge badge-sm badge-success w-20"
+                          >{student.admissionNo?.split("/")[1]}</span
+                        >
                       </div>
                     </td>
                     <td class="flex text-xl m-3">

@@ -2,6 +2,8 @@
   import { routes } from "$lib/routes";
   import { user } from "$lib/stores/user";
   import Brand from "./brand.svelte";
+
+  
 </script>
 
 <div class="drawer-side">

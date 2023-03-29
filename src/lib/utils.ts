@@ -66,3 +66,30 @@ export const compressImg = (file: File) => {
     };
   });
 };
+
+export const loadRemoteStudents = async () => {
+  let data: any;
+  let response = await fetch(`https://llacademy.ng/api/auth/login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({
+      email: "onosbrown.saved@gmail.com",
+      password: "#1414bruno#",
+    }),
+  });
+
+  data = await response.json();
+    console.log(data);
+
+  response = await fetch(`https://llacademy.ng/api/student-list`, {
+    headers: {
+      Authorization: data.token,
+    },
+  });
+
+  data = await response.json();
+  console.log(data);
+};
