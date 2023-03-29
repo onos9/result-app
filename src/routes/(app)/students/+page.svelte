@@ -8,6 +8,7 @@
 
   export let data: PageData;
   let isAlert: boolean = false;
+  let isNetAlert: boolean = false;
   let message: string;
   let remoteStudents: any[];
 
@@ -28,6 +29,10 @@
 
   onMount(async () => {
     const resp = await fetch("/api/printjob");
+    if (!resp.ok) {
+      message = resp.statusText;
+      isNetAlert = true;
+    }
     const { students } = await resp.json();
     remoteStudents = students;
   });
@@ -82,6 +87,19 @@
 <div class="md:container md:mx-auto">
   <div class="grid grid-cols-3 gap-6 w-full">
     <div class="col-span-2">
+      {#if isNetAlert}
+        <div class="alert alert-error shadow-lg">
+          <div>
+            <div class="i-bx:close" />
+            <span>{message}</span>
+          </div>
+          <div class="flex-none">
+            <button on:click={() => (isNetAlert = !isNetAlert)} class="btn btn-sm btn-circle">
+              ✕
+            </button>
+          </div>
+        </div>
+      {/if}
       <div class="card bg-base-100 shadow-xl col-span-2 mb-10 w-full">
         <div class="card-body">
           <div class="overflow-x-auto">
@@ -196,6 +214,7 @@
             class="input input-bordered w-full max-w-lg mb-3"
           />
           <input
+            disabled={isNetAlert}
             name="admissionNo"
             value={student?.admissionNo?.split("/")[0] || ""}
             placeholder="Addmission Number"

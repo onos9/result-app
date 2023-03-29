@@ -1,5 +1,6 @@
 import type { RequestEvent, RequestHandler } from "./$types";
 import { loadRemoteStudents } from "$lib/utils";
+import { error } from "@sveltejs/kit";
 
 export const POST = (async ({ locals, request, fetch }: RequestEvent) => {
   const { result, studentId, mimeType } = await request.json();
@@ -48,7 +49,10 @@ export const POST = (async ({ locals, request, fetch }: RequestEvent) => {
 }) satisfies RequestHandler;
 
 export const GET = (async ({ locals, request, fetch }: RequestEvent) => {
-  const { data } = await loadRemoteStudents();
-
-  return new Response(JSON.stringify({ ...data }), { status: 200 });
+  try {
+    const { data } = await loadRemoteStudents();
+    return new Response(JSON.stringify({ ...data }), { status: 200 });
+  } catch (err: any) {
+    return new Response(JSON.stringify({ error: err.message }), { status: 500 });
+  }
 }) satisfies RequestHandler;
