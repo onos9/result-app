@@ -87,21 +87,21 @@
 <div class="md:container md:mx-auto">
   <div class="grid grid-cols-3 gap-6 w-full">
     <div class="col-span-2">
-      {#if isNetAlert}
-        <div class="alert alert-error shadow-lg">
-          <div>
-            <div class="i-bx:close" />
-            <span>{message}</span>
-          </div>
-          <div class="flex-none">
-            <!-- <button on:click={() => (isNetAlert = !isNetAlert)} class="btn btn-sm btn-circle">
-              ✕
-            </button> -->
-          </div>
-        </div>
-      {/if}
       <div class="card bg-base-100 shadow-xl col-span-2 mb-10 w-full">
         <div class="card-body">
+          {#if isNetAlert}
+            <div class="alert alert-error shadow-lg">
+              <div>
+                <div class="i-bx:close" />
+                <span>{message}</span>
+              </div>
+              <div class="flex-none">
+                <!-- <button on:click={() => (isNetAlert = !isNetAlert)} class="btn btn-sm btn-circle">
+              ✕
+            </button> -->
+              </div>
+            </div>
+          {/if}
           <div class="overflow-x-auto">
             <table class="table-compact table w-full">
               <thead>
