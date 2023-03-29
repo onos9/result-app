@@ -90,7 +90,7 @@
       <div class="card bg-base-100 shadow-xl col-span-2 mb-10 w-full">
         <div class="card-body">
           {#if isNetAlert}
-            <div class="alert alert-error shadow-lg">
+            <div class="alert alert-error shadow-lg mb-3">
               <div>
                 <div class="i-bx:close" />
                 <span>{message}</span>
