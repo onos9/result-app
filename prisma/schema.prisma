@@ -108,6 +108,7 @@ model Result {
   academicYear String?
   studentId    String
   classId      String
+  uploaded     Boolean @default(false)
   records      Record[]
   scores       Score[]
   ratings      Rating[]

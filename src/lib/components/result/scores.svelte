@@ -41,7 +41,7 @@
   }
 </script>
 
-<table class="min-w-max w-full table-fixed mb-5 rounded">
+<table class="min-w-max w-full table-fixed mb-5 rounded print:break-inside-avoid">
   <tbody class="align-baseline">
     <tr class="border-b">
       <td

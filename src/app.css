@@ -18,11 +18,7 @@
     }
 }
 
-@media print {
-    table thead {
-        display: table-header-group;
-    }
-}
+
 
 /* Change Autocomplete styles in Chrome*/
 input:-webkit-autofill,

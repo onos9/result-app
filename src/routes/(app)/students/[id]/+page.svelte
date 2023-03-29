@@ -2,7 +2,13 @@
   import { enhance } from "$app/forms";
   import { goto } from "$app/navigation";
   import { printer } from "$lib/chrome";
-  import { Header, Rating, Records, Remark, Scores } from "$lib/components/result";
+  import {
+    Header,
+    Rating,
+    Records,
+    Remark,
+    Scores,
+  } from "$lib/components/result";
   import StudentInfo from "$lib/components/result/studentInfo.svelte";
 
   import ReusultList from "$lib/components/reusultList.svelte";
@@ -127,30 +133,44 @@
 <input bind:checked type="checkbox" id="modal-result" class="modal-toggle" />
 <div class="modal">
   <div class="modal-box relative">
-    <label for="modal-result" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+    <label
+      for="modal-result"
+      class="btn btn-sm btn-circle absolute right-2 top-2">✕</label
+    >
     <div class="font-bold text-sm mb-5">Add a New Result</div>
     <div class="mt-5 md:col-span-2 md:mt-0">
       <form action="?/result" method="POST" use:enhance={onSubmit}>
         <div class="grid grid-cols-6 gap-4">
           <fieldset class="col-span-6">
-            <legend class="contents text-sm font-semibold leading-6 ">Select Term</legend>
+            <legend class="contents text-sm font-semibold leading-6 "
+              >Select Term</legend
+            >
             <!-- <p class="text-sm text-gray-500">These are delivered via SMS to your mobile phone.</p> -->
             <div class="mt-4 space-y-4">
               <div class="flex items-center">
                 <input type="radio" name="term" value="first" class="radio" />
-                <label for="mail" class="ml-3 block text-sm font-medium leading-6 ">
+                <label
+                  for="mail"
+                  class="ml-3 block text-sm font-medium leading-6 "
+                >
                   First Term
                 </label>
               </div>
               <div class="flex items-center">
                 <input type="radio" name="term" value="second" class="radio" />
-                <label for="femail" class="ml-3 block text-sm font-medium leading-6 ">
+                <label
+                  for="femail"
+                  class="ml-3 block text-sm font-medium leading-6 "
+                >
                   Second Term
                 </label>
               </div>
               <div class="flex items-center">
                 <input type="radio" name="term" value="third" class="radio" />
-                <label for="femail" class="ml-3 block text-sm font-medium leading-6 ">
+                <label
+                  for="femail"
+                  class="ml-3 block text-sm font-medium leading-6 "
+                >
                   Third Term
                 </label>
               </div>

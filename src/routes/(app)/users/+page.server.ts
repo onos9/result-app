@@ -5,7 +5,7 @@ export const load: PageServerLoad = async ({ locals }) => {
   if (!locals.user?.arm) throw redirect(302, "/settings");
 
   return {
-    users: await db.user.findMany(),
+    users: await db.user.findMany({where:{arm:locals.user.arm}}),
     user: locals.user,
   };
 };

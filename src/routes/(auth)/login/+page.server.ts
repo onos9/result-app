@@ -14,7 +14,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 
 const login: Action = async ({ cookies, request }) => {
   const { email, password } = Object.fromEntries(await request.formData());
-
+  
   if (
     typeof email !== "string" ||
     typeof password !== "string" ||
@@ -25,7 +25,7 @@ const login: Action = async ({ cookies, request }) => {
   }
 
   const user = await db.user.findUnique({ where: { email } });
-
+  
   if (!user) {
     return fail(400, { credentials: true });
   }
@@ -34,7 +34,7 @@ const login: Action = async ({ cookies, request }) => {
     password,
     user.passwordHash as string
   );
-
+ 
   if (!userPassword) {
     return fail(400, { credentials: true, email, password });
   }
