@@ -9,7 +9,7 @@ import { loadRemoteStudents } from "$lib/utils";
 export const load: PageServerLoad = async ({ locals }) => {
   if (!locals.user?.arm) throw redirect(302, "/settings");
 
-  const remoteStudents = await loadRemoteStudents();
+  // const remoteStudents = await loadRemoteStudents();
 
   return {
     students: await db.student.findMany({
@@ -20,7 +20,6 @@ export const load: PageServerLoad = async ({ locals }) => {
       where: { arm: locals.user?.arm } as any,
     }),
     user: locals.user,
-    remoteStudents,
   };
 };
 

@@ -44,15 +44,14 @@ const login: Action = async ({ cookies, request }) => {
     data: { userAuthToken: crypto.randomUUID() },
   });
 
-  cookies.set("session", authenticatedUser.userAuthToken, {
+  cookies.delete("session", { path: "/" });
+  cookies.set("session", authenticatedUser.userAuthToken as string, {
     path: "/",
     httpOnly: true,
     sameSite: "strict",
     secure: false,
     maxAge: 60 * 60 * 24 * 30,
   });
-
-  throw redirect(302, "/settings");
 };
 
 export const actions: Actions = { login };
