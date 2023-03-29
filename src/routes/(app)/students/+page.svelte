@@ -94,9 +94,9 @@
             <span>{message}</span>
           </div>
           <div class="flex-none">
-            <button on:click={() => (isNetAlert = !isNetAlert)} class="btn btn-sm btn-circle">
+            <!-- <button on:click={() => (isNetAlert = !isNetAlert)} class="btn btn-sm btn-circle">
               ✕
-            </button>
+            </button> -->
           </div>
         </div>
       {/if}
