@@ -33,10 +33,10 @@ export const routes = [
     name: "User Management",
     links: [
       {
-        name: "Staffs",
+        name: "Users",
         badge: null,
-        url: "/users/admins",
-        roles: ["SUPER_ADMIN"],
+        url: "/users",
+        roles: ["SUPER_ADMIN","ADMIN"],
       },
     ],
   },

@@ -4,9 +4,12 @@ import { fail, redirect } from "@sveltejs/kit";
 import type { Student, Prisma } from "@prisma/client";
 import { mkdirSync, writeFileSync } from "fs";
 import { customAlphabet } from "nanoid";
+import { loadRemoteStudents } from "$lib/utils";
 
 export const load: PageServerLoad = async ({ locals }) => {
   if (!locals.user?.arm) throw redirect(302, "/settings");
+
+  const remoteStudents = await loadRemoteStudents();
 
   return {
     students: await db.student.findMany({
@@ -17,6 +20,7 @@ export const load: PageServerLoad = async ({ locals }) => {
       where: { arm: locals.user?.arm } as any,
     }),
     user: locals.user,
+    remoteStudents,
   };
 };
 
@@ -49,8 +53,7 @@ export const actions: Actions = {
       } else {
         let year = new Date().getFullYear().toString().substring(2);
         let nanoid = customAlphabet("0123456789", 4);
-        data.admissionNo =
-          (data.admissionNo || "") + "/" + "01" + year + "-" + nanoid();
+        data.admissionNo = (data.admissionNo || "") + "/" + "01" + year + "-" + nanoid();
         student = await db.student.create({ data: { ...data } as any });
       }
 
