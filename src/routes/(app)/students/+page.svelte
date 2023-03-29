@@ -46,6 +46,11 @@
       cancel();
     }
 
+    if (admissionNo) {
+      const remotStudent = remoteStudents.find((item) => item?.admission_no == Number(admissionNo));
+      data.set("admissionNo", `${remotStudent.id}`);
+    }
+
     if (id && admissionNo) {
       const remotStudent = remoteStudents.find((item) => item?.admission_no == Number(admissionNo));
       const student = students.find((item) => item?.id == id);
