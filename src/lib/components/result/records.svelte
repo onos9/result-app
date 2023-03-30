@@ -110,7 +110,7 @@
   </label>
 </div>
 
-<table class="min-w-max w-full table-auto mb-4 ">
+<table class="min-w-max w-full table-auto mb-4 overflow-hidden">
   <thead>
     <tr
       class="print:bg-violet-900 bg-neutral text-neutral-content tezprimary-content uppercase print:text-slate-300 text-xs leading-normal"
