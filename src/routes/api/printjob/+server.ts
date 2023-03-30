@@ -30,7 +30,7 @@ export const POST = (async ({ locals, request, fetch }: RequestEvent) => {
   const formData = new FormData();
   const date = new Date(cfg.resumptionDate);
   formData.append("title", `${cfg.rusultDesc}, ${date.toDateString()}`);
-  formData.append("doc", blob, `${studentId}.pdf);`)
+  formData.append("doc", blob, `${studentId}.pdf);`);
   // console.log(data.token);
 
   response = await fetch(`https://llacademy.ng/api/student-documents/${admissionNo}`, {
@@ -49,11 +49,13 @@ export const POST = (async ({ locals, request, fetch }: RequestEvent) => {
         result.academicYear == cfg.academicYear
     );
 
-    db.result.update({
+    const result = db.result.update({
       where: { id: result?.id },
       data: { status: "uploaded" },
     });
+    console.log({ resultId: result?.id });
   }
+  console.log({ response: response.ok });
 
   return new Response(JSON.stringify({ success: true }), { status: 200 });
 }) satisfies RequestHandler;
