@@ -4,7 +4,7 @@
   import type { ActionData } from "./$types";
   let reveal = false;
   let isAlert = false;
-  let message = "Hello";
+  let message: boolean;
   export let form: ActionData;
 
   $: if (form && !form?.success) {
