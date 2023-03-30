@@ -45,6 +45,7 @@
   let searchTerm: string;
   let commentType: string;
   let commentText: string;
+  let commentFor: string
   let filtered: Comment[] = $comments.filter((comment) => comment.type == "positive");
   let commentList: Comment[] = filtered.slice(0, 5);
 
@@ -146,46 +147,11 @@
     commentText = text;
   };
 
-  let table: HTMLTableElement;
-  let rows: HTMLTableRowElement[];
+  const editRemark = (id: string) => {
+    const remark = remarks.find((remark) => remark.id == id);
+    commentText = remark?.comment as string;
+    checked = !checked;
 
-  onMount(() => {
-    rows = [...table.rows];
-  });
-
-  let dragSrcElement: HTMLTableRowElement;
-
-  const handleDragStart = (e: DragEvent) => {
-    const row = e.target as HTMLTableRowElement;
-    dragSrcElement = row;
-    if (e.dataTransfer) {
-      e.dataTransfer.effectAllowed = "move";
-      e.dataTransfer.setData("text/html", row.innerHTML);
-    }
-  };
-
-  const handleDragOver = (e: DragEvent) => {
-    if (e.preventDefault) {
-      e.preventDefault();
-    }
-    if (e.dataTransfer) e.dataTransfer.dropEffect = "move";
-    return false;
-  };
-
-  const handleDrop = (e: DragEvent) => {
-    const row = e.target as HTMLTableRowElement;
-    if (e.stopPropagation) {
-      e.stopPropagation();
-    }
-    if (dragSrcElement !== row) {
-      dragSrcElement.innerHTML = row.innerHTML;
-      if (e.dataTransfer) row.innerHTML = e.dataTransfer.getData("text/html");
-    }
-    return false;
-  };
-
-  const handleDragEnd = () => {
-    rows.forEach((row) => row.classList.remove("dragging"));
   };
 </script>
 
@@ -208,10 +174,13 @@
               {remark.name}
             </span>
           </td>
-          <td contenteditable class="max-w-lg text-xs text-left py-3 print:text-slate-500">
+          <td class="max-w-xl text-xs text-left py-2 print:text-slate-500">
             {remark.comment}
           </td>
-          <td class="text-center print:hidden">
+          <td class="text-center flex print:hidden">
+            <div class="tooltip mx-2" data-tip="Edit">
+              <button on:click={() => editRemark(remark.id)} class="i-bx:bxs-edit text-lg" />
+            </div>
             <form action="?/remark&id={remark.id}" method="post" use:enhance={onSubmit}>
               <div class="tooltip" data-tip="Delete">
                 <button class="i-bx:bxs-trash text-lg text-accent-focus" />
