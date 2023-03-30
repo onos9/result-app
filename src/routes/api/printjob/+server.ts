@@ -49,11 +49,11 @@ export const POST = (async ({ locals, request, fetch }: RequestEvent) => {
         result.academicYear == cfg.academicYear
     );
 
-    const result = db.result.update({
+    const res = await db.result.update({
       where: { id: result?.id },
       data: { status: "uploaded" },
     });
-    console.log({ resultId: result?.id });
+    console.log({ resultId: res.id });
   }
   console.log({ response: response.ok });
 
