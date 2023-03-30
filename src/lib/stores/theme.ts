@@ -33,7 +33,7 @@ const Theme = () => {
       document.documentElement.setAttribute("data-theme", scheme);
       localStorage.picoPreferredColorScheme = scheme;
     }
-    console.log(scheme);
+    // console.log(scheme);
     return scheme;
   };
 

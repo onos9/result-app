@@ -5,7 +5,10 @@ import { error } from "@sveltejs/kit";
 export const POST = (async ({ locals, request, fetch }: RequestEvent) => {
   const { result, studentId, mimeType } = await request.json();
   const blob = await (await fetch(result)).blob();
-  const student = await db.student.findUnique({ where: { id: studentId } });
+  const student = await db.student.findUnique({
+    where: { id: studentId },
+    include: { result: true },
+  });
   const admissionNo = student?.admissionNo?.split("/")[0];
 
   let cfgEntries = locals?.configs?.map((cfg: any) => [cfg.key, cfg.value]);
@@ -28,7 +31,7 @@ export const POST = (async ({ locals, request, fetch }: RequestEvent) => {
   const date = new Date(cfg.resumptionDate);
   formData.append("title", `${cfg.rusultDesc}, ${date.toDateString()}`);
   formData.append("doc", blob, studentId);
-  console.log(data.token);
+  // console.log(data.token);
 
   response = await fetch(`https://llacademy.ng/api/student-documents/${admissionNo}`, {
     method: "POST",
@@ -38,12 +41,19 @@ export const POST = (async ({ locals, request, fetch }: RequestEvent) => {
     body: formData,
   });
 
-  // if (response.ok) {
-  //   db.student.update({
-  //     where: { id: studentId },
-  //     data: { uploaded: `${student?.uploaded}${cfg.term}"|"` },
-  //   });
-  // }
+  if (response.ok) {
+    const result = student?.result?.find(
+      (result) =>
+        result?.studentId == studentId &&
+        result.term == cfg.term &&
+        result.academicYear == cfg.academicYear
+    );
+
+    db.result.update({
+      where: { id: result?.id },
+      data: { status: "uploaded" },
+    });
+  }
 
   return new Response(JSON.stringify({ success: true }), { status: 200 });
 }) satisfies RequestHandler;

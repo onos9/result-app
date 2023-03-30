@@ -19,8 +19,6 @@ export const createUser = async () => {
       roleId: role.id,
     } as Prisma.UserCreateInput,
   });
-
-  // console.log({ user, role });
 };
 
 export const clearUser = async () => {

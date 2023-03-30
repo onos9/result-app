@@ -1,6 +1,7 @@
 <script>
   import { enhance } from "$app/forms";
   import Brand from "$lib/components/brand.svelte";
+  let reveal = false;
 </script>
 
 <div class="hero min-h-screen bg-base-200">
@@ -8,8 +9,8 @@
     <div class="text-center lg:text-left">
       <h1 class="text-5xl font-bold">Welcome to Lighthouse!</h1>
       <p class="py-6">
-        Experience the Intense Atmosphere of Heaven with Lighthouse - Where
-        Learning Meets Spiritual Impartation
+        Experience the Intense Atmosphere of Heaven with Lighthouse - Where Learning Meets Spiritual
+        Impartation
       </p>
     </div>
     <div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
@@ -25,32 +26,31 @@
               id="email"
               class=" input input-bordered floating-input peer focus:border-accent-focus "
             />
-            <label
-              for="password"
-              class=" floating-label peer-focus:text-accent-focus"
-            >
+            <label for="password" class=" floating-label peer-focus:text-accent-focus">
               Email
             </label>
           </div>
+
           <div class="relative w-full max-w-xs">
-            <input
-              name="password"
-              type="password"
-              id="password"
-              class=" input input-bordered floating-input peer focus:border-accent-focus"
-              placeholder=" "
-            />
-            <label
-              for="password"
-              class=" floating-label peer-focus:text-accent-focus"
-            >
+            <div class="input-group">
+              <input
+                name="password"
+                type={reveal ? "text" : "password"}
+                id="password"
+                class=" input input-bordered floating-input peer focus:border-accent-focus"
+                placeholder=" "
+              />
+              <button on:click={() => (reveal = !reveal)} type="button" class="btn btn-square">
+                <div class="{reveal ? 'i-mdi:eye-outline' : 'i-mdi:eye-off-outline'} text-2xl" />
+              </button>
+            </div>
+            <label for="password" class=" floating-label peer-focus:text-accent-focus">
               Password
             </label>
           </div>
+
           <label for="" class="label">
-            <a href="/forget" class="label-text-alt link link-hover"
-              >Forgot password?</a
-            >
+            <a href="/forget" class="label-text-alt link link-hover">Forgot password?</a>
           </label>
 
           <div class="form-control mt-6">

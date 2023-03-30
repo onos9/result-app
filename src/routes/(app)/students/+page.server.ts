@@ -5,16 +5,13 @@ import type { Student, Prisma } from "@prisma/client";
 import { mkdirSync, writeFileSync } from "fs";
 import { customAlphabet } from "nanoid";
 
-
 export const load: PageServerLoad = async ({ locals }) => {
   if (!locals.user?.arm) throw redirect(302, "/settings");
-
-  
 
   return {
     students: await db.student.findMany({
       where: { userId: locals.user?.id },
-      include: { Class: true },
+      include: { Class: true, result: true },
     }),
     classes: await db.class.findMany({
       where: { arm: locals.user?.arm } as any,

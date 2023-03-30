@@ -5,19 +5,6 @@
   import { student as studentStore } from "$lib/stores/data_store";
   import { configs } from "$lib/stores/configs";
 
-  // type FormInput = {
-  //   data: FormData;
-  //   cancel(): void;
-  // };
-  // const onAdd = async ({ data, cancel }: FormInput) => {
-  //   let file = data.getAll("avatar")[0] as File;
-  //   file = (await compressImg(file)) as File;
-  //   console.log(file);
-  //   data.set("avatar", file);
-
-  //   return async ({ result, update }: any) => update();
-  // };
-
   export let student:
     | (Student & {
         result: Result[];

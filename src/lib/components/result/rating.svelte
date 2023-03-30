@@ -56,7 +56,7 @@
       }
 
       if (result.type == "success") {
-        console.log(result);
+        // console.log(result);
         form.reset;
         checked = false;
       }

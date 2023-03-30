@@ -1,8 +1,10 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
+  import { configs } from "$lib/stores/configs";
+  import { results } from "$lib/stores/data_store";
   import { user } from "$lib/stores/user";
   import { compressImg } from "$lib/utils";
-  import type { Class, Student } from "@prisma/client";
+  import type { Class, Result, Student } from "@prisma/client";
   import { onMount } from "svelte";
   import type { PageData } from "./$types";
 
@@ -66,7 +68,7 @@
     data.set("userId", $user.id);
 
     return async ({ result, update }: any) => {
-      console.log(result);
+      // console.log(result);
       if (result.type == "failure") {
         student = null;
         message = result.data.message;
@@ -81,6 +83,18 @@
     student = students.find((student) => student.id == id) as Student & {
       Class: Class | null;
     };
+  };
+
+  const isComplete = (id: string) => {
+    const student = students.find((student) => student.id == id);
+    const result = student?.result?.find(
+      (result) =>
+        result?.studentId == id &&
+        result.term == $configs.term &&
+        result.academicYear == $configs.academicYear
+    );
+
+    return result?.status == "uploaded";
   };
 </script>
 
@@ -101,7 +115,7 @@
             </button> -->
               </div>
             </div>
-          {/if} 
+          {/if}
           <div class="overflow-x-auto">
             <table class="table-compact table w-full">
               <thead>
@@ -120,14 +134,17 @@
                   <tr>
                     <th>
                       <label>
-                        <input type="checkbox" class="checkbox" />
+                        <input checked={isComplete(student.id)} type="checkbox" class="checkbox" />
                       </label>
                     </th>
                     <td>
                       <div class="flex items-center space-x-3">
                         <div class="avatar">
                           <div class="mask mask-squircle w-12 h-12">
-                            <img src={`/${student.avatarUrl}`} alt="Avatar Tailwind CSS Component" />
+                            <img
+                              src={`/${student.avatarUrl}`}
+                              alt="Avatar Tailwind CSS Component"
+                            />
                           </div>
                         </div>
                         <div>

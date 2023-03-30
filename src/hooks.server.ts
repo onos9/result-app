@@ -27,8 +27,7 @@ export const handle: Handle = async ({ event, resolve }) => {
   if (configs.length) {
     event.locals.configs = configs;
   }
-
-  console.log(event.url.pathname.includes("print"));
+  
   const theme = event.url.pathname.includes("print") ? "light" : "night";
   return await resolve(event, {
     transformPageChunk: ({ html }) => html.replace("%theme%", theme),

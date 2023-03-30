@@ -1,7 +1,6 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import { goto } from "$app/navigation";
-  import { printer } from "$lib/chrome";
   import {
     Header,
     Rating,
