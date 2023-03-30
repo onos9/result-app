@@ -13,5 +13,5 @@ vite.config.ts.timestamp-*
 prisma/*.sqlite
 static/uploads
 static/results
-extension.pem
+extension.*
 extension
