@@ -208,7 +208,7 @@
               {remark.name}
             </span>
           </td>
-          <td class="max-w-lg text-xs text-left py-3 print:text-slate-500">
+          <td contenteditable class="max-w-lg text-xs text-left py-3 print:text-slate-500">
             {remark.comment}
           </td>
           <td class="text-center print:hidden">
