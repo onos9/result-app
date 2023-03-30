@@ -163,7 +163,7 @@
 </div>
 
 {#if remarks}
-  <table bind:this={table} class="min-w-max w-full table-auto mb-5 rounded">
+  <table class="min-w-max w-full table-auto mb-5 rounded">
     <tbody class="align-baseline">
       {#each remarks as remark}
         <tr class="border-b print:border-b">
