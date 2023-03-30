@@ -4,7 +4,6 @@ import type { Action, Actions, PageServerLoad } from "./$types";
 
 import { db } from "$lib/server/database";
 import type { Prisma } from "@prisma/client";
-import { user } from "$lib/stores/user";
 
 export const load: PageServerLoad = async ({ locals }) => {
   if (locals.user) {
@@ -14,29 +13,21 @@ export const load: PageServerLoad = async ({ locals }) => {
 
 const login: Action = async ({ cookies, request }) => {
   const { email, password } = Object.fromEntries(await request.formData());
-  
-  if (
-    typeof email !== "string" ||
-    typeof password !== "string" ||
-    !email ||
-    !password
-  ) {
+
+  if (typeof email !== "string" || typeof password !== "string" || !email || !password) {
     return fail(400, { invalid: true, email, password });
   }
 
   const user = await db.user.findUnique({ where: { email } });
-  
+
   if (!user) {
-    return fail(400, { credentials: true });
+    return fail(404, { success: false, message: `Email ${email} is incorrect` });
   }
 
-  const userPassword = await bcrypt.compare(
-    password,
-    user.passwordHash as string
-  );
- 
+  const userPassword = await bcrypt.compare(password, user.passwordHash as string);
+
   if (!userPassword) {
-    return fail(400, { credentials: true, email, password });
+    return fail(400, { success: false, message: `Password is incorrect` });
   }
 
   const authenticatedUser = await db.user.update({

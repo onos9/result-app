@@ -1,7 +1,17 @@
-<script>
+<script lang="ts">
   import { enhance } from "$app/forms";
   import Brand from "$lib/components/brand.svelte";
+  import type { ActionData } from "./$types";
   let reveal = false;
+  let isAlert = false;
+  let message = "Hello";
+  export let form: ActionData;
+
+  $: if (form && !form?.success) {
+    message = form?.message;
+    isAlert = true;
+    console.log(form);
+  }
 </script>
 
 <div class="hero min-h-screen bg-base-200">
@@ -18,6 +28,14 @@
         <div class="font-medium self-center text-xl">
           <Brand />
         </div>
+        {#if isAlert}
+          <div class="alert alert-error shadow-lg mb-4">
+            <div>
+              <div class="i-bx:close" />
+              <span>{message}</span>
+            </div>
+          </div>
+        {/if}
         <form action="?/login" method="post" use:enhance>
           <div class="relative  mb-4">
             <input
