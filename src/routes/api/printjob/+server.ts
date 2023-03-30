@@ -55,7 +55,6 @@ export const POST = (async ({ locals, request, fetch }: RequestEvent) => {
     });
     console.log({ resultId: res.id });
   }
-  console.log({ response: response.ok });
 
   return new Response(JSON.stringify({ success: true }), { status: 200 });
 }) satisfies RequestHandler;
