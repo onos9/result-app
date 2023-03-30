@@ -91,10 +91,11 @@
       (result) =>
         result?.studentId == id &&
         result.term == $configs.term &&
-        result.academicYear == $configs.academicYear
-    );
+        result == $configs.academicYear &&
+        result.status == "uploaded"
 
-    return result?.status == "uploaded";
+    );
+    return !!result;
   };
 </script>
 
