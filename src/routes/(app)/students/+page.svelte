@@ -86,8 +86,8 @@
   };
 
   const isComplete = (id: string) => {
-    const student = students.find((student) => student.id == id);
-    const result = student?.result?.find(
+    const stud = students.find((student) => student.id == id);
+    const result = stud?.result?.find(
       (result) =>
         result?.studentId == id &&
         result.term == $configs.term &&
