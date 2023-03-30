@@ -15,12 +15,12 @@
   if (!student) student = $studentStore;
 </script>
 
-<div class="text-sm flex mb-3 print:hidden">
+<!-- <div class="text-sm flex mb-3 print:hidden">
   <label for="modal-info" class="btn btn-sm btn-primary cursor-pointer">
     Edit Student
     <div class="i-bx:bxs-edit-alt text-lg ml-1" />
   </label>
-</div>
+</div> -->
 
 <div class="flex flex-row pt-2">
   <table class="min-w-max w-full table-auto mb-4 rounded">
