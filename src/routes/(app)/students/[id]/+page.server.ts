@@ -1,12 +1,6 @@
 import { db } from "$lib/server/database";
 import { fail, redirect } from "@sveltejs/kit";
-import type {
-  Prisma,
-  Rating,
-  Record,
-  Remark,
-  Student,
-} from "node_modules/.prisma/client";
+import type { Prisma, Rating, Record, Remark, Student } from "node_modules/.prisma/client";
 import type { Actions, PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ locals, params }) => {
@@ -111,6 +105,7 @@ export const actions: Actions = {
 
   remark: async ({ url, request }) => {
     const id = url.searchParams.get("id") as string;
+    const edit = url.searchParams.get("edit");
     const formData = await request.formData();
     const data = Object.fromEntries(formData) as any;
     let remark: Remark;
@@ -120,9 +115,12 @@ export const actions: Actions = {
     }
 
     try {
-      if (id) {
+      if (id && !edit) {
         remark = await db.remark.delete({ where: { id } });
         return { id: remark.id };
+      } else if (id && edit) {
+        remark = await db.remark.update({ where: { id }, data });
+        return { edit: true, remark };
       } else remark = await db.remark.create({ data });
       return { remark };
     } catch (err: any) {

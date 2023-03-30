@@ -39,13 +39,14 @@
 
   let remarkId: string;
   let checked = false;
+  let isEdit = false;
   let isAlert: boolean = false;
   let message: string;
   let errorMessage: string = "";
   let searchTerm: string;
   let commentType: string;
   let commentText: string;
-  let commentFor: string
+  let commentFor: string = "Class Teacher's Comment";
   let filtered: Comment[] = $comments.filter((comment) => comment.type == "positive");
   let commentList: Comment[] = filtered.slice(0, 5);
 
@@ -61,6 +62,7 @@
     data.set("arm", $user.arm as string);
 
     return async ({ result, update }: any) => {
+      isEdit = false;
       if (result.data?.id) {
         const newRemarks = remarks.filter((record) => record.id != result.data?.id);
         remarks = [...newRemarks];
@@ -150,6 +152,9 @@
   const editRemark = (id: string) => {
     const remark = remarks.find((remark) => remark.id == id);
     commentText = remark?.comment as string;
+    commentFor = remark?.name as string;
+    remarkId = remark?.id as string;
+    isEdit = true;
     checked = !checked;
   };
 </script>
@@ -177,9 +182,9 @@
             {remark.comment}
           </td>
           <td class="text-center flex print:hidden">
-            <!-- <div class="tooltip mx-2" data-tip="Edit">
+            <div class="tooltip mx-2" data-tip="Edit">
               <button on:click={() => editRemark(remark.id)} class="i-bx:bxs-edit text-lg" />
-            </div> -->
+            </div>
             <form action="?/remark&id={remark.id}" method="post" use:enhance={onSubmit}>
               <div class="tooltip" data-tip="Delete">
                 <button class="i-bx:bxs-trash text-lg text-accent-focus" />
@@ -265,14 +270,18 @@
             </div>
           </div>
         {/if}
-        <form action="?/remark" method="POST" use:enhance={onSubmit}>
+        <form
+          action="?/remark&edit={isEdit || ''}&id={remarkId || ''}"
+          method="POST"
+          use:enhance={onSubmit}
+        >
           <div class="grid grid-cols-6 gap-4 justify-center items-center">
             <fieldset class="col-span-6 ">
               <legend class="contents text-sm font-semibold leading-6">Remark for</legend>
               <div class="mt-3 space-y-4 mb-4">
                 <div class="flex items-center">
                   <input
-                    checked
+                    checked={commentFor == "Class Teacher's Comment"}
                     type="radio"
                     name="name"
                     value="Class Teacher's Comment"
@@ -283,13 +292,25 @@
                   </label>
                 </div>
                 <div class="flex items-center">
-                  <input type="radio" name="name" value="Head Teacher's Comment" class="radio" />
+                  <input
+                    checked={commentFor == "Head Teacher's Comment"}
+                    type="radio"
+                    name="name"
+                    value="Head Teacher's Comment"
+                    class="radio"
+                  />
                   <label for="hm-comment" class="ml-3 block text-sm font-medium leading-6">
                     Head Teacher
                   </label>
                 </div>
                 <div class="flex items-center">
-                  <input type="radio" name="name" value="Recomendation" class="radio" />
+                  <input
+                    checked={commentFor == "Recomendation"}
+                    type="radio"
+                    name="name"
+                    value="Recomendation"
+                    class="radio"
+                  />
                   <label for="recomend-comment" class="ml-3 block text-sm font-medium leading-6 ">
                     Recommendation
                   </label>
