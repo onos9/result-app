@@ -151,7 +151,6 @@
     const remark = remarks.find((remark) => remark.id == id);
     commentText = remark?.comment as string;
     checked = !checked;
-
   };
 </script>
 
@@ -178,9 +177,9 @@
             {remark.comment}
           </td>
           <td class="text-center flex print:hidden">
-            <div class="tooltip mx-2" data-tip="Edit">
+            <!-- <div class="tooltip mx-2" data-tip="Edit">
               <button on:click={() => editRemark(remark.id)} class="i-bx:bxs-edit text-lg" />
-            </div>
+            </div> -->
             <form action="?/remark&id={remark.id}" method="post" use:enhance={onSubmit}>
               <div class="tooltip" data-tip="Delete">
                 <button class="i-bx:bxs-trash text-lg text-accent-focus" />
