@@ -82,7 +82,7 @@
 
       if (result.data.edit) {
         const index = remarks.findIndex((remark) => remark.id == result.data.remark.id);
-        if (index == -1) return;
+        if (index === -1) return;
         let newRemarks = remarks;
         newRemarks[index] = result.data.remark;
         remarks = [...newRemarks];
