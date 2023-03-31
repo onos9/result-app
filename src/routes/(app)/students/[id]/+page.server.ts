@@ -23,11 +23,6 @@ export const load: PageServerLoad = async ({ locals, params }) => {
     subjects: await db.subject.findMany({
       where: { arm: locals.user?.arm, classId } as any,
     }),
-
-    students: await db.student.findMany({
-      where: { userId: locals.user.id },
-      include: { result: true },
-    }),
   };
 };
 
