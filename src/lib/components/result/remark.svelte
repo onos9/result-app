@@ -37,7 +37,7 @@
     cancel(): void;
   };
 
-  let remarkId: string;
+  let remarkId: string | null;
   let checked = false;
   let isEdit = false;
   let isAlert: boolean = false;
@@ -84,6 +84,7 @@
         const index = remarks.findIndex((remark) => remark.id == result.data.remark.id);
         if (index === -1) return;
         remarks[index] = result.data.remark;
+        remarkId = null;
         update();
         return;
       }
@@ -114,7 +115,10 @@
   };
 
   const setComment = (text: string) => {
-    text = text.replace(/STUDENT_NAME/g, $student?.fullName as string);
+    text = text
+      .replace(/STUDENT_NAME/g, $student?.fullName as string)
+      .replace(/CLASS_NAME/g, $student?.Class?.name as string);
+
     if ($student?.gender == "male") {
       text = text
         .replace(/\bhis\/hers\b|\bhis\/her\b/g, "his")

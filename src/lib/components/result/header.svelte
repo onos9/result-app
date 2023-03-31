@@ -18,7 +18,7 @@ let vacationDate = new Date($configs.resumptionDate)
       <div class="font-bold ">{$configs.schoolName}</div>
       <div class="text-sm opacity-50 flex">
         <div class="i-bx:bxs-map text-xl mr-1" />
-        {$configs.schoolRegion} States
+        {$configs.schoolRegion} State, {$configs.city}
       </div>
     </div>
   </div>

@@ -23,6 +23,11 @@ export const load: PageServerLoad = async ({ locals, params }) => {
     subjects: await db.subject.findMany({
       where: { arm: locals.user?.arm, classId } as any,
     }),
+
+    students: await db.student.findMany({
+      where: { userId: locals.user.id },
+      include: { result: true },
+    }),
   };
 };
 
@@ -63,6 +68,7 @@ export const actions: Actions = {
 
   record: async ({ request, url }) => {
     const id = url.searchParams.get("id") as string;
+    const edit = url.searchParams.get("edit");
     const formData = await request.formData();
     const data = Object.fromEntries(formData) as any;
     if (!data.subject && !id) {
@@ -70,10 +76,14 @@ export const actions: Actions = {
     }
 
     let record: Record;
+
     try {
-      if (id) {
+      if (id && !edit) {
         record = await db.record.delete({ where: { id } });
         return { id: record.id };
+      } else if (id && edit) {
+        record = await db.record.update({ where: { id }, data });
+        return { edit: true, record };
       } else record = await db.record.create({ data });
       return { record };
     } catch (err: any) {
@@ -84,6 +94,7 @@ export const actions: Actions = {
 
   rating: async ({ url, request }) => {
     const id = url.searchParams.get("id") as string;
+    const edit = url.searchParams.get("edit");
     const formData = await request.formData();
     const data = Object.fromEntries(formData) as any;
     let rating: Rating;
@@ -92,9 +103,12 @@ export const actions: Actions = {
     }
 
     try {
-      if (id) {
+      if (id && !edit) {
         rating = await db.rating.delete({ where: { id } });
         return { id: rating.id };
+      } else if (id && edit) {
+        rating = await db.rating.update({ where: { id }, data });
+        return { edit: true, rating };
       } else rating = await db.rating.create({ data });
       return { rating };
     } catch (err: any) {

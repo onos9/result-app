@@ -1,5 +1,4 @@
-import { browser } from "$app/environment";
-import { grades, results, student, subjects, comments } from "$lib/stores/data_store";
+import { grades, results, student, subjects } from "$lib/stores/data_store";
 import type { PageLoad } from "./$types";
 
 export const load = (async ({ data, fetch }) => {

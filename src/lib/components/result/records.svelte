@@ -16,10 +16,12 @@
   };
 
   let checked = false;
-  let recordId: string;
+  let isEdit = false;
+  let recordId: string | null;
   let grade: Grade | undefined;
   let objective: string | null | undefined;
   let errorMessage: string = "";
+  let record: Record | undefined;
   let scores: number[] = [];
   let score: number;
 
@@ -53,7 +55,7 @@
     const gradePoint = data.get("grade") as never;
     const outcome = data.get("outcome") as never;
     if (gradePoint) data.set("color", colors[gradePoint]);
-    if (outcome) data.set("color", colors[gradePoint]);
+    if (outcome) data.set("color", colors[outcome]);
 
     return async ({ result, update }: any) => {
       console.log(result);
@@ -64,14 +66,20 @@
       }
 
       if (result.data.error == "P2002" && !recordId) {
-        errorMessage = `${data.get(
-          "subject"
-        )} is already recorded choose another subject`;
+        errorMessage = `${data.get("subject")} is already recorded choose another subject`;
       }
+
+      if (result.data.edit) {
+        const index = records.findIndex((rating) => rating.id == result.data.rating.id);
+        if (index === -1) return;
+        records[index] = result.data.record;
+        recordId = null;
+        update();
+        return;
+      }
+
       if (result.data?.id) {
-        const newRecords = records.filter(
-          (record) => record.id != result.data?.id
-        );
+        const newRecords = records.filter((record) => record.id != result.data?.id);
         records = [...newRecords];
         update();
         return;
@@ -101,6 +109,13 @@
     const name = input.value;
     objective = $subjects.find((subject) => subject.name == name)?.objective;
   };
+
+  const editRecord = (id: string) => {
+    record = records.find((record) => record.id == id);
+    recordId = record?.id as string;
+    isEdit = true;
+    checked = !checked;
+  };
 </script>
 
 <div class="text-sm flex mb-3 print:hidden">
@@ -122,9 +137,10 @@
           </th>
         {:else if key}
           <th
-            class="py-1 px-6 text-center {key != 'action'
-              ? 'print:border-r-2'
-              : ''} {key == 'action' ? 'print:hidden' : ''}"
+            class="py-1 px-6 text-center {key != 'action' ? 'print:border-r-2' : ''} {key ==
+            'action'
+              ? 'print:hidden'
+              : ''}"
           >
             {key.replace("_", " ")}
           </th>
@@ -150,9 +166,7 @@
         {/if}
         {#if record.outcome}
           <td class="py-3 px-6 text-center">
-            <span
-              class="{record.color} text-violet-600 py-1 px-3 rounded-full text-xs"
-            >
+            <span class="{record.color} text-violet-600 py-1 px-3 rounded-full text-xs">
               {record.outcome}
             </span>
           </td>
@@ -165,33 +179,27 @@
           <td class="py-3 px-6 text-center whitespace-nowrap">{record.ca}</td>
         {/if}
         {#if record.report}
-          <td class="py-3 px-6 text-center whitespace-nowrap"
-            >{record.report}</td
-          >
+          <td class="py-3 px-6 text-center whitespace-nowrap">{record.report}</td>
         {/if}
         {#if record.exam}
           <td class="py-3 px-6 text-center whitespace-nowrap">{record.exam}</td>
         {/if}
         {#if record.score}
-          <td class="py-3 px-6 text-center whitespace-nowrap">{record.score}</td
-          >
+          <td class="py-3 px-6 text-center whitespace-nowrap">{record.score}</td>
         {/if}
 
         {#if record.grade}
           <td class="py-3 px-6 text-center">
-            <span
-              class="{record.color} text-violet-600 py-1 px-3 rounded-full text-xs"
-            >
+            <span class="{record.color} text-violet-600 py-1 px-3 rounded-full text-xs">
               {record.grade}
             </span>
           </td>
         {/if}
-        <td class="text-center print:hidden">
-          <form
-            action="?/record&id={record.id}"
-            method="post"
-            use:enhance={onSubmit}
-          >
+        <td class="py-3 px-6 flex justify-center print:hidden">
+          <!-- <div class="tooltip mx-2" data-tip="Edit">
+            <button on:click={() => editRecord(record.id)} class="i-bx:bxs-edit text-lg" />
+          </div> -->
+          <form action="?/record&id={record.id}" method="post" use:enhance={onSubmit}>
             <div class="tooltip" data-tip="Delete">
               <button class="i-bx:bxs-trash text-lg text-accent-focus" />
             </div>
@@ -207,12 +215,14 @@
 <input bind:checked type="checkbox" id="modal-rec" class="modal-toggle" />
 <div class="modal">
   <div class="modal-box relative">
-    <label for="modal-rec" class="btn btn-sm btn-circle absolute right-2 top-2"
-      >✕</label
-    >
+    <label for="modal-rec" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
     <div class="font-bold text-sm mb-5">Add Student Record</div>
     <div class="mt-5 md:col-span-2 md:mt-0">
-      <form action="?/record" method="POST" use:enhance={onSubmit}>
+      <form
+        action="?/record&edit={isEdit || ''}&id={recordId || ''}"
+        method="POST"
+        use:enhance={onSubmit}
+      >
         <div class="grid grid-cols-6 gap-4">
           <div class="relative col-span-6">
             <select
@@ -227,10 +237,7 @@
                 <option>{subject.name}</option>
               {/each}
             </select>
-            <label
-              for="subject"
-              class="floating-label peer-focus:text-accent-focus"
-            >
+            <label for="subject" class="floating-label peer-focus:text-accent-focus">
               {$user.arm == "prmary" ? "Subject" : "Learning Areas"}
             </label>
           </div>
@@ -238,18 +245,14 @@
             <div class="relative col-span-6 sm:col-span-3">
               <input
                 on:keyup={(e) => calculateGrade(e, 0)}
+                value={record?.mta || ""}
                 name="mta"
                 type="text"
                 id="mta"
                 class=" input input-bordered floating-input peer focus:border-accent-focus"
                 placeholder=" "
               />
-              <label
-                for="mta"
-                class="floating-label peer-focus:text-accent-focus"
-              >
-                MTA
-              </label>
+              <label for="mta" class="floating-label peer-focus:text-accent-focus"> MTA </label>
             </div>
             <div class="relative col-span-6 sm:col-span-3">
               <input
@@ -260,12 +263,7 @@
                 class=" input input-bordered floating-input peer focus:border-accent-focus"
                 placeholder=" "
               />
-              <label
-                for="ca"
-                class="floating-label peer-focus:text-accent-focus"
-              >
-                CA
-              </label>
+              <label for="ca" class="floating-label peer-focus:text-accent-focus"> CA </label>
             </div>
             <div class="relative col-span-6 sm:col-span-3">
               <input
@@ -276,10 +274,7 @@
                 class=" input input-bordered floating-input peer focus:border-accent-focus"
                 placeholder=" "
               />
-              <label
-                for="report"
-                class="floating-label peer-focus:text-accent-focus"
-              >
+              <label for="report" class="floating-label peer-focus:text-accent-focus">
                 Report
               </label>
             </div>
@@ -292,12 +287,7 @@
                 class=" input input-bordered floating-input peer focus:border-accent-focus"
                 placeholder=" "
               />
-              <label
-                for="exam"
-                class="floating-label peer-focus:text-accent-focus"
-              >
-                Exam
-              </label>
+              <label for="exam" class="floating-label peer-focus:text-accent-focus"> Exam </label>
             </div>
             <div class="relative col-span-6 sm:col-span-3 text-center">
               <input
@@ -322,9 +312,7 @@
           {/if}
           {#if $user.arm == "eyfs"}
             <div class="relative col-span-6 ">
-              <legend class="contents text-sm font-semibold leading-6 mb-3"
-                >Objectives</legend
-              >
+              <legend class="contents text-sm font-semibold leading-6 mb-3">Objectives</legend>
               <textarea
                 value={objective || ""}
                 readonly
@@ -343,12 +331,7 @@
                 class="input input-bordered appearance-none floating-input peer focus:border-accent-focus"
                 placeholder=" "
               />
-              <label
-                for="score"
-                class="floating-label peer-focus:text-accent-focus"
-              >
-                Score
-              </label>
+              <label for="score" class="floating-label peer-focus:text-accent-focus"> Score </label>
             </div>
 
             <div class="relative col-span-6 sm:col-span-3">
@@ -360,10 +343,7 @@
                 class="input input-bordered appearance-none floating-input peer focus:border-accent-focus"
                 placeholder=" "
               />
-              <label
-                for="outcome"
-                class="floating-label peer-focus:text-accent-focus"
-              >
+              <label for="outcome" class="floating-label peer-focus:text-accent-focus">
                 Outcome
               </label>
             </div>

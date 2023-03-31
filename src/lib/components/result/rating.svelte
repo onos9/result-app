@@ -32,11 +32,13 @@
     "w-11/12",
   ];
 
-  let ratingId: string;
+  let ratingId: string | null;
   let checked = false;
+  let isEdit = false;
   let errorMessage: string = "";
   let comment: string;
   let rate: string;
+  let attribute: string;
 
   const onSubmit = async ({ form, action, data, cancel }: FormInput) => {
     if (ratingId) action.searchParams.set("id", ratingId);
@@ -65,6 +67,15 @@
         errorMessage = `${data.get("subject")} is already recorded choose another subject`;
       }
 
+      if (result.data.edit) {
+        const index = ratings.findIndex((rating) => rating.id == result.data.rating.id);
+        if (index === -1) return;
+        ratings[index] = result.data.rating;
+        ratingId = null;
+        update();
+        return;
+      }
+
       if (result.data.rating) {
         ratings = [...ratings, result.data.rating];
       }
@@ -74,6 +85,16 @@
   };
 
   $: comment = comments[Number(rate)];
+
+  const editRating = (id: string) => {
+    const rating = ratings.find((remark) => remark.id == id);
+    attribute = rating?.attribute as string;
+    rate = rating?.rate as string;
+    comment = rating?.comment as string;
+    ratingId = rating?.id as string;
+    isEdit = true;
+    checked = !checked;
+  };
 </script>
 
 <div class=" mb-4">
@@ -109,12 +130,15 @@
               </div>
             </div>
           </td>
-          <td class=" text-xs print:text-slate-500 capitalize">
+          <td class=" text-xs text-center print:text-slate-500 capitalize">
             <span class="bg-purple-200 text-purple-600 py-1 px-3 rounded-full text-xs uppercase">
               {rating.comment}
             </span>
           </td>
-          <td class="text-center print:hidden">
+          <td class="text-center flex print:hidden">
+            <div class="tooltip mx-2" data-tip="Edit">
+              <button on:click={() => editRating(rating.id)} class="i-bx:bxs-edit text-lg" />
+            </div>
             <form action="?/rating&id={rating.id}" method="post" use:enhance={onSubmit}>
               <div class="tooltip" data-tip="Delete">
                 <button class="i-bx:bxs-trash text-lg text-accent-focus" />
@@ -132,7 +156,11 @@
   <div class="modal-box relative">
     <label for="modal-rate" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
     <div class="font-bold text-sm mb-5">Add Student Record</div>
-    <form action="?/rating" method="POST" use:enhance={onSubmit}>
+    <form
+      action="?/rating&edit={isEdit || ''}&id={ratingId || ''}"
+      method="POST"
+      use:enhance={onSubmit}
+    >
       <div class="grid grid-cols-6 gap-4">
         <div class="relative col-span-6">
           <select
@@ -141,7 +169,9 @@
             class="input input-bordered floating-input peer focus:border-accent-focus"
             placeholder=" "
           >
-            <option selected disabled>Choose Learning Area</option>
+            <option disabled={!!!attribute} selected>
+              {attribute || "Choose Learning Area"}
+            </option>
             <option>Adherent and Independent</option>
             <option>Self-control and Interaction</option>
             <option>Flexibility and Creativity</option>
