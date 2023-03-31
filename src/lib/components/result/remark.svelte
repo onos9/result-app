@@ -80,6 +80,16 @@
         errorMessage = `${data.get("subject")} is already recorded choose another subject`;
       }
 
+      if (result.data.edit) {
+        const index = remarks.findIndex((remark) => remark.id == result.data.remark.id);
+        if (index == -1) return;
+        let newRemarks = remarks;
+        newRemarks[index] = result.data.remark;
+        remarks = [...newRemarks];
+        update();
+        return;
+      }
+
       if (result.data.remark) {
         remarks = [...remarks, result.data.remark];
       }
