@@ -1,8 +1,7 @@
 <script lang="ts">
   import { configs } from "$lib/stores/configs";
 
-
-let vacationDate = new Date($configs.resumptionDate)
+  let vacationDate = new Date($configs.resumptionDate);
 </script>
 
 <div
@@ -18,16 +17,16 @@ let vacationDate = new Date($configs.resumptionDate)
       <div class="font-bold ">{$configs.schoolName}</div>
       <div class="text-sm opacity-50 flex">
         <div class="i-bx:bxs-map text-xl mr-1" />
-        {$configs.schoolRegion} State, {$configs.schoolCity}
+        {$configs.schoolCity}, {$configs.schoolRegion} State
       </div>
     </div>
   </div>
 
   <div class="flex flex-col lg:float-right text-center leading-7">
-    <div class="font-bold float-right">{$configs.rusultDesc }</div>
+    <div class="font-bold float-right">{$configs.rusultDesc}</div>
     <div class="text-sm opacity-50 flex lg:justify-end justify-center">
       <div class="i-bx:calendar-alt text-xl mr-1" />
-     {vacationDate.toDateString()}
+      {vacationDate.toDateString()}
     </div>
   </div>
 </div>
