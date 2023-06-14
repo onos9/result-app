@@ -1,5 +1,6 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
+  import { page } from "$app/stores";
   import { configs } from "$lib/stores/configs";
   import { user } from "$lib/stores/user";
   import { compressImg } from "$lib/utils";
@@ -41,7 +42,9 @@
       cancel();
     }
     if (file) data.set("avatarUrl", file);
-    data.set("userId", $user.id);
+    if ($user.role.name == "ADMIN") {
+      data.set("userId", $page.params.id);
+    } else data.set("userId", $user.id);
 
     return async ({ result, update }: any) => {
       console.log(result);
@@ -97,7 +100,11 @@
                   <tr>
                     <th>
                       <label>
-                        <input checked={isComplete(student.id)} type="checkbox" class="checkbox" />
+                        <input
+                          checked={isComplete(student.id)}
+                          type="checkbox"
+                          class="checkbox"
+                        />
                       </label>
                     </th>
                     <td>
@@ -136,10 +143,17 @@
                         </a>
                       </div>
                       <div class="tooltip mr-3" data-tip="Edit">
-                        <button on:click={() => handleEdit(student.id)} class="i-bx:bxs-edit" />
+                        <button
+                          on:click={() => handleEdit(student.id)}
+                          class="i-bx:bxs-edit"
+                        />
                       </div>
                       <div class="tooltip" data-tip="Delete">
-                        <form action="?/delete&id={student.id}" method="post" use:enhance>
+                        <form
+                          action="?/delete&id={student.id}"
+                          method="post"
+                          use:enhance
+                        >
                           <button class="i-bx:bxs-trash" />
                         </form>
                       </div>
@@ -164,7 +178,11 @@
           </div>
         {/if}
 
-        <form action="?/create&id={student?.id || ''}" method="POST" use:enhance={onAdd}>
+        <form
+          action="?/create&id={student?.id || ''}"
+          method="POST"
+          use:enhance={onAdd}
+        >
           <input
             name="fullName"
             value={student?.fullName || ""}
@@ -172,15 +190,30 @@
             class="input input-bordered w-full max-w-lg mb-3"
           />
           <fieldset>
-            <legend class="contents text-sm font-semibold leading-6 ">Gender</legend>
+            <legend class="contents text-sm font-semibold leading-6 "
+              >Gender</legend
+            >
             <div class="mt-3 flex mb-4">
               <div class="flex items-center mr-4">
                 <input type="radio" name="gender" value="male" class="radio" />
-                <label for="male" class="ml-3 block text-sm font-medium leading-6 "> Male </label>
+                <label
+                  for="male"
+                  class="ml-3 block text-sm font-medium leading-6 "
+                >
+                  Male
+                </label>
               </div>
               <div class="flex items-center">
-                <input type="radio" name="gender" value="female" class="radio" />
-                <label for="female" class="ml-3 block text-sm font-medium leading-6 ">
+                <input
+                  type="radio"
+                  name="gender"
+                  value="female"
+                  class="radio"
+                />
+                <label
+                  for="female"
+                  class="ml-3 block text-sm font-medium leading-6 "
+                >
                   Female
                 </label>
               </div>
@@ -199,8 +232,15 @@
             placeholder="Addmission Number"
             class="input input-bordered w-full max-w-lg mb-3"
           />
-          <select name="classId" class="select select-bordered w-full max-w-xs mb-3">
-            <option disabled={!!!student?.Class?.name} selected value={student?.classId}>
+          <select
+            name="classId"
+            class="select select-bordered w-full max-w-xs mb-3"
+          >
+            <option
+              disabled={!!!student?.Class?.name}
+              selected
+              value={student?.classId}
+            >
               {student?.Class?.name || "Select a Class"}
             </option>
             {#each classes as cls}
