@@ -86,6 +86,30 @@ export const loadRemoteStudents = async () => {
       Authorization: data.token,
     },
   });
+  // console.log(data)
+  return await response.json();
+};
 
+export const searchRemoteStudents = async () => {
+  let response = await fetch(`https://llacademy.ng/api/auth/login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({
+      email: "onosbrown.saved@gmail.com",
+      password: "#1414bruno#",
+    }),
+  });
+
+  const { data } = await response.json();
+
+  response = await fetch(`https://llacademy.ng/api/student-list-search?class=1&section=1`, {
+    headers: {
+      Authorization: data.token,
+    },
+  });
+  // if (response.ok) console.log(await response.json());
   return await response.json();
 };
