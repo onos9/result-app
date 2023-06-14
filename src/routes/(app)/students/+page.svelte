@@ -148,13 +148,6 @@
                       <input checked={isComplete(student.id)} type="checkbox" class="checkbox" />
                     </label>
                   </th>
-<<<<<<< HEAD
-                  <td>
-                    <div class="flex items-center space-x-3">
-                      <div class="avatar">
-                        <div class="mask mask-squircle w-12 h-12">
-                          <img src={`/${student.avatarUrl}`} alt="Avatar Tailwind CSS Component" />
-=======
                   <th class="normal-case">Parent Email</th>
                   <th class="normal-case">Admission No</th>
                   <th class="normal-case">Action</th>
@@ -181,16 +174,8 @@
                               alt="Avatar Tailwind CSS Component"
                             />
                           </div>
->>>>>>> fc829bfee79e50d65c97cd2a1d3780f6eae53541
                         </div>
                       </div>
-<<<<<<< HEAD
-                      <div>
-                        <div class="font-bold">{student.fullName}</div>
-                        <div class="text-sm opacity-50">
-                          {student?.Class?.name}
-                        </div>
-=======
                       <div class="tooltip mr-3" data-tip="Edit">
                         <button
                           on:click={() => handleEdit(student.id)}
@@ -205,7 +190,6 @@
                         >
                           <button class="i-bx:bxs-trash" />
                         </form>
->>>>>>> fc829bfee79e50d65c97cd2a1d3780f6eae53541
                       </div>
                     </div>
                   </td>
