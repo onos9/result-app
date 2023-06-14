@@ -30,16 +30,19 @@ export const POST = (async ({ locals, request, fetch }: RequestEvent) => {
   const formData = new FormData();
   const date = new Date(cfg.resumptionDate);
   formData.append("title", `${cfg.rusultDesc}, ${date.toDateString()}`);
-  formData.append("doc", blob, `${studentId}.pdf`);
+  formData.append("doc", blob, `${student?.fullName?.toUpperCase()}.pdf`);
   // console.log(data.token);
 
-  response = await fetch(`https://llacademy.ng/api/student-documents/${admissionNo}`, {
-    method: "POST",
-    headers: {
-      Authorization: data.token,
-    },
-    body: formData,
-  });
+  response = await fetch(
+    `https://llacademy.ng/api/student-documents/${admissionNo}`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: data.token,
+      },
+      body: formData,
+    }
+  );
 
   if (response.ok) {
     const result = student?.result?.find(
@@ -64,6 +67,8 @@ export const GET = (async ({ locals, request, fetch }: RequestEvent) => {
     const { data } = await loadRemoteStudents();
     return new Response(JSON.stringify({ ...data }), { status: 200 });
   } catch (err: any) {
-    return new Response(JSON.stringify({ error: err.message }), { status: 500 });
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 500,
+    });
   }
 }) satisfies RequestHandler;
