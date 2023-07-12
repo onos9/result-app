@@ -1,4 +1,4 @@
-import type { Config, Prisma, PrismaClient, Role, User } from "@prisma/client";
+import type { Config, Prisma, PrismaClient, Role, User, Class } from "@prisma/client";
 
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
@@ -7,7 +7,7 @@ import type { Config, Prisma, PrismaClient, Role, User } from "@prisma/client";
 declare global {
   declare namespace App {
     interface Locals {
-      user: (User & { role: Role | null }) | null;
+      user: (User & { role: Role | null } & { class: Class | null }) | null;
       configs: Config[];
     }
 

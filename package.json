@@ -46,7 +46,7 @@
 		"@prisma/client": "^4.11.0",
 		"@types/chrome": "^0.0.225",
 		"bcrypt": "^5.1.0",
-		"daisyui": "^2.50.2",
+		"daisyui": "^3.2.1",
 		"hashids": "^2.2.11",
 		"nanoid": "^4.0.1"
 	}

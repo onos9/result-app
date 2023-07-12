@@ -10,7 +10,7 @@
 </div>
 
 <div class="flex flex-col justify-center items-center w-full mb-4">
-  <div class="font-bold ">{$student?.fullName}</div>
+  <div class="font-bold">{$student?.fullName}</div>
   <div class="text-sm opacity-50">{$student?.Class?.name}</div>
 </div>
 
@@ -20,11 +20,13 @@
     <tr class="border-b">
       <td
         translate="no"
-        class="py-2 pr-2 font-mono font-medium text-xs leading-6 whitespace-nowrap "
+        class="py-2 pr-2 font-mono font-medium text-xs leading-6 whitespace-nowrap"
       >
         Admissio No
       </td>
-      <td translate="no" class="py-2 pl-2 font-mono text-xs leading-6 whitespace-pre ">{$student?.admissionNo}</td>
+      <td translate="no" class="py-2 pl-2 font-mono text-xs leading-6 whitespace-pre"
+        >{$student?.admissionNo}</td
+      >
     </tr>
     <tr class="border-b">
       <td
@@ -33,14 +35,14 @@
       >
         Present
       </td>
-      <td translate="no" class="py-2 pl-2 font-mono text-xs leading-6  whitespace-pre">
-       {$student?.present} days
+      <td translate="no" class="py-2 pl-2 font-mono text-xs leading-6 whitespace-pre">
+        {$student?.present} days
       </td>
     </tr>
     <tr class="border-b">
       <td
         translate="no"
-        class="py-2 pr-2 font-mono font-medium text-xs leading-6  whitespace-nowrap"
+        class="py-2 pr-2 font-mono font-medium text-xs leading-6 whitespace-nowrap"
       >
         Absent
       </td>

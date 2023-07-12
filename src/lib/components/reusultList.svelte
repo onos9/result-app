@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { enhance } from "$app/forms";
   import { page } from "$app/stores";
   import { results, student } from "$lib/stores/data_store";
   export let resultId: string;
@@ -17,8 +18,15 @@
         >
           {`${result.term} Term`}
         </td>
-        <td translate="no" class="py-2 pl-2 font-mono text-xs leading-6 whitespace-pre ">
+        <td translate="no" class="py-2 pl-2 font-mono text-xs leading-6 whitespace-pre">
           {result.academicYear}
+        </td>
+        <td class="py-3 px-6 flex justify-center print:hidden">
+          <form action="?/result&id={result.id}" method="post" use:enhance>
+            <div class="tooltip" data-tip="Delete">
+              <button class="i-bx:bxs-trash text-lg text-accent-focus" />
+            </div>
+          </form>
         </td>
       </tr>
     {/each}

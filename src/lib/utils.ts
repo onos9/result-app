@@ -90,26 +90,65 @@ export const loadRemoteStudents = async () => {
   return await response.json();
 };
 
-export const searchRemoteStudents = async () => {
+export const searchRemoteStudents = async (path: string, search: string) => {
+  const token = await remoteLogin({
+    email: "onosbrown.saved@gmail.com",
+    password: "#1414bruno#",
+  });
+
+  const response = await fetch(`https://llacademy.ng/api/student-list-search?${search}`, {
+    headers: {
+      Authorization: token,
+    },
+  });
+
+  return await response.json();
+};
+
+export const remoteLogin = async (credential: { email: string; password: string }) => {
   let response = await fetch(`https://llacademy.ng/api/auth/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
     },
-    body: JSON.stringify({
-      email: "onosbrown.saved@gmail.com",
-      password: "#1414bruno#",
-    }),
+    body: JSON.stringify(credential),
   });
 
   const { data } = await response.json();
+  return data.token;
+};
 
-  response = await fetch(`https://llacademy.ng/api/student-list-search?class=1&section=1`, {
-    headers: {
-      Authorization: data.token,
-    },
-  });
-  // if (response.ok) console.log(await response.json());
-  return await response.json();
+
+/**
+ * Gets the first name, technically gets all words leading up to the last
+ * Example: "Blake Robertson" --> "Blake"
+ * Example: "Blake Andrew Robertson" --> "Blake Andrew"
+ * Example: "Blake" --> "Blake"
+ * @param str
+ * @returns {*}
+ */
+export const getFirstName = (str: string): string => {
+  var arr = str.split(" ");
+  if (arr.length === 1) {
+    return arr[0];
+  }
+  return arr.slice(0, -1).join(" "); // returns "Paul Steve"
+};
+
+/**
+ * Gets the last name (e.g. the last word in the supplied string)
+ * Example: "Blake Robertson" --> "Robertson"
+ * Example: "Blake Andrew Robertson" --> "Robertson"
+ * Example: "Blake" --> "<None>"
+ * @param str
+ * @param {string} [ifNone] optional default value if there is not last name, defaults to "<None>"
+ * @returns {string}
+ */
+export const getLastName = (str: string, ifNone?: string): string => {
+  var arr = str.split(" ");
+  if (arr.length === 1) {
+    return ifNone || "<None>";
+  }
+  return arr.slice(-1).join(" ");
 };

@@ -12,7 +12,6 @@
   let isAlert: boolean = false;
   let isNetAlert: boolean = false;
   let message: string;
-  let remoteStudents: any[];
   let checked: boolean;
 
   let student:
@@ -28,18 +27,14 @@
     cancel(): void;
   };
 
-  $: ({ classes, students } = data);
+  $: ({ classes, students, remoteStudents, userData } = data);
+  $: console.log(remoteStudents);
 
-  onMount(async () => {
-    const resp = await fetch("/api/printjob");
-    if (!resp.ok) {
-      message = resp.statusText;
-      isNetAlert = true;
-    }
+  const editStudent = async (id: any) => {
+    const resp = await fetch(`/api/student-edit/${id}`);
     const data = await resp.json();
-    remoteStudents = data.students;
     console.log(data);
-  });
+  };
 
   const onAdd = async ({ data, cancel, action }: FormInput) => {
     let id = action.searchParams.get("id");
@@ -57,20 +52,17 @@
 
     if (admissionNo && !id) {
       const remotStudent = remoteStudents.find(
-        (item) => item?.admission_no == Number(admissionNo)
+        (item: any) => item?.admission_no == Number(admissionNo)
       );
       data.set("admissionNo", `${remotStudent.id}`);
     }
 
     if (id && admissionNo) {
       const remotStudent = remoteStudents.find(
-        (item) => item?.admission_no == Number(admissionNo)
+        (item: any) => item?.admission_no == Number(admissionNo)
       );
       const student = students.find((item) => item?.id == id);
-      data.set(
-        "admissionNo",
-        `${remotStudent.id}/${student?.admissionNo?.split("/")[1]}`
-      );
+      data.set("admissionNo", `${remotStudent.id}/${student?.admissionNo?.split("/")[1]}`);
     }
 
     if (file) data.set("avatarUrl", file);
@@ -135,13 +127,13 @@
                 <th class="flex items-center gap-2 normal-case">
                   <span>Name</span>
                 </th>
-                <th class="normal-case">Parent Email</th>
+                <th class="normal-case">Parent Info</th>
                 <th class="normal-case">Admission No</th>
                 <th class="normal-case">Action</th>
               </tr>
             </thead>
             <tbody>
-              {#each students as student}
+              {#each remoteStudents as student}
                 <tr>
                   <th>
                     <label>
@@ -149,39 +141,65 @@
                     </label>
                   </th>
                   <td>
-                    <div class="flex items-center space-x-3">
-                      <div class="avatar">
-                        <div class="mask mask-squircle w-12 h-12">
-                          <img src={`/${student.avatarUrl}`} alt="Avatar Tailwind CSS Component" />
+                    <a href="/students/{student.admission_no}">
+                      <div class="flex items-center space-x-3">
+                        {#if student?.student_photo}
+                          <div class="avatar">
+                            <div class="mask mask-squircle w-12 h-12">
+                              <img
+                                src={`https://llacademy.ng/${student?.student_photo}`}
+                                alt="Avatar Tailwind CSS Component"
+                              />
+                            </div>
+                          </div>
+                        {:else}
+                          <div class="avatar placeholder">
+                            <div
+                              class="bg-neutral-focus text-neutral-content mask mask-squircle w-12"
+                            >
+                              <span class="text-xl">{student.full_name.charAt(0)}</span>
+                            </div>
+                          </div>
+                        {/if}
+                        <div>
+                          <div class="font-bold">{student.full_name}</div>
+                          <div class="text-sm opacity-50">
+                            {student.class_name}
+                          </div>
                         </div>
                       </div>
-                      <div>
-                        <div class="font-bold">{student.fullName}</div>
-                        <div class="text-sm opacity-50">
-                          {student?.Class?.name}
-                        </div>
+                    </a>
+                  </td>
+                  <td>
+                    <div>
+                      <div class="font-bold">
+                        {student.parents.mothers_name || student.parents.fathers}
+                      </div>
+                      <div class="text-sm opacity-50">
+                        {student.parents.guardians_email}
                       </div>
                     </div>
                   </td>
-                  <td>{student.parentEmail}</td>
                   <td>
                     <div
                       class="tooltip tooltip-right cursor-help"
                       data-tip="Supports responsive prefixes (sm:, lg:, …)"
                     >
                       <span class="badge badge-sm badge-success w-20">
-                        {student.admissionNo?.split("/")[1]}
+                        {`${student.school_code}${student.year.slice(-2)}-${String(
+                          student.admission_no
+                        ).padStart(4, "0")}`}
                       </span>
                     </div>
                   </td>
                   <td class="flex text-xl m-3">
-                    <div class="tooltip mr-3" data-tip="View">
+                    <!-- <div class="tooltip mr-3" data-tip="View">
                       <a href="/students/{student.id}">
                         <div class="mr-1 i-mdi:eye-outline text-2xl" />
                       </a>
-                    </div>
+                    </div> -->
                     <div class="tooltip mr-3" data-tip="Edit">
-                      <button on:click={() => handleEdit(student.id)} class="i-bx:bxs-edit" />
+                      <button on:click={() => editStudent(student.id)} class="i-bx:bxs-edit" />
                     </div>
                     <div class="tooltip" data-tip="Delete">
                       <form action="?/delete&id={student.id}" method="post" use:enhance>
@@ -198,6 +216,8 @@
     </div>
   </div>
 </div>
+
+<!-- Guardians Email * -->
 
 <input bind:checked type="checkbox" id="modal-std" class="modal-toggle" />
 <div class="modal">
@@ -294,46 +314,3 @@
     </div>
   </div>
 </div>
-
-<!-- public function studentDetailsSearch(Request $request)
-    {
-        $request->validate([
-            'class' => 'required',
-        ]);
-        try {
-            $students = SmStudent::query();
-            $students->where('active_status', 1);
-            if ($request->class != "") {
-                $students->where('class_id', $request->class);
-            }
-            if ($request->section != "") {
-                $students->where('section_id', $request->section);
-            }
-            if ($request->name != "") {
-                $students->where('full_name', 'like', '%' . $request->name . '%');
-            }
-            if ($request->roll_no != "") {
-                $students->where('roll_no', 'like', '%' . $request->roll_no . '%');
-            }
-
-            $students = $students->get();
-            $classes = SmClass::where('active_status', 1)->where('academic_id', SmAcademicYear::SINGLE_SCHOOL_API_ACADEMIC_YEAR())->get();
-
-            $class_id = $request->class;
-            $name = $request->name;
-            $roll_no = $request->roll_no;
-
-            if (ApiBaseMethod::checkUrl($request->fullUrl())) {
-                $data = [];
-                $data['students'] = $students->toArray();
-                $data['classes'] = $classes->toArray();
-                $data['class_id'] = $class_id;
-                $data['name'] = $name;
-                $data['roll_no'] = $roll_no;
-                return ApiBaseMethod::sendResponse($data, null);
-            }
-            return view('backEnd.studentInformation.student_details', compact('students', 'classes', 'class_id', 'name', 'roll_no'));
-        } catch (\Exception $e) {
-            return ApiBaseMethod::sendError('Error.', $e->getMessage());
-        }
-    } -->

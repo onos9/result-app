@@ -1,5 +1,5 @@
 import type { RequestEvent, RequestHandler } from "./$types";
-import { loadRemoteStudents } from "$lib/utils";
+import { loadRemoteStudents, searchRemoteStudents } from "$lib/utils";
 import { error } from "@sveltejs/kit";
 
 export const POST = (async ({ locals, request, fetch }: RequestEvent) => {
@@ -33,16 +33,13 @@ export const POST = (async ({ locals, request, fetch }: RequestEvent) => {
   formData.append("doc", blob, `${student?.fullName?.toUpperCase()}.pdf`);
   // console.log(data.token);
 
-  response = await fetch(
-    `https://llacademy.ng/api/student-documents/${admissionNo}`,
-    {
-      method: "POST",
-      headers: {
-        Authorization: data.token,
-      },
-      body: formData,
-    }
-  );
+  response = await fetch(`https://llacademy.ng/api/student-documents/${admissionNo}`, {
+    method: "POST",
+    headers: {
+      Authorization: data.token,
+    },
+    body: formData,
+  });
 
   if (response.ok) {
     const result = student?.result?.find(
@@ -62,9 +59,10 @@ export const POST = (async ({ locals, request, fetch }: RequestEvent) => {
   return new Response(JSON.stringify({ success: true }), { status: 200 });
 }) satisfies RequestHandler;
 
-export const GET = (async ({ locals, request, fetch }: RequestEvent) => {
+export const GET = (async ({ locals, request, fetch, url }: RequestEvent) => {
   try {
     const { data } = await loadRemoteStudents();
+
     return new Response(JSON.stringify({ ...data }), { status: 200 });
   } catch (err: any) {
     return new Response(JSON.stringify({ error: err.message }), {

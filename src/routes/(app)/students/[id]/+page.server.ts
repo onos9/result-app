@@ -1,28 +1,50 @@
 import { db } from "$lib/server/database";
 import { fail, redirect } from "@sveltejs/kit";
-import type { Prisma, Rating, Record, Remark, Student } from "node_modules/.prisma/client";
+import type { Prisma, Rating, Record, Remark, Result, Student } from "@prisma/client";
 import type { Actions, PageServerLoad } from "./$types";
+import { getFirstName, getLastName } from "$lib/utils";
 
-export const load: PageServerLoad = async ({ locals, params }) => {
+export const load: PageServerLoad = async ({ fetch, locals, params }) => {
   if (!locals.user?.arm) throw redirect(302, "/settings");
 
   const { id } = params;
-  const student = await db.student.findUnique({
-    where: { id },
-    include: { Class: true, result: true },
+  const res = await fetch(`/api/student-view/${id}`);
+
+  const {
+    data: { rStudent },
+  } = await res.json();
+
+  let name = rStudent.class_name as string;
+  let section = rStudent.section_name as string;
+
+  name = name.charAt(0) + name.slice(1).toLowerCase();
+  section = section.charAt(0) + section.slice(1).toLowerCase();
+
+  const cls = await db.class.findFirst({
+    where: { name, section, arm: locals.user?.arm },
   });
 
-  const classId = locals.user.arm == "eyfs" ? student?.classId : {};
+  const classId = cls?.id;
+  const students = await db.student.findMany({
+    where: { classId },
+  });
+
+  const grades = await db.grade.findMany({ where: { arm: locals.user?.arm } });
+
+  const results = await db.result.findMany({
+    where: { classId },
+    include: { records: true, ratings: true, remarks: true, scores: true },
+  });
+  const subjects = await db.subject.findMany({
+    where: { arm: locals.user?.arm, classId } as any,
+  });
+
   return {
-    student,
-    grades: await db.grade.findMany({ where: { arm: locals.user?.arm } }),
-    results: await db.result.findMany({
-      where: { classId: student?.classId },
-      include: { records: true, ratings: true, remarks: true, scores: true },
-    }),
-    subjects: await db.subject.findMany({
-      where: { arm: locals.user?.arm, classId } as any,
-    }),
+    rStudent,
+    students,
+    grades,
+    results,
+    subjects,
   };
 };
 
@@ -46,15 +68,21 @@ export const actions: Actions = {
 
   result: async ({ request, url }) => {
     const id = url.searchParams.get("id") as string;
+
     const formData = await request.formData();
     const data = Object.fromEntries(formData) as any;
+    const { term, academicYear } = data;
+    let result: Result;
     try {
+      const hasRe = await db.result.count({ where: { term, academicYear } });
+      if (hasRe && !id) return fail(500, { message: `${term} term result already exists` });
+      if (hasRe && id) return fail(500, { message: `Result has some data` });
+
       if (id) {
-        const record = await db.result.update({ data, where: { id } });
-        return { ...record };
-      }
-      const record = await db.result.create({ data });
-      return { ...record };
+        result = await db.result.delete({ where: { id } });
+        return { deleted: result.id };
+      } else result = await db.result.create({ data });
+      return { result };
     } catch (err) {
       console.error(err);
       return fail(500, { message: "Could not create the student." });
@@ -132,6 +160,37 @@ export const actions: Actions = {
         return { edit: true, remark };
       } else remark = await db.remark.create({ data });
       return { remark };
+    } catch (err: any) {
+      console.error(err);
+      return fail(500, { error: err.code });
+    }
+  },
+
+  confirm: async ({ fetch, url, request }) => {
+    const id = url.searchParams.get("id") as string;
+    const body = await request.formData();
+    const { photo_url, student_photo, remoteId, studentId } = Object.fromEntries(body);
+    body.set("id", id);
+    try {
+      const file = student_photo as File;
+      if (!file.size) {
+        const filename = (photo_url as string).split("/")[1];
+        const res = await fetch(`/${photo_url}`);
+        const blob = await res.blob();
+        let file = new File([blob], filename, {
+          type: "image/jpeg",
+          lastModified: new Date().getTime(),
+        });
+        body.set("student_photo", file);
+      }
+      const res = await fetch(`/api/update-student`, { method: "POST", body });
+      const result = await res.json();
+
+      if (result.success) {
+        await db.student.update({ where: { id: studentId as string }, data: { remoteId } as any });
+      }
+
+      return { result };
     } catch (err: any) {
       console.error(err);
       return fail(500, { error: err.code });

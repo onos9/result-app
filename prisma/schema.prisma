@@ -44,6 +44,8 @@ model User {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   schoolId      String?
+  classId       String?
+  class         Class?   @relation(fields: [classId], references: [id])
 }
 
 model Class {
@@ -55,10 +57,12 @@ model Class {
   students  Student[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  User      User[]
 }
 
 model Student {
   id           String   @id @unique @default(uuid())
+  remoteId     String?
   fullName     String?
   gender       String?
   email        String?
@@ -104,8 +108,8 @@ model Grade {
 }
 
 model Result {
-  id           String   @id @unique @default(uuid())
-  term         String?
+  id           String   @id @default(uuid())
+  term         String   @unique
   academicYear String?
   studentId    String
   classId      String

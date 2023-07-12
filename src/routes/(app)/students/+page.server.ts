@@ -1,14 +1,21 @@
 import type { Actions, PageServerLoad } from "./$types";
 import { db } from "$lib/server/database";
 import { fail, redirect } from "@sveltejs/kit";
-import type { Student, Prisma } from "@prisma/client";
+import type { Student, Prisma, Class } from "@prisma/client";
 import { mkdirSync, writeFileSync } from "fs";
 import { customAlphabet } from "nanoid";
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async ({ locals, fetch }) => {
   if (!locals.user?.arm) throw redirect(302, "/settings");
 
+  const { name, section } = locals.user.class as Class;
+  const url = `/api/student-list-search?class=${name?.toUpperCase()}&section=${section}`;
+
+  const resp = await fetch(url);
+  const { data } = await resp.json();
+
   return {
+    remoteStudents: data.students.length > 0 ? (data.students as any[]) : [],
     students: await db.student.findMany({
       where: { userId: locals.user?.id },
       include: { Class: true, result: true },
@@ -16,7 +23,7 @@ export const load: PageServerLoad = async ({ locals }) => {
     classes: await db.class.findMany({
       where: { arm: locals.user?.arm } as any,
     }),
-    user: locals.user,
+    userData: locals.user,
   };
 };
 
