@@ -94,7 +94,7 @@
                   </select>
                   <label for="arm" class="floating-label peer-focus:text-accent-focus">Arm</label>
                 </div>
-                {#if $user?.class && classes.length}
+                {#if classes.length}
                   <div class="relative col-span-6 sm:col-span-3">
                     <select
                       name="classId"
