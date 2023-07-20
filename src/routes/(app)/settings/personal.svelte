@@ -6,7 +6,7 @@
 
   export let classes: Class[] = [];
 
-  if (browser) console.log({ classes });
+  if (browser) console.log({ classes, $user });
 </script>
 
 {#if $user?.id}
