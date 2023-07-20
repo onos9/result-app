@@ -9,7 +9,7 @@ export const load: PageServerLoad = async ({ fetch, locals, params }) => {
   if (!locals.user?.arm) throw redirect(302, "/settings");
 
   let { name, section } = locals.user.class as Class;
-  name = name?.toUpperCase() as string;
+  name = name?.toUpperCase().trim() as string;
   section = section?.toUpperCase() as string;
 
   const classId = locals.user.class?.id;
@@ -33,9 +33,13 @@ export const load: PageServerLoad = async ({ fetch, locals, params }) => {
     where: { arm: locals.user?.arm } as any,
   });
 
+  const rStudents = Pupils.filter(
+    (pupil) => pupil.class_name == name && pupil.section_name == section
+  );
+  
   return {
-    rStudents: Pupils.filter((pupil) => pupil.class_name == name && pupil.section_name == section),
     students: local_students,
+    rStudents,
     grades,
     results,
     subjects,

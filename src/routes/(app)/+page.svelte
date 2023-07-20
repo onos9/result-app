@@ -2,14 +2,7 @@
   import { browser } from "$app/environment";
   import { TabNav, TabPane } from "$lib/components/tabs";
   import { configs } from "$lib/stores/configs";
-  import {
-    rStudent,
-    rStudents,
-    result,
-    results,
-    student,
-    students
-  } from "$lib/stores/data_store";
+  import { rStudent, rStudents, result, results, student, students } from "$lib/stores/data_store";
   import { user } from "$lib/stores/user";
   import type { Class, Student } from "@prisma/client";
   import type { ActionData } from "./$types";
@@ -23,7 +16,7 @@
 
   export let form: ActionData;
   $: if (browser) {
-    console.log({ ...form });
+    console.log({ form, $user });
   }
 
   let items = [

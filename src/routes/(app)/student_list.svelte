@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { browser } from "$app/environment";
   import { enhance } from "$app/forms";
   import { configs } from "$lib/stores/configs";
   import { classes, rStudents, students } from "$lib/stores/data_store";
@@ -10,7 +11,7 @@
   let isNetAlert: boolean = false;
   let message: string;
   let checked: boolean;
-
+  $: if (browser) console.log({ $rStudents });
   let student:
     | (Student & {
         Class: Class | null;
@@ -67,11 +68,11 @@
     };
   };
 
-  const handleEdit = (id: string) => {
-    student = $students.find((student) => student.id == id) as Student & {
-      Class: Class | null;
-    };
-  };
+  // const handleEdit = (id: string) => {
+  //   student = $students.find((student) => student.id == id) as Student & {
+  //     Class: Class | null;
+  //   };
+  // };
 </script>
 
 <div class="md:container md:mx-auto">
