@@ -144,7 +144,7 @@
                   <td>
                     <div>
                       <div class="font-bold">
-                        {student.parents.mothers_name || student.parents.fathers}
+                        {student.parents.mothers_name || student.parents.fathers_name}
                       </div>
                       <div class="text-sm opacity-50">
                         {student.parents.guardians_email}
