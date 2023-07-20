@@ -102,7 +102,7 @@
                       class="input input-bordered floating-input peer focus:border-accent-focus"
                       placeholder=" "
                     >
-                      <option disabled value={$user.classId}>
+                      <option disabled value={$user.classId ?? ""}>
                         {$user.class.name ?? "Choose Your class"}
                       </option>
                       {#each classes as cls}
