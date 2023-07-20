@@ -38,7 +38,7 @@
         res.studentId == $student?.id
     ) as typeof $result;
 
-    console.log({ $result, $student, $rStudent });
+    console.log({ $result, $student, $rStudent, $configs });
   };
 </script>
 

@@ -103,7 +103,7 @@
                       class="input input-bordered floating-input peer focus:border-accent-focus"
                       placeholder=" "
                     >
-                      <option> {`${cls?.name}(${cls?.section})` ?? "Choose Your class"}</option>
+                      <option> {`${cls?.name}${cls?.section}` ?? "Choose Your class"}</option>
                       {#each classes as cls}
                         <option value={cls.id}>{`${cls.name}(${cls.section})`}</option>
                       {/each}
