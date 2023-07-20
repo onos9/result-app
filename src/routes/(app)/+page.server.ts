@@ -10,7 +10,7 @@ export const load: PageServerLoad = async ({ fetch, locals, params }) => {
 
   let { name, section } = locals.user.class as Class;
   name = name?.toUpperCase().trim() as string;
-  section = section?.toUpperCase() as string;
+  section = section?.toUpperCase().trim() as string;
 
   const classId = locals.user.class?.id;
   const local_students = await db.student.findMany({
@@ -36,7 +36,7 @@ export const load: PageServerLoad = async ({ fetch, locals, params }) => {
   const rStudents = Pupils.filter(
     (pupil) => pupil.class_name == name && pupil.section_name == section
   );
-  
+
   return {
     students: local_students,
     rStudents,
