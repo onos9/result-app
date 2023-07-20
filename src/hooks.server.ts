@@ -16,7 +16,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     include: { role: true, class: true },
   });
 
-  console.log(user)
+  // console.log(user)
 
   const configs = await db.config.findMany();
   // console.log(configs)

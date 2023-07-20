@@ -1,11 +1,12 @@
 <script lang="ts">
+  import { browser } from "$app/environment";
   import { enhance } from "$app/forms";
   import { user } from "$lib/stores/user";
   import type { Class } from "@prisma/client";
 
   export let classes: Class[] = [];
 
-  // console.log($user);
+  if (browser) console.log({ classes });
 </script>
 
 {#if $user?.id}
@@ -103,7 +104,7 @@
                       placeholder=" "
                     >
                       <option disabled value={$user.classId ?? ""}>
-                        {$user.class.name ?? "Choose Your class"}
+                        {$user?.class?.name ?? "Choose Your class"}
                       </option>
                       {#each classes as cls}
                         <option value={cls.id}>{`${cls.name}${cls.section}`}</option>
