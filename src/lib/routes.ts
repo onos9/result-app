@@ -8,12 +8,12 @@ export const routes = [
         url: "/classes",
         roles: ["SUPER_ADMIN", "ADMIN"],
       },
-      {
-        name: "Students",
-        badge: null,
-        url: "/students",
-        roles: ["SUPER_ADMIN", "ADMIN", "USER"],
-      },
+      // {
+      //   name: "Students",
+      //   badge: null,
+      //   url: "/students",
+      //   roles: ["SUPER_ADMIN", "ADMIN", "USER"],
+      // },
       {
         name: "Subjects",
         badge: null,

@@ -1,62 +1,40 @@
+import { loadRemoteStudents } from "$lib/utils";
+import type { Result } from "@prisma/client";
+import { mkdirSync, writeFileSync } from "fs";
 import type { RequestEvent, RequestHandler } from "./$types";
-import { loadRemoteStudents, searchRemoteStudents } from "$lib/utils";
-import { error } from "@sveltejs/kit";
 
 export const POST = (async ({ locals, request, fetch }: RequestEvent) => {
-  const { result, studentId, mimeType } = await request.json();
-  const blob = await (await fetch(result)).blob();
+  const { dataUrl, id, remoteId, mimeType } = await request.json();
+  const blob = await(await fetch(dataUrl)).blob();
+
   const student = await db.student.findUnique({
-    where: { id: studentId },
+    where: { id },
     include: { result: true },
   });
-  const admissionNo = student?.admissionNo?.split("/")[0];
 
-  let cfgEntries = locals?.configs?.map((cfg: any) => [cfg.key, cfg.value]);
-  let cfg = Object.fromEntries(cfgEntries);
+  const filename = `${student?.fullName?.toUpperCase()}.pdf`;
+  const file = new File([blob], filename, {
+    type: mimeType,
+    lastModified: new Date().getTime(),
+  });
+  const ab = await file.arrayBuffer();
 
-  let response = await fetch(`https://llacademy.ng/api/auth/login`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    body: JSON.stringify({
-      email: "onosbrown.saved@gmail.com",
-      password: "#1414bruno#",
-    }),
+  let dir = `static/uploads`;
+  const resultUrl = `uploads/${filename}`;
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(`${dir}/${filename}`, Buffer.from(ab));
+
+  const term = locals.configs.find((cfg) => cfg.key == "term");
+  const res = student?.result.find(
+    (res) => res.studentId == id && res.term == term?.value
+  ) as Result;
+  
+  const data = await db.result.update({
+    where: { id: res.id },
+    data: { resultUrl, remoteId: remoteId },
   });
 
-  const { data } = await response.json();
-  const formData = new FormData();
-  const date = new Date(cfg.resumptionDate);
-  formData.append("title", `${cfg.rusultDesc}, ${date.toDateString()}`);
-  formData.append("doc", blob, `${student?.fullName?.toUpperCase()}.pdf`);
-  // console.log(data.token);
-
-  response = await fetch(`https://llacademy.ng/api/student-documents/${admissionNo}`, {
-    method: "POST",
-    headers: {
-      Authorization: data.token,
-    },
-    body: formData,
-  });
-
-  if (response.ok) {
-    const result = student?.result?.find(
-      (result) =>
-        result?.studentId == studentId &&
-        result.term == cfg.term &&
-        result.academicYear == cfg.academicYear
-    );
-
-    const res = await db.result.update({
-      where: { id: result?.id },
-      data: { status: "uploaded" },
-    });
-    console.log({ resultId: res.id });
-  }
-
-  return new Response(JSON.stringify({ success: true }), { status: 200 });
+  return new Response(JSON.stringify({ success: true, data }), { status: 200 });
 }) satisfies RequestHandler;
 
 export const GET = (async ({ locals, request, fetch, url }: RequestEvent) => {

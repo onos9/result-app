@@ -1,17 +1,19 @@
 <script lang="ts">
   import { configs } from "$lib/stores/configs";
-  import { student } from "$lib/stores/data_store";
+  import type { Student } from "@prisma/client";
+
+  export let student: any;
 </script>
 
 <div class="avatar flex flex-col p-0 px-4 justify-center items-center">
   <div class="w-24 rounded-full ring ring-neutral ring-offset-base-100 ring-offset-2 mb-4">
-    <img src="/{$student?.avatarUrl}" alt="" />
+    <img src="/{student?.avatarUrl}" alt="" />
   </div>
 </div>
 
 <div class="flex flex-col justify-center items-center w-full mb-4">
-  <div class="font-bold">{$student?.fullName}</div>
-  <div class="text-sm opacity-50">{$student?.Class?.name}</div>
+  <div class="font-bold">{student?.fullName}</div>
+  <div class="text-sm opacity-50">{student?.Class?.name}</div>
 </div>
 
 <hr />
@@ -25,7 +27,7 @@
         Admissio No
       </td>
       <td translate="no" class="py-2 pl-2 font-mono text-xs leading-6 whitespace-pre"
-        >{$student?.admissionNo}</td
+        >{student?.admissionNo}</td
       >
     </tr>
     <tr class="border-b">
@@ -36,7 +38,7 @@
         Present
       </td>
       <td translate="no" class="py-2 pl-2 font-mono text-xs leading-6 whitespace-pre">
-        {$student?.present} days
+        {student?.present} days
       </td>
     </tr>
     <tr class="border-b">

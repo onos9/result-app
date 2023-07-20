@@ -66,7 +66,7 @@
     }
 
     if (file) data.set("avatarUrl", file);
-    data.set("userId", $user.id);
+    data.set("userId", $user?.id as string);
     return async ({ result, update }: any) => {
       // console.log(result);
       if (result.type == "failure") {

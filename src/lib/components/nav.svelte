@@ -1,14 +1,12 @@
 <script lang="ts">
-    import { enhance } from "$app/forms";
-
-
+  import { enhance } from "$app/forms";
+  import { user } from "$lib/stores/user";
 </script>
 
 <nav
-  class="navbar bg-base-100 
-  sticky top-0 z-30 flex h-16 w-full justify-center bg-opacity-90 backdrop-blur transition-all duration-100 
-  text-base-content shadow-sm
-  "
+  class="navbar bg-base-100
+  sticky top-0 z-30 flex h-16 w-full justify-center bg-opacity-90 backdrop-blur transition-all duration-100
+  text-base-content shadow-sm px-16"
 >
   <div class="flex flex-1 md:gap-1 lg:gap-2">
     <div class="flex items-center gap-2 lg:hidden">
@@ -16,8 +14,10 @@
         for="my-drawer"
         class="i-bx:menu text-2xl text-primary drawer-button tooltip tooltip-bottom before:text-xs before:content-[attr(data-tip)]"
       />
-      <a href="/" aria-current="page" aria-label="Homepage" class="flex-0 btn btn-ghost px-2 "
-        ><div class="font-title text-primary inline-flex text-lg transition-all duration-200 md:text-3xl">
+      <a href="/" aria-current="page" aria-label="Homepage" class="flex-0 btn btn-ghost px-2"
+        ><div
+          class="font-title text-primary inline-flex text-lg transition-all duration-200 md:text-3xl"
+        >
           <span class="capitalize">Light</span>
           <span class="text-base-content uppercase">HOUSE</span>
         </div></a
@@ -31,7 +31,7 @@
     <div class="dropdown dropdown-end">
       <button class="btn btn-ghost btn-circle">
         <div class="indicator">
-          <div class="i-bx:cart text-2xl" />
+          <div class="i-bx:bell text-2xl" />
           <span class="badge badge-sm indicator-item">8</span>
         </div>
       </button>
@@ -46,11 +46,22 @@
       </div>
     </div>
     <div class="dropdown dropdown-end">
-      <button class="btn btn-ghost btn-circle avatar">
-        <div class="w-10 rounded-full">
-          <img src="https://i.pravatar.cc/150?img=1" alt="" />
-        </div>
-      </button>
+      {#if $user?.avatarUrl}
+        <button class="btn btn-ghost btn-circle avatar">
+          <div class="w-10 rounded-full">
+            <img src={`/${$user?.avatarUrl}`} alt="Avatar Tailwind CSS Component" />
+          </div>
+        </button>
+      {:else}
+        <button class="btn btn-ghost btn-circle avatar placeholder">
+          <div class="w-10 rounded-full">
+            <span class="text-3xl uppercase text-primary">
+              {`${$user?.firstName?.charAt(0)}${$user?.lastName?.charAt(0)}`}
+            </span>
+          </div>
+        </button>
+      {/if}
+
       <ul class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
         <li>
           <a href=" " class="justify-between">

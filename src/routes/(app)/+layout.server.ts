@@ -1,5 +1,4 @@
 import { redirect } from "@sveltejs/kit";
-import { URL, URLSearchParams } from "url";
 import type { LayoutServerLoad } from "./$types";
 
 // get `locals.user` and pass it to the `page` store

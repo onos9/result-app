@@ -40,7 +40,7 @@
   let blacklist = ["id", "arm", "resultId", "createdAt", "updatedAt", "color"];
 
   $: if (records.length) {
-    const record = records.filter((record) => record.arm == $user.arm);
+    const record = records.filter((record) => record.arm == $user?.arm);
     keys = Object.entries(record[0] || {}).map(([key, value]) =>
       value && !blacklist.includes(key) ? key : null
     );
@@ -50,7 +50,7 @@
 
   const onSubmit = async ({ form, action, data, cancel }: FormInput) => {
     data.set("resultId", resultId);
-    data.set("arm", $user.arm as string);
+    data.set("arm", $user?.arm as string);
 
     const gradePoint = data.get("grade") as never;
     const outcome = data.get("outcome") as never;
@@ -100,7 +100,7 @@
       (grade) =>
         score <= Number(grade?.maxScore) &&
         score >= Number(grade?.minScore) &&
-        $user.arm == grade.arm
+        $user?.arm == grade.arm
     );
   };
 
@@ -133,7 +133,7 @@
       {#each keys as key}
         {#if key == "subject"}
           <th class="py-1 px-6 text-left">
-            {$user.arm == "primary" ? "Subjects" : "Learning Areas"}
+            {$user?.arm == "primary" ? "Subjects" : "Learning Areas"}
           </th>
         {:else if key}
           <th
@@ -238,10 +238,10 @@
               {/each}
             </select>
             <label for="subject" class="floating-label peer-focus:text-accent-focus">
-              {$user.arm == "prmary" ? "Subject" : "Learning Areas"}
+              {$user?.arm == "prmary" ? "Subject" : "Learning Areas"}
             </label>
           </div>
-          {#if $user.arm == "primary"}
+          {#if $user?.arm == "primary"}
             <div class="relative col-span-6 sm:col-span-3">
               <input
                 on:keyup={(e) => calculateGrade(e, 0)}
@@ -310,7 +310,7 @@
               <span>Grade</span>
             </div>
           {/if}
-          {#if $user.arm == "eyfs"}
+          {#if $user?.arm == "eyfs"}
             <div class="relative col-span-6 ">
               <legend class="contents text-sm font-semibold leading-6 mb-3">Objectives</legend>
               <textarea

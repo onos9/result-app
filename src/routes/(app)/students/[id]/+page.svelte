@@ -1,7 +1,5 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import { goto } from "$app/navigation";
-  import { page } from "$app/stores";
   import { Header, Rating, Records, Remark, Scores } from "$lib/components/result";
   import StudentInfo from "$lib/components/result/studentInfo.svelte";
 
@@ -11,7 +9,8 @@
   import { comments, rStudent, results, student } from "$lib/stores/data_store";
   import { user } from "$lib/stores/user";
   import { onMount } from "svelte";
-  import type { ActionData } from "../$types";
+  import type { ActionData } from "./$types";
+  import { browser } from "$app/environment";
 
   let frame: HTMLIFrameElement;
   let resultId: string = "";
@@ -30,7 +29,7 @@
   }
 
   export let form: ActionData;
-  $: console.log(form);
+  $: if (browser) console.log(form);
 
   const onPrint = () => {
     frame.src = `/print/${$student?.id}`;
@@ -91,7 +90,7 @@
       <div>
         <div class="card bg-base-100 shadow-sm mb-3 w-full">
           <div class="card-body">
-            <StudentDetail />
+            <!-- <StudentDetail /> -->
           </div>
         </div>
         <div class="card bg-base-100 shadow-sm mb-3 w-full">
@@ -108,7 +107,7 @@
               <div class="card bg-base-100 shadow-sm w-full mb-4">
                 <div class="card-body overflow-x-auto">
                   <Header />
-                  <StudentInfo />
+                  <!-- <StudentInfo /> -->
                 </div>
               </div>
 
@@ -119,7 +118,7 @@
                   </div>
                 </div>
 
-                {#if $user.arm == "primary"}
+                {#if $user?.arm == "primary"}
                   <div class="card bg-base-100 shadow-sm w-full mb-4">
                     <div class="card-body overflow-x-auto">
                       <Rating ratings={result?.ratings} resultId={result.id} />

@@ -109,16 +109,18 @@ model Grade {
 
 model Result {
   id           String   @id @default(uuid())
-  term         String   @unique
+  term         String 
   academicYear String?
   studentId    String
+  remoteId     String?
   classId      String
   status       String?  @default("pending")
+  resultUrl    String?
   records      Record[]
   scores       Score[]
   ratings      Rating[]
   remarks      Remark[]
-  Student      Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  student      Student?  @relation(fields: [studentId], references: [id], onDelete: Cascade)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }

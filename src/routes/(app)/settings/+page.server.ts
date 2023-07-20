@@ -4,8 +4,10 @@ import { fail } from "@sveltejs/kit";
 import type { Subject, Prisma } from "@prisma/client";
 
 export const load: PageServerLoad = async ({ locals }) => {
+  const classes = await db.class.findMany();
   return {
     user: locals.user,
+    classes,
   };
 };
 
@@ -14,7 +16,8 @@ export const actions: Actions = {
     const id = url.searchParams.get("id") as string;
     const formData = await request.formData();
     const data = Object.fromEntries(formData);
-    const { firstName, lastName, email, phone, arm, gender, address, city, state, zip } = data;
+    const { firstName, lastName, email, phone, arm, classId, gender, address, city, state, zip } =
+      data;
 
     if (!id) {
       return fail(400, { message: "Invalid request" });

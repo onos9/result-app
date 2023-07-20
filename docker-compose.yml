@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  web:
+    container_name: result-app
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - "8081:8081"
+    env_file:
+      - .env

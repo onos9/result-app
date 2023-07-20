@@ -17,6 +17,7 @@ export const handle: Handle = async ({ event, resolve }) => {
   });
 
   const configs = await db.config.findMany();
+  // console.log(configs)
 
   // if `user` exists set `events.local`
   if (user) {
