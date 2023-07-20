@@ -5,8 +5,8 @@
   import type { Class } from "@prisma/client";
 
   export let classes: Class[] = [];
-
-  if (browser) console.log({ classes, $user });
+  const cls = $user?.class;
+  if (browser) console.log({ classes, $user, cls });
 </script>
 
 {#if $user?.id}
@@ -95,7 +95,7 @@
                   </select>
                   <label for="arm" class="floating-label peer-focus:text-accent-focus">Arm</label>
                 </div>
-                {#if classes.length}
+                {#if $user?.class && classes.length}
                   <div class="relative col-span-6 sm:col-span-3">
                     <select
                       name="classId"
@@ -103,11 +103,9 @@
                       class="input input-bordered floating-input peer focus:border-accent-focus"
                       placeholder=" "
                     >
-                      <option disabled value={$user.classId ?? ""}>
-                        {$user?.class?.name ?? "Choose Your class"}
-                      </option>
+                      <option> {`${cls?.name}(${cls?.section})` ?? "Choose Your class"}</option>
                       {#each classes as cls}
-                        <option value={cls.id}>{`${cls.name}${cls.section}`}</option>
+                        <option value={cls.id}>{`${cls.name}(${cls.section})`}</option>
                       {/each}
                     </select>
                     <label for="arm" class="floating-label peer-focus:text-accent-focus"
