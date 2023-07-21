@@ -33,16 +33,16 @@ export const load: PageServerLoad = async ({ fetch, locals, params }) => {
     where: { arm: locals.user?.arm } as any,
   });
 
-  // const rStudents = Pupils.filter(
-  //   (pupil) => pupil.class_name == name && pupil.section_name == section
-  // );
-
   let file = readFileSync("static/student-list.json", { encoding: "utf8" });
   const { data } = JSON.parse(file);
 
+  const rStudents = data.students.filter(
+    (std: any) => std.class_name == name && std.section_name == section
+  );
+
   return {
     students: local_students,
-    rStudents: data.students,
+    rStudents,
     grades,
     results,
     subjects,
