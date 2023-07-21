@@ -16,29 +16,13 @@ export const actions: Actions = {
     const id = url.searchParams.get("id") as string;
     const formData = await request.formData();
     const data = Object.fromEntries(formData);
-    const { firstName, lastName, email, phone, arm, classId, gender, address, city, state, zip } =
-      data;
-
     if (!id) {
       return fail(400, { message: "Invalid request" });
     }
 
     try {
-      await db.user.update({
-        where: { id },
-        data: {
-          firstName,
-          lastName,
-          email,
-          phone,
-          arm,
-          gender,
-          address,
-          city,
-          state,
-          zip,
-        } as Prisma.UserUpdateInput,
-      });
+      const user = await db.user.update({ where: { id }, data });
+      return { ...user };
     } catch (err) {
       console.error(err);
       return fail(500, {
@@ -54,7 +38,6 @@ export const actions: Actions = {
   school: async ({ url, request }) => {
     const formData = await request.formData();
     const data = Object.entries(Object.fromEntries(formData));
-
     try {
       const hasData = await db.config.count({});
       if (hasData) {
