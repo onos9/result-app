@@ -22,7 +22,7 @@ export const actions: Actions = {
 
     try {
       const user = await db.user.update({ where: { id }, data });
-      return { ...user };
+      return { user };
     } catch (err) {
       console.error(err);
       return fail(500, {

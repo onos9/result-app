@@ -5,7 +5,10 @@
   import type { Class } from "@prisma/client";
 
   export let classes: Class[] = [];
+  export let id: string | null | undefined;
   const cls = $user?.class;
+  if (id && $user) $user.class = classes.find((cls) => cls.id == id) as Class;
+
   if (browser) console.log({ classes, $user, cls });
 </script>
 
@@ -103,7 +106,9 @@
                       class="input input-bordered floating-input peer focus:border-accent-focus"
                       placeholder=" "
                     >
-                      <option> {`${cls?.name}${cls?.section}` ?? "Choose Your class"}</option>
+                      <option disabled selected value={$user?.classId}>
+                        {`${cls?.name}${cls?.section}` ?? "Choose Your class"}
+                      </option>
                       {#each classes as cls}
                         <option value={cls.id}>{`${cls.name}(${cls.section})`}</option>
                       {/each}
