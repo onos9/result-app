@@ -3,13 +3,14 @@
   import { enhance } from "$app/forms";
   import { user } from "$lib/stores/user";
   import type { Class } from "@prisma/client";
+  import { onMount } from "svelte";
 
   export let classes: Class[] = [];
   export let id: string | null | undefined;
-  const cls = $user?.class;
-  if (id && $user) $user.class = classes.find((cls) => cls.id == id) as Class;
+  let cls = `${$user?.class?.name?.trim()}${$user?.class?.section}` ?? "Choose Your class";
 
-  if (browser) console.log({ classes, $user, cls });
+  if (id && $user) $user.class = classes.find((cls) => cls.id == id) as Class;
+  // if (browser) console.log({ classes, $user, cls });
 </script>
 
 {#if $user?.id}
@@ -98,24 +99,24 @@
                   </select>
                   <label for="arm" class="floating-label peer-focus:text-accent-focus">Arm</label>
                 </div>
-                {#if $user?.class && classes.length}
+                {#if cls && classes.length}
                   <div class="relative col-span-6 sm:col-span-3">
                     <select
+                      bind:value={cls}
                       name="classId"
                       id="classId"
                       class="input input-bordered floating-input peer focus:border-accent-focus"
                       placeholder=" "
                     >
-                      <option disabled selected value={$user?.classId}>
-                        {`${cls?.name}${cls?.section}` ?? "Choose Your class"}
-                      </option>
+                      <option disabled> "Choose Your class" </option>
                       {#each classes as cls}
                         <option value={cls.id}>{`${cls.name}(${cls.section})`}</option>
                       {/each}
                     </select>
-                    <label for="arm" class="floating-label peer-focus:text-accent-focus"
-                      >Class</label
-                    >
+                    <label for="arm" class="floating-label peer-focus:text-accent-focus">
+                      <!-- {console.log(cls)} -->
+                      Class
+                    </label>
                   </div>
                 {/if}
 

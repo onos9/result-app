@@ -3,7 +3,7 @@ import { fail, redirect } from "@sveltejs/kit";
 import type { Class, Prisma, Rating, Record, Remark, Result, Student } from "@prisma/client";
 import type { Actions, PageServerLoad } from "./$types";
 import { Pupils } from "$lib/data/pupils";
-import { mkdirSync, writeFileSync } from "fs";
+import { mkdirSync, readFileSync, writeFileSync } from "fs";
 
 export const load: PageServerLoad = async ({ fetch, locals, params }) => {
   if (!locals.user?.arm) throw redirect(302, "/settings");
@@ -33,13 +33,16 @@ export const load: PageServerLoad = async ({ fetch, locals, params }) => {
     where: { arm: locals.user?.arm } as any,
   });
 
-  const rStudents = Pupils.filter(
-    (pupil) => pupil.class_name == name && pupil.section_name == section
-  );
+  // const rStudents = Pupils.filter(
+  //   (pupil) => pupil.class_name == name && pupil.section_name == section
+  // );
+
+  let file = readFileSync("static/student-list.json", { encoding: "utf8" });
+  const { data } = JSON.parse(file);
 
   return {
     students: local_students,
-    rStudents,
+    rStudents: data.students,
     grades,
     results,
     subjects,

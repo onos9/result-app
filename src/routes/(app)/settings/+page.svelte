@@ -10,7 +10,9 @@
   $: ({ classes } = data);
 
   export let form: ActionData;
+  let loaded: boolean;
   $: if (browser && form) {
+    loaded = form.success as boolean;
     console.log({ form });
   }
 </script>
@@ -19,7 +21,7 @@
 
 <div class="divider" />
 {#if roles.includes($user?.role?.name ?? "")}
-  <School />
+  <School {loaded} />
   <div class="divider" />
 {/if}
 

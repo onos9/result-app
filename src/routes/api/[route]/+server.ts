@@ -8,7 +8,7 @@ export const GET = (async ({ params, fetch, url }: RequestEvent) => {
       email: "onosbrown.saved@gmail.com",
       password: "#1414bruno#",
     });
-
+    // console.log(params);
     const response = await fetch(`https://llacademy.ng/api/${params.route}${url.search}`, {
       headers: {
         Authorization: token,
@@ -16,6 +16,7 @@ export const GET = (async ({ params, fetch, url }: RequestEvent) => {
     });
 
     result = await response.json();
+    // console.log({ result });
     return new Response(JSON.stringify(result), { status: 200 });
   } catch (err: any) {
     return new Response(JSON.stringify({ error: err.message }), {

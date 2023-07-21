@@ -14,8 +14,6 @@ export const load: PageServerLoad = async ({ locals, fetch }) => {
   const resp = await fetch(url);
   const { data } = await resp.json();
 
-  
-
   return {
     remoteStudents: data.students.length > 0 ? (data.students as any[]) : [],
     students: await db.student.findMany({
