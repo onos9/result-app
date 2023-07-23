@@ -43,7 +43,7 @@
   const onSubmit = async ({ form, action, data, cancel }: FormInput) => {
     if (ratingId) action.searchParams.set("id", ratingId);
     data.set("resultId", resultId);
-    data.set("arm", $user.arm as string);
+    data.set("arm", $user?.arm as string);
     data.set("comment", comment);
 
     const range = Math.round((Number(rate) / 5) * 12);
@@ -153,7 +153,7 @@
 
 <input bind:checked type="checkbox" id="modal-rate" class="modal-toggle" />
 <label class="modal">
-  <div class="modal-box relative">
+  <div class="modal-box md:w-3/12 w-10/12 relative">
     <label for="modal-rate" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
     <div class="font-bold text-sm mb-5">Add Student Record</div>
     <form

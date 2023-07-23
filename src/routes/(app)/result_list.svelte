@@ -17,7 +17,7 @@
       </label>
     </div>
 
-    <div class="card bg-base-100 shadow-xl col-span-2 w-full">
+    <div class="card bg-base-100 shadow-xl col-span-2 w-screen">
       <div class="card-body">
         {#if isNetAlert}
           <div class="alert alert-error shadow-lg mb-3">
@@ -32,105 +32,101 @@
             </div>
           </div>
         {/if}
-
-        <table class="table-compact table w-full">
-          <thead>
-            <tr>
-              <th />
-              <th class="flex items-center gap-2 uppercase">
-                <span>Document Name</span>
-              </th>
-              <th class="uppercase">Student Name</th>
-              <th class="uppercase">Academic Year</th>
-              <th class="uppercase">Status</th>
-              <th class="uppercase text-center">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {#each $results as result}
+        <div class="overflow-x-auto md:overflow-hidden">
+          <table class=" table">
+            <thead>
               <tr>
-                <th>
-                  <label>
-                    <input checked={!!result.remoteId} type="checkbox" class="checkbox" />
-                  </label>
+                <th />
+                <th class="flex items-center gap-2 uppercase">
+                  <span>Document Name</span>
                 </th>
-                <td>
-                  <a target="_blank" href="/{result.resultUrl}">
-                    <div class="flex items-center space-x-3">
-                      <div class="avatar placeholder">
-                        <div class="bg-neutral-focus text-neutral-content mask mask-squircle w-12">
-                          <div class="i-bx:bxs-file-pdf text-3xl text-accent-focus" />
-                        </div>
-                      </div>
-                      <div>
-                        <div class="font-bold">
-                          {`${result?.student?.fullName?.toUpperCase()}.pdf`}
-                        </div>
-                        <div class="text-sm opacity-50">
-                          {result.createdAt.toDateString()}
-                        </div>
-                      </div>
-                    </div>
-                  </a>
-                </td>
-                <td>
-                  <div>
-                    <div class="font-bold">
-                      {result?.student?.fullName}
-                    </div>
-                    <span class="badge badge-sm badge-success">
-                      {result?.student?.admissionNo?.split("/")[1]}
-                    </span>
-                  </div>
-                </td>
-                <td>
-                  <div
-                    class="tooltip tooltip-right cursor-help"
-                    data-tip="Supports responsive prefixes (sm:, lg:, …)"
-                  >
-                    <div class="font-bold">
-                      {result.academicYear}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div>
-                    <span
-                      class:badge-success={result.status == "uploaded"}
-                      class="badge badge-sm badge-accent badge-outline capitalize"
-                    >
-                      {result.status}
-                    </span>
-                  </div>
-                </td>
-                <td class="flex text-xl m-3 justify-center">
-                  <div class="dropdown dropdown-end dropdown-left mb-3">
-                    <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-                    <label for="" tabindex="0" class="btn btn-ghost btn-sm p-0">
-                      <div class="i-bx:dots-vertical-rounded text-xl" />
-                    </label>
-                    <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-                    <ul
-                      class="menu flex-row dropdown-content z-[1] p-2 shadow bg-base-200 rounded-box mt-4"
-                    >
-                      <li>
-                        <form action="?/upload&id={result.id}" method="post" use:enhance>
-                          <a target="_blank" href="/{result.resultUrl}">View</a>
-                        </form>
-                        <form action="?/upload&id={result.id}" method="post" use:enhance>
-                          <button>Upload</button>
-                        </form>
-                        <form action="?/result&id={result.id}" method="post" use:enhance>
-                          <button class="btn-link text-error">Delete</button>
-                        </form>
-                      </li>
-                    </ul>
-                  </div>
-                </td>
+                <th class="uppercase">Student Name</th>
+                <th class="uppercase">Academic Year</th>
+                <th class="uppercase">Status</th>
+                <th class="uppercase text-center">Action</th>
               </tr>
-            {/each}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {#each $results as result}
+                <tr>
+                  <th>
+                    <label>
+                      <input checked={!!result.remoteId} type="checkbox" class="checkbox" />
+                    </label>
+                  </th>
+                  <td>
+                    <a target="_blank" href="/{result.resultUrl}">
+                      <div class="flex items-center space-x-3">
+                        <div class="avatar placeholder">
+                          <div
+                            class="bg-neutral-focus text-neutral-content mask mask-squircle w-12"
+                          >
+                            <div class="i-bx:bxs-file-pdf text-3xl text-accent-focus" />
+                          </div>
+                        </div>
+                        <div>
+                          <div class="font-bold">
+                            {`${result?.student?.fullName?.toUpperCase()}.pdf`}
+                          </div>
+                          <div class="text-sm opacity-50">
+                            {result.createdAt.toDateString()}
+                          </div>
+                        </div>
+                      </div>
+                    </a>
+                  </td>
+                  <td>
+                    <div>
+                      <div class="font-bold">
+                        {result?.student?.fullName}
+                      </div>
+                      <span class="badge badge-sm badge-success">
+                        {result?.student?.admissionNo?.split("/")[1]}
+                      </span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="font-bold">{result.academicYear} </span>
+                  </td>
+                  <td>
+                    <div>
+                      <span
+                        class:badge-success={result.status == "uploaded"}
+                        class="badge badge-sm badge-accent badge-outline capitalize"
+                      >
+                        {result.status}
+                      </span>
+                    </div>
+                  </td>
+                  <td class="flex text-xl justify-center">
+                    <div class="dropdown dropdown-end dropdown-left mb-3">
+                      <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+                      <label for="" tabindex="0" class="btn btn-ghost btn-sm p-0">
+                        <div class="i-bx:dots-vertical-rounded text-xl" />
+                      </label>
+                      <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+                      <ul
+                        class="menu flex-row dropdown-content z-[1] p-2 shadow bg-base-200 rounded-box mt-4"
+                      >
+                        <li>
+                          <form action="?/upload&id={result.id}" method="post" use:enhance>
+                            <a target="_blank" href="/{result.resultUrl}">View</a>
+                          </form>
+                          <form action="?/upload&id={result.id}" method="post" use:enhance>
+                            <button>Upload</button>
+                          </form>
+                          <form action="?/result&id={result.id}" method="post" use:enhance>
+                            <button class="btn-link text-error">Delete</button>
+                          </form>
+                        </li>
+                      </ul>
+                    </div>
+                  </td>
+                </tr>
+              {/each}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>

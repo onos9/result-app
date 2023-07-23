@@ -214,7 +214,7 @@
 
 <input bind:checked type="checkbox" id="modal-rec" class="modal-toggle" />
 <div class="modal">
-  <div class="modal-box relative">
+  <div class="modal-box md:w-3/12 w-10/12 relative">
     <label for="modal-rec" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
     <div class="font-bold text-sm mb-5">Add Student Record</div>
     <div class="mt-5 md:col-span-2 md:mt-0">

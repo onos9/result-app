@@ -1,17 +1,15 @@
 <script>
-  import Footer from "$lib/components/footer.svelte";
   import Nav from "$lib/components/nav.svelte";
   import Sidebar from "$lib/components/sidebar.svelte";
-  import { theme } from "$lib/stores/theme";
 </script>
 
 <main class="rounded-tr-box rounded-b-box drawer lg:drawer-open">
   <input id="my-drawer" type="checkbox" class="drawer-toggle" />
   <div class="drawer-content bg-base-100">
     <Nav />
-    <div class="p-10 pt-0 ">
-      <div class="rounded-3xl ">
-        <div class="p-10 bg-partern rounded-3xl">
+    <div class="lg:p-10 pt-0">
+      <div class="rounded-3xl">
+        <div class="p-5 lg:p-10 bg-partern lg:rounded-3xl">
           <slot />
         </div>
         <footer class="footer p-4 bg-base-100 text-base-content">

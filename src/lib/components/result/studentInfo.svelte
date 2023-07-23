@@ -31,8 +31,8 @@
   </label>
 </div>
 
-<div class="flex flex-row pt-2">
-  <table class="min-w-max w-full table-auto mb-4 rounded">
+<div class="flex flex-row p-3 overflow-x-auto">
+  <table class="min-w-max table-auto">
     <tbody class="align-baseline">
       <tr class="border-b">
         <td
@@ -43,6 +43,7 @@
         <td class="py-2 pl-2 text-xs print:text-slate-500 uppercase">
           {remote_student?.full_name}
         </td>
+
         <td />
         <td />
         <td
@@ -60,7 +61,7 @@
         >
           <span> Class </span>
         </td>
-        <td class="py-2 pl-2 text-xs print:text-slate-500 uppercase"
+        <td class="py-2 text-xs print:text-slate-500 uppercase w-44"
           >{remote_student?.class_name}
         </td>
 
@@ -73,7 +74,7 @@
         <td
           class="print:print:bg-violet-900 capitalize btn btn-xs border print:text-slate-300 cursor-default rounded-full"
         >
-          <span> Academic Year </span>
+          <span> Academic Year</span>
         </td>
         <td class="py-2 pl-2 text-xs print:text-slate-500 uppercase">{$configs.academicYear}</td>
       </tr>
@@ -113,9 +114,10 @@
   <form
     action="?/confirm&id={local_student?.id}"
     method="POST"
-    class="modal-box w-3/12 max-w-5xl"
+    class="modal-box md:w-3/12 w-10/12 max-w-5xl"
     use:enhance
   >
+    <label for="modal-info" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
     <p class="font-bold text-sm mb-3">Confirm Student Data</p>
     <div class="mt-5 md:col-span-2 md:mt-0">
       <p>

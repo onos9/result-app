@@ -40,6 +40,17 @@
 
     console.log({ $result, $student, $rStudent, $configs });
   };
+
+  const isComplete = (id: string) => {
+    const result = $results.find(
+      (result) =>
+        result?.remoteId == id &&
+        result.term == $configs.term &&
+        result == $configs.academicYear &&
+        result.status == "uploaded"
+    );
+    return result?.status;
+  };
 </script>
 
 <iframe hidden class="w-full h-screen" bind:this={frame} title="printf" />
@@ -59,7 +70,7 @@
         </div>
       </div>
       <div class="mt-5 md:col-span-2 md:mt-0">
-        <div class="card bg-base-100 shadow-sm w-full mb-4">
+        <div class="card bg-base-100 shadow-sm md:w-full w-screen mb-4">
           <div class="card-body overflow-x-auto">
             {#if $result?.id}
               <StudentInfo remote_student={$rStudent} local_student={$student} />
@@ -82,7 +93,7 @@
         </div>
       </div>
       <div class="mt-5 md:col-span-2 md:mt-0">
-        <div class="card bg-base-100 shadow-sm w-full mb-4">
+        <div class="card bg-base-100 shadow-sm md:w-full w-screen mb-4">
           <div class="card-body overflow-x-auto">
             {#if $result?.id}
               <Records records={$result?.records} resultId={$result.id} />
@@ -93,29 +104,29 @@
     </div>
   </div>
   <div class="divider" />
-  {#if $user?.arm == "primary"}
-    <div class="mt-10 sm:mt-0">
-      <div class="md:grid md:grid-cols-3 md:gap-6">
-        <div class="md:col-span-1">
-          <div class="px-4 sm:px-0">
-            <h3 class="text-base font-semibold leading-6">Ratings</h3>
-            <p class="mt-1 text-sm">
-              Your Contact and personal information are very important and should be accurate.
-            </p>
-          </div>
+
+  <div class="mt-10 sm:mt-0">
+    <div class="md:grid md:grid-cols-3 md:gap-6">
+      <div class="md:col-span-1">
+        <div class="px-4 sm:px-0">
+          <h3 class="text-base font-semibold leading-6">Ratings</h3>
+          <p class="mt-1 text-sm">
+            Your Contact and personal information are very important and should be accurate.
+          </p>
         </div>
-        <div class="mt-5 md:col-span-2 md:mt-0">
-          <div class="card bg-base-100 shadow-sm w-full mb-4">
-            <div class="card-body overflow-x-auto">
-              {#if $result?.id}
-                <Rating ratings={$result?.ratings} resultId={$result.id} />
-              {/if}
-            </div>
+      </div>
+      <div class="mt-5 md:col-span-2 md:mt-0">
+        <div class="card bg-base-100 shadow-sm md:w-full w-screen mb-4">
+          <div class="card-body overflow-x-auto">
+            {#if $result?.id}
+              <Rating ratings={$result?.ratings} resultId={$result.id} />
+            {/if}
           </div>
         </div>
       </div>
     </div>
-  {/if}
+  </div>
+  
   <div class="divider" />
   <div class="mt-10 sm:mt-0">
     <div class="md:grid md:grid-cols-3 md:gap-6">
@@ -128,7 +139,7 @@
         </div>
       </div>
       <div class="mt-5 md:col-span-2 md:mt-0">
-        <div class="card bg-base-100 shadow-sm w-full mb-4">
+        <div class="card bg-base-100 shadow-sm md:w-full w-screen mb-4">
           <div class="card-body overflow-x-auto">
             {#if $result?.id}
               <Remark remarks={$result?.remarks} resultId={$result.id} />
@@ -139,23 +150,20 @@
     </div>
   </div>
 {:else}
-  <div class="alert w-8/12 m-auto my-48">
+  <div class="alert md:w-8/12 m-auto my-48">
     <div class="i-bx:info-circle text-2xl" />
     <span>No student selected, click the button to select a student</span>
     <div>
-      <div class="dropdown dropdown-left dropdown-end">
+      <div class="dropdown dropdown-top md:dropdown-left md:dropdown-end">
         <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
         <label for="" tabindex="0" class="btn btn-sm btn-primary rounded-btn">Select Student</label>
         <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
         <ul
-          class="menu dropdown-content z-[1] p-2 shadow bg-base-200 rounded-box mt-4 overflow-y-auto h-96"
+          class="menu flex-row dropdown-content z-[1] p-2 shadow bg-base-200 rounded-box mt-4 overflow-y-auto w-full h-96"
         >
           {#each $rStudents as student}
-            <li>
-              <a
-                href=" "
-                on:click|preventDefault={() => getStudent(student.id, student.admission_no)}
-              >
+            <li class="flex-row">
+              <a class="" href=" " on:click={() => getStudent(student.id, student.admission_no)}>
                 <div class="flex items-center space-x-3">
                   {#if student?.student_photo}
                     <div class="avatar">
@@ -173,11 +181,18 @@
                       </div>
                     </div>
                   {/if}
-                  <div>
-                    <div class="font-bold">{student.full_name}</div>
-                    <div class="text-sm opacity-50">
-                      {student.class_name}
+                  <div class=" flex flex-col">
+                    <div class="font-bold">
+                      {student.full_name
+                        .replace(/ +(?= )/g, "")
+                        .split(" ")
+                        .slice(0, 2)
+                        .join(" ")}
                     </div>
+                    <span class="text-sm opacity-50">{student.class_name}</span>
+                    <span class="badge badge-sm badge-accent badge-outline capitalize">
+                      {isComplete(student.id) ?? "Pending"}
+                    </span>
                   </div>
                 </div>
               </a>

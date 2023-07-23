@@ -7,9 +7,9 @@
 
   export let classes: Class[] = [];
   export let id: string | null | undefined;
-  let cls = `${$user?.class?.name?.trim()}${$user?.class?.section}` ?? "Choose Your class";
+  let cls = `${$user?.class?.name?.trim()}${$user?.class?.section}`;
 
-  if (id && $user) $user.class = classes.find((cls) => cls.id == id) as Class;
+  $: if (id && $user) $user.class = classes.find((cls) => cls.id == id) as Class;
   // if (browser) console.log({ classes, $user, cls });
 </script>
 
@@ -91,24 +91,21 @@
                     class="input input-bordered floating-input peer focus:border-accent-focus"
                     placeholder=" "
                   >
-                    <option disabled>Choose Arm</option>
+                    <option disabled>{"Choose Arm"}</option>
                     <option value="eyfs">EYFS</option>
                     <option value="primary">Primary</option>
-                    <!-- <option value="gradek">Grade K</option>
-                  <option value="creche">Creche</option> -->
                   </select>
                   <label for="arm" class="floating-label peer-focus:text-accent-focus">Arm</label>
                 </div>
-                {#if cls && classes.length}
+                {#if cls}
                   <div class="relative col-span-6 sm:col-span-3">
                     <select
-                      bind:value={cls}
                       name="classId"
                       id="classId"
                       class="input input-bordered floating-input peer focus:border-accent-focus"
                       placeholder=" "
                     >
-                      <option disabled> "Choose Your class" </option>
+                      <option disabled selected>{cls ?? "Choose Your class"}</option>
                       {#each classes as cls}
                         <option value={cls.id}>{`${cls.name}(${cls.section})`}</option>
                       {/each}

@@ -2,13 +2,11 @@
   import { routes } from "$lib/routes";
   import { user } from "$lib/stores/user";
   import Brand from "./brand.svelte";
-
-  
 </script>
 
 <div class="drawer-side">
   <label for="my-drawer" class="drawer-overlay" />
-  <aside class="bg-base-100 w-64">
+  <aside class="bg-base-100 w-64 h-screen">
     <Brand />
 
     <div class="h-4" />
@@ -23,7 +21,7 @@
           <li class="menu-title {route.name ? '' : 'hidden'}"><span>{route.name}</span></li>
           <li class={route.name ? "" : "hidden"} />
           {#each route.links as link}
-            {#if link.roles.includes($user.role.name)}
+            {#if link.roles.includes($user?.role?.name ?? "")}
               <li>
                 <a href={link.url} class="flex gap-4">
                   <span class="flex-1">{link.name}</span>

@@ -29,4 +29,4 @@ RUN npx prisma generate
 COPY --from=build /app/build ./build
 COPY --from=build /app/.env ./.env
 
-ENTRYPOINT [ "npm", "run", "prod" ]
+ENTRYPOINT [ "npm", "run", "prod"]

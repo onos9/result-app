@@ -81,7 +81,7 @@
       <label for="modal-std" class="btn btn-disabled btn-primary mb-3">Add Student</label>
     </div>
 
-    <div class="card bg-base-100 shadow-xl col-span-2 w-full">
+    <div class="card bg-base-100 shadow-xl col-span-2 w-screen md:w-full">
       <div class="card-body">
         {#if isNetAlert}
           <div class="alert alert-error shadow-lg mb-3">
@@ -89,15 +89,10 @@
               <div class="i-bx:close" />
               <span>{message}</span>
             </div>
-            <div class="flex-none">
-              <!-- <button on:click={() => (isNetAlert = !isNetAlert)} class="btn btn-sm btn-circle">
-              ✕
-            </button> -->
-            </div>
           </div>
         {/if}
-        <div class="overflow-x-auto">
-          <table class="table-compact table w-full">
+        <div class="overflow-x-auto md:overflow-hidden">
+          <table class="table">
             <thead>
               <tr>
                 <th class="uppercase">ID</th>
@@ -106,7 +101,6 @@
                 </th>
                 <th class="uppercase">Parent Info</th>
                 <th class="uppercase">Admission Number</th>
-                <!-- <th class="normal-case">Action</th> -->
               </tr>
             </thead>
             <tbody>
@@ -152,32 +146,12 @@
                     </div>
                   </td>
                   <td>
-                    <div
-                      class="tooltip tooltip-right cursor-help"
-                      data-tip="Supports responsive prefixes (sm:, lg:, …)"
-                    >
-                      <span class="badge badge-sm badge-success w-20">
-                        {`${student.school_code}${student.year.slice(-2)}-${String(
-                          student.admission_no
-                        ).padStart(4, "0")}`}
-                      </span>
-                    </div>
+                    <span class="badge badge-sm badge-success">
+                      {`${student.school_code}${student.year.slice(-2)}-${String(
+                        student.admission_no
+                      ).padStart(4, "0")}`}
+                    </span>
                   </td>
-                  <!-- <td class="flex text-xl m-3">
-                    <div class="tooltip mr-3" data-tip="View">
-                      <a href="/students/{student.id}">
-                        <div class="mr-1 i-mdi:eye-outline text-2xl" />
-                      </a>
-                    </div>
-                    <div class="tooltip mr-3" data-tip="Edit">
-                      <button on:click={() => editStudent(student.id)} class="i-bx:bxs-edit" />
-                    </div>
-                    <div class="tooltip" data-tip="Delete">
-                      <form action="?/delete&id={student.id}" method="post" use:enhance>
-                        <button class="i-bx:bxs-trash text-error" />
-                      </form>
-                    </div>
-                  </td> -->
                 </tr>
               {/each}
             </tbody>

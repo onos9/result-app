@@ -2,13 +2,22 @@
   import { browser } from "$app/environment";
   import { TabNav, TabPane } from "$lib/components/tabs";
   import { configs } from "$lib/stores/configs";
-  import { rStudent, rStudents, result, results, student, students } from "$lib/stores/data_store";
+  import {
+    comments,
+    rStudent,
+    rStudents,
+    result,
+    results,
+    student,
+    students,
+  } from "$lib/stores/data_store";
   import { user } from "$lib/stores/user";
   import type { Class, Student } from "@prisma/client";
   import type { ActionData } from "./$types";
   import ResultList from "./result_list.svelte";
   import ResulteTemplate from "./resulte_template.svelte";
   import StudentList from "./student_list.svelte";
+  import { onMount } from "svelte";
 
   let active = 0;
   let isDropdown: boolean;
@@ -50,13 +59,19 @@
         result == $configs.academicYear &&
         result.status == "uploaded"
     );
-    return !!result;
+    return result?.status;
   };
+
+  onMount(async () => {
+    let res = await fetch("/api/comments");
+    let json = await res.json();
+    comments.set(json?.comments || []);
+  });
 </script>
 
 <div class="card w-full bg-base-100 text-neutral-content mb-5">
   <div class="card-body shadow-lg p-6 pb-1">
-    <div class="grid grid-cols-12 mb-4">
+    <div class="md:grid grid-cols-12 space-x-6 mb-4 hidden">
       {#if $user?.avatarUrl}
         <div class="avatar col-span-2">
           <div class="w-44 rounded-xl">
@@ -75,7 +90,7 @@
 
       <div class="flex flex-col col-span-7">
         <div class="font-semibold text-xl mb-2">{`${$user?.firstName} ${$user?.lastName}`}</div>
-        <div class="flex opacity-30 mb-8 text-sm font-mono">
+        <div class="flex md:flex-row opacity-30 mb-8 text-sm font-mono">
           <span class="flex mr-3 justify-center">
             <div class="i-bx:user text-lg leading-2 mr-1 text-primary" />
             <p class="leading-2">{"Instructor"}</p>
@@ -132,10 +147,11 @@
         </div>
       </div>
     </div>
-    <div class="flex justify-between">
+
+    <div class="flex flex-col-reverse md:flex-row justify-between">
       <TabNav bind:active {items} />
 
-      <div class:dropdown-close={isDropdown} class="dropdown dropdown-left mb-3">
+      <div class:dropdown-close={isDropdown} class="dropdown md:dropdown-left mb-3">
         <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
         <label for="" tabindex="0" class="btn btn-neutral rounded-btn">
           {$student?.fullName || "Select Student"}
@@ -143,15 +159,11 @@
         </label>
         <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
         <ul
-          class="menu flex-row dropdown-content z-[1] p-2 shadow bg-base-200 rounded-box mt-4 overflow-y-auto h-96"
+          class="menu flex-row dropdown-content z-[1] p-2 shadow bg-base-200 rounded-box mt-4 overflow-y-auto w-full h-96"
         >
           {#each $rStudents as student}
-            <li class="w-full flex-row justify-between">
-              <a
-                class="w-8/12"
-                href=" "
-                on:click={() => getStudent(student.id, student.admission_no)}
-              >
+            <li class="flex-row">
+              <a class="" href=" " on:click={() => getStudent(student.id, student.admission_no)}>
                 <div class="flex items-center space-x-3">
                   {#if student?.student_photo}
                     <div class="avatar">
@@ -169,17 +181,21 @@
                       </div>
                     </div>
                   {/if}
-                  <div class="w-8/12">
-                    <div class="font-bold">{student.full_name}</div>
-                    <div class="text-sm opacity-50">
-                      {student.class_name}
+                  <div class=" flex flex-col">
+                    <div class="font-bold">
+                      {student.full_name
+                        .replace(/ +(?= )/g, "")
+                        .split(" ")
+                        .slice(0, 2)
+                        .join(" ")}
                     </div>
+                    <span class="text-sm opacity-50">{student.class_name}</span>
+                    <span class="badge badge-sm badge-accent badge-outline capitalize">
+                      {isComplete(student.id) ?? "Pending"}
+                    </span>
                   </div>
                 </div>
               </a>
-              <label class="w-2/12">
-                <input checked={isComplete(student.id)} type="checkbox" class="checkbox" />
-              </label>
             </li>
           {/each}
         </ul>

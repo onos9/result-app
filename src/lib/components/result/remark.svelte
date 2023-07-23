@@ -59,7 +59,7 @@
     }
 
     data.set("resultId", resultId);
-    data.set("arm", $user.arm as string);
+    data.set("arm", $user?.arm as string);
 
     return async ({ result, update }: any) => {
       isEdit = false;
@@ -211,16 +211,21 @@
 
 <input bind:checked type="checkbox" id="modal-remark" class="modal-toggle" />
 <div class="modal">
-  <div class="modal-box w-11/12 max-w-5xl relative overflow-hidden">
+  <form
+    action="?/remark&edit={isEdit || ''}&id={remarkId || ''}"
+    method="POST"
+    use:enhance={onSubmit}
+    class="modal-box md:w-11/12 w-10/12 max-w-5xl relative overflow-auto"
+  >
     <label for="modal-remark" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
-    <div class="font-bold text-sm">Add Student Record</div>
-    <div class="flex w-full overflow-hidden p-5">
-      <div class="grid flex-grow w-full">
+    <div class="font-bold text-sm mb-4">Add A Remark</div>
+
+    <div class="flex flex-col-reverse md:flex-row w-full">
+      <div class="grid flex-grow mb-3 w-full">
         <div class="grid grid-cols-6 gap-4">
           <div class="relative col-span-6 sm:col-span-3">
             <select
               bind:value={commentType}
-              name="type"
               id="type"
               class="input input-bordered floating-input peer focus:border-accent-focus"
             >
@@ -238,7 +243,6 @@
             <select
               bind:value={searchTerm}
               on:change={searchComment}
-              name="type"
               id="type"
               class="input input-bordered floating-input peer focus:border-accent-focus"
               placeholder=" "
@@ -272,7 +276,9 @@
           </div>
         </div>
       </div>
-      <div class="divider divider-horizontal" />
+
+      <div class="divider h-3 md:divider-horizontal w-full" />
+
       <div class="w-full my-auto">
         {#if isAlert}
           <div class="alert alert-error shadow-lg mb-3">
@@ -282,72 +288,68 @@
             </div>
           </div>
         {/if}
-        <form
-          action="?/remark&edit={isEdit || ''}&id={remarkId || ''}"
-          method="POST"
-          use:enhance={onSubmit}
-        >
-          <div class="grid grid-cols-6 gap-4 justify-center items-center">
-            <fieldset class="col-span-6 ">
-              <legend class="contents text-sm font-semibold leading-6">Remark for</legend>
-              <div class="mt-3 space-y-4 mb-4">
-                <div class="flex items-center">
-                  <input
-                    checked={commentFor == "Class Teacher's Comment"}
-                    type="radio"
-                    name="name"
-                    value="Class Teacher's Comment"
-                    class="radio"
-                  />
-                  <label for="teach-comment" class="ml-3 block text-sm font-medium leading-6">
-                    Class Teacher
-                  </label>
-                </div>
-                <div class="flex items-center">
-                  <input
-                    checked={commentFor == "Head Teacher's Comment"}
-                    type="radio"
-                    name="name"
-                    value="Head Teacher's Comment"
-                    class="radio"
-                  />
-                  <label for="hm-comment" class="ml-3 block text-sm font-medium leading-6">
-                    Head Teacher
-                  </label>
-                </div>
-                <div class="flex items-center">
-                  <input
-                    checked={commentFor == "Recomendation"}
-                    type="radio"
-                    name="name"
-                    value="Recomendation"
-                    class="radio"
-                  />
-                  <label for="recomend-comment" class="ml-3 block text-sm font-medium leading-6 ">
-                    Recommendation
-                  </label>
-                </div>
+
+        <div class="grid grid-cols-6 gap-4 justify-center items-center">
+          <fieldset class="col-span-6">
+            <legend class="contents text-sm font-semibold leading-6">Remark for</legend>
+            <div class="mt-3 space-y-4 mb-4">
+              <div class="flex items-center">
+                <input
+                  checked={commentFor == "Class Teacher's Comment"}
+                  type="radio"
+                  name="name"
+                  value="Class Teacher's Comment"
+                  class="radio"
+                />
+                <label for="teach-comment" class="ml-3 block text-sm font-medium leading-6">
+                  Class Teacher
+                </label>
               </div>
-            </fieldset>
-            <div class="relative col-span-6">
-              <textarea
-                bind:value={commentText}
-                name="comment"
-                id="comment"
-                class="textarea textarea-bordered w-full h-24"
-                placeholder=" "
-              />
-              <label for="classTeacher" class="floating-label peer-focus:text-accent-focus">
-                Remark
-              </label>
+              <div class="flex items-center">
+                <input
+                  checked={commentFor == "Head Teacher's Comment"}
+                  type="radio"
+                  name="name"
+                  value="Head Teacher's Comment"
+                  class="radio"
+                />
+                <label for="hm-comment" class="ml-3 block text-sm font-medium leading-6">
+                  Head Teacher
+                </label>
+              </div>
+              <div class="flex items-center">
+                <input
+                  checked={commentFor == "Recomendation"}
+                  type="radio"
+                  name="name"
+                  value="Recomendation"
+                  class="radio"
+                />
+                <label for="recomend-comment" class="ml-3 block text-sm font-medium leading-6">
+                  Recommendation
+                </label>
+              </div>
             </div>
-            <legend class="col-span-6 text-sm text-error">{errorMessage}</legend>
-            <div class="text-right col-span-6">
-              <button class="btn btn-sm">{remarkId ? "Save" : "Add"}</button>
-            </div>
+          </fieldset>
+          <div class="relative col-span-6">
+            <textarea
+              disabled={!commentText}
+              bind:value={commentText}
+              name="comment"
+              id="comment"
+              class="textarea textarea-bordered w-full h-24"
+              placeholder=" "
+            />
+            <label for="classTeacher" class="floating-label peer-focus:text-accent-focus">
+              Remark
+            </label>
           </div>
-        </form>
+          <legend class="col-span-6 text-sm text-error">{errorMessage}</legend>
+        </div>
       </div>
     </div>
-  </div>
+    <div class="modal-action">
+      <button class="btn btn-sm">{remarkId ? "Save" : "Add"}</button>
+    </div>
+  </form>
 </div>
