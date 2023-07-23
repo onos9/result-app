@@ -30,11 +30,10 @@ jobs:
       # https://github.com/docker/build-push-action
       - name: Checkout repository
         uses: actions/checkout@v3
-
       
       - name: Create a .env file
         run: |
-          echo "${{secrets.EVN_FILE}}" > .env
+          run: echo "$ {{ secrets.ENV_FILE }}  " | base64 --decode ./.env
 
       - name: Build and push Docker image
         env:
