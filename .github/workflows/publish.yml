@@ -34,7 +34,7 @@ jobs:
       
       - name: Create a .env file
         run: |
-          echo "${{secrets.EVN_FILE}}" > .env
+          echo "${{variables.EVN_FILE}}" > .env
 
       - name: Build and push Docker image
         env:
