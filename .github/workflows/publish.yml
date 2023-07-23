@@ -34,7 +34,7 @@ jobs:
       - name: Create a .env file 
         run: |
           touch ./.env
-          echo "${{ secrets.ENV_FILE }}" | base64 --decode
+          echo "${{ secrets.ENV_FILE }}" | base64 --decode ./.env
           ls -la
           cat ./.env
 
