@@ -24,8 +24,8 @@ jobs:
         with:
           image: ${{ github.repository }}
           tags: latest
-          registry: ./docker/Dockerfile
-          dockerfile: Dockerfile.ci
+          registry: ghcr.io
+          dockerfile: ./docker/Dockerfile
           username: ${{ github.actor }}
           password: ${{ secrets.GH_PAT }}
 
