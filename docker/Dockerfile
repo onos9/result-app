@@ -5,7 +5,7 @@ WORKDIR /app
 
 COPY .env ./
 RUN echo "Environment file copied to app"
-RUN echo ./.env
+RUN cat ./.env
 
 COPY package*.json ./
 RUN npm install
