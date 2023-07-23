@@ -36,7 +36,7 @@ jobs:
           touch ./.env
           echo "${{ secrets.ENV_FILE }}" | base64 --decode ./.env
           ls -la
-          cat ./.env
+          echo ./.env
 
       # - name: Build and push Docker image
       #   run: |
