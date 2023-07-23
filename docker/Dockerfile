@@ -11,6 +11,8 @@ COPY prisma ./prisma/
 RUN npx prisma db push
 RUN npx prisma db seed
 
+RUN echo .env
+
 COPY . .
 RUN npm run build
 
