@@ -3,15 +3,18 @@ FROM node:lts-slim as build
 RUN apt-get -qy update && apt-get -qy install openssl
 WORKDIR /app
 
+COPY .env ./
+RUN echo "Environment file copied to app"
+RUN echo ./.env
+
 COPY package*.json ./
 RUN npm install
 
-COPY .env ./
 COPY prisma ./prisma/
 RUN npx prisma db push
 RUN npx prisma db seed
 
-RUN echo .env
+
 
 COPY . .
 RUN npm run build
