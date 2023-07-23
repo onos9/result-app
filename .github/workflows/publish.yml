@@ -33,7 +33,7 @@ jobs:
       
       - name: Create a .env file 
         run: |
-          echo ${{ secrets.ENV_FILE }} | base64 --decode ./.env
+          echo ${{ secrets.ENV_FILE }} | base64 --decode > ./.env
           ls -la
           cat ./.env
 
