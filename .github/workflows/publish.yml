@@ -31,7 +31,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
       
-      - name: Create a .env file
+      - name: Create a .env file 
         run: |
           touch .env
           echo "$ {{ secrets.ENV_FILE }}  " | base64 --decode > .env
