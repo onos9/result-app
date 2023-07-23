@@ -38,7 +38,7 @@ jobs:
           context: .
           file: ./docker/Dockerfile
           push: true
-          tags: ${{ github.repository }}/app:latest
+          tags: ${{ github.repository }}:latest
 
 
       # - name: Build and push Docker image
