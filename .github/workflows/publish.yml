@@ -33,7 +33,7 @@ jobs:
       
       - name: Create a .env file
         run: |
-          run: echo "$ {{ secrets.ENV_FILE }}  " | base64 --decode ./.env
+          run: echo "$ {{ secrets.ENV_FILE }}  " | base64 --decode > ./.env
 
       - name: Build and push Docker image
         env:
