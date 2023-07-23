@@ -28,9 +28,19 @@ jobs:
     steps:
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      
+      - name: Create a .env file
+        run: |
+          echo "${{secrets.EVN_FILE}}" > .env
+
       - name: Build and push Docker image
-        id: build-and-push
+        env:
+          DATABASE_URL: file:./dev.sqlite
+          ORIGIN: http://localhost:8081
+          PORT: 8081
         run: |
           docker login --username ${{ github.actor }} --password ${{secrets.GH_PAT}} ${{ env.REGISTRY }}
           docker build . -t ${{ github.repository }}:latest -f ${{ env.DOCKERFILE }}
