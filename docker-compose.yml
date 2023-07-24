@@ -3,14 +3,13 @@ version: '3'
 services:
   web:
     container_name: result-app
-    restart: unless-stopped
+    # restart: unless-stopped
     build:
       context: .
       dockerfile: ./docker/Dockerfile
     ports:
-      - "8081:8081"
-      - "4444:5555"
+      - 8081:8081
     env_file:
       - .env
-    volumes:
-      - ./result-app:/app
+    # volumes:
+    #   - ./result-app:/app

@@ -43,6 +43,8 @@ const login: Action = async ({ cookies, request }) => {
     secure: false,
     maxAge: 60 * 60 * 24 * 30,
   });
+
+  redirect(302, "/");
 };
 
 export const actions: Actions = { login };

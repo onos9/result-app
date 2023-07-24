@@ -1,37 +1,34 @@
-FROM node:lts-slim as build
-
-RUN apt-get -qy update && apt-get -qy install openssl
+#############################################
+# App Builder: From developrnt to production
+#############################################
+FROM node:lts-alpine as builder
 WORKDIR /app
 
-COPY .env ./
-RUN echo "Environment file copied to app"
-RUN cat ./.env
+COPY package*.json .
+RUN npm ci
 
-COPY package*.json ./
-RUN npm install
-
-COPY prisma ./prisma/
+COPY .env .
+COPY prisma ./prisma
 RUN npx prisma db push
 RUN npx prisma db seed
-
-
+RUN npx prisma generate
 
 COPY . .
 RUN npm run build
+RUN npm prune --production
 
-# production image runner
-FROM node:lts-slim as run
+#############################################
+# App Runner: Production image runner
+#############################################
+FROM node:lts-alpine as runner
 
-RUN apt-get -qy update && apt-get -qy install openssl
 WORKDIR /app
 
-COPY --from=build /app/package.json ./package.json
-RUN npm install --omit=dev
+COPY --from=builder /app/.env ./.env
+COPY --from=builder /app/build ./build/
+COPY --from=builder /app/prisma ./prisma/
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/node_modules ./node_modules/
 
-COPY --from=build /app/prisma ./prisma/
-RUN npx prisma generate
-
-COPY --from=build /app/build ./build
-COPY --from=build /app/.env ./.env
-
-ENTRYPOINT [ "npm", "run", "prod"]
+ENV NODE_ENV=production
+ENTRYPOINT ["node", "build"]

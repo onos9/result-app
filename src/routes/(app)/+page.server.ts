@@ -33,8 +33,8 @@ export const load: PageServerLoad = async ({ fetch, locals, params }) => {
     where: { arm: locals.user?.arm } as any,
   });
 
-  let file = readFileSync("static/student-list.json", { encoding: "utf8" });
-  const { data } = JSON.parse(file);
+  const resp = await fetch("/student-list.json")
+  const { data } = await resp.json();
 
   const rStudents = data.students.filter(
     (std: any) => std.class_name == name && std.section_name == section
