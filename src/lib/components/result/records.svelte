@@ -148,7 +148,7 @@
       {/each}
     </tr>
   </thead>
-  {#if recordId}
+  {#if records?.length}
     <tbody class="print:text-gray-600 text-sm font-light">
       {#each records as record}
         <tr class="border-b border-gray-200 hover:bg-base-300">
