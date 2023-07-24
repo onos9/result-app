@@ -15,8 +15,8 @@
   }
 
   const onPrint = () => {
-    goto(`/print?id=${$student.id}&remoteId=${$rStudent?.id}`);
-    return;
+    // goto(`/print?id=${$student.id}&remoteId=${$rStudent?.id}`);
+    // return;
     frame.src = `/print?id=${$student.id}&remoteId=${$rStudent?.id}`;
     frame.onload = () => {
       const content = frame.contentWindow;
@@ -96,7 +96,7 @@
         <div class="card bg-base-100 shadow-sm md:w-full w-screen mb-4">
           <div class="card-body overflow-x-auto">
             {#if $rStudent?.id}
-              <Records records={$result?.records} resultId={$result.id} />
+              <Records records={$result?.records} resultId={$result?.id} />
             {/if}
           </div>
         </div>
@@ -104,29 +104,31 @@
     </div>
   </div>
   <div class="divider" />
-
-  <div class="mt-10 sm:mt-0">
-    <div class="md:grid md:grid-cols-3 md:gap-6">
-      <div class="md:col-span-1">
-        <div class="px-4 sm:px-0">
-          <h3 class="text-base font-semibold leading-6">Ratings</h3>
-          <p class="mt-1 text-sm">
-            Your Contact and personal information are very important and should be accurate.
-          </p>
+  
+  {#if $user?.arm == "primary"}
+    <div class="mt-10 sm:mt-0">
+      <div class="md:grid md:grid-cols-3 md:gap-6">
+        <div class="md:col-span-1">
+          <div class="px-4 sm:px-0">
+            <h3 class="text-base font-semibold leading-6">Ratings</h3>
+            <p class="mt-1 text-sm">
+              Your Contact and personal information are very important and should be accurate.
+            </p>
+          </div>
         </div>
-      </div>
-      <div class="mt-5 md:col-span-2 md:mt-0">
-        <div class="card bg-base-100 shadow-sm md:w-full w-screen mb-4">
-          <div class="card-body overflow-x-auto">
-            {#if $rStudent?.id}
-              <Rating ratings={$result?.ratings} resultId={$result.id} />
-            {/if}
+        <div class="mt-5 md:col-span-2 md:mt-0">
+          <div class="card bg-base-100 shadow-sm md:w-full w-screen mb-4">
+            <div class="card-body overflow-x-auto">
+              {#if $rStudent?.id}
+                <Rating ratings={$result?.ratings} resultId={$result?.id} />
+              {/if}
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  
+  {/if}
+
   <div class="divider" />
   <div class="mt-10 sm:mt-0">
     <div class="md:grid md:grid-cols-3 md:gap-6">
@@ -142,7 +144,7 @@
         <div class="card bg-base-100 shadow-sm md:w-full w-screen mb-4">
           <div class="card-body overflow-x-auto">
             {#if $rStudent?.id}
-              <Remark remarks={$result?.remarks} resultId={$result.id} />
+              <Remark remarks={$result?.remarks} resultId={$result?.id} />
             {/if}
           </div>
         </div>

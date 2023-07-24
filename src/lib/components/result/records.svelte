@@ -39,7 +39,7 @@
   let keys: any[] = [];
   let blacklist = ["id", "arm", "resultId", "createdAt", "updatedAt", "color"];
 
-  $: if (records.length) {
+  $: if (records?.length) {
     const record = records.filter((record) => record.arm == $user?.arm);
     keys = Object.entries(record[0] || {}).map(([key, value]) =>
       value && !blacklist.includes(key) ? key : null
@@ -148,69 +148,73 @@
       {/each}
     </tr>
   </thead>
-  <tbody class="print:text-gray-600 text-sm font-light">
-    {#each records as record}
-      <tr class="border-b border-gray-200 hover:bg-base-300">
-        <td class="py-3 px-6 text-left max-w-xs whitespace-normal print:w-24">
-          {record?.subject}
-        </td>
-
-        {#if record?.objectives?.length}
-          <td class="py-3 px-6 max-w-xs">
-            <ul class="list-disc">
-              {#each record.objectives?.split("|") as objective}
-                <li>{objective}</li>
-              {/each}
-            </ul>
+  {#if recordId}
+    <tbody class="print:text-gray-600 text-sm font-light">
+      {#each records as record}
+        <tr class="border-b border-gray-200 hover:bg-base-300">
+          <td class="py-3 px-6 text-left max-w-xs whitespace-normal print:w-24">
+            {record?.subject}
           </td>
-        {/if}
-        {#if record.outcome}
-          <td class="py-3 px-6 text-center">
-            <span class="{record.color} text-violet-600 py-1 px-3 rounded-full text-xs">
-              {record.outcome}
-            </span>
-          </td>
-        {/if}
 
-        {#if record.mta}
-          <td class="py-3 px-6 text-center whitespace-nowrap">{record.mta}</td>
-        {/if}
-        {#if record.ca}
-          <td class="py-3 px-6 text-center whitespace-nowrap">{record.ca}</td>
-        {/if}
-        {#if record.report}
-          <td class="py-3 px-6 text-center whitespace-nowrap">{record.report}</td>
-        {/if}
-        {#if record.exam}
-          <td class="py-3 px-6 text-center whitespace-nowrap">{record.exam}</td>
-        {/if}
-        {#if record.score}
-          <td class="py-3 px-6 text-center whitespace-nowrap">{record.score}</td>
-        {/if}
+          {#if record?.objectives?.length}
+            <td class="py-3 px-6 max-w-xs">
+              <ul class="list-disc">
+                {#each record.objectives?.split("|") as objective}
+                  <li>{objective}</li>
+                {/each}
+              </ul>
+            </td>
+          {/if}
+          {#if record.outcome}
+            <td class="py-3 px-6 text-center">
+              <span class="{record.color} text-violet-600 py-1 px-3 rounded-full text-xs">
+                {record.outcome}
+              </span>
+            </td>
+          {/if}
 
-        {#if record.grade}
-          <td class="py-3 px-6 text-center">
-            <span class="{record.color} text-violet-600 py-1 px-3 rounded-full text-xs">
-              {record.grade}
-            </span>
-          </td>
-        {/if}
-        <td class="py-3 px-6 flex justify-center print:hidden">
-          <!-- <div class="tooltip mx-2" data-tip="Edit">
+          {#if record.mta}
+            <td class="py-3 px-6 text-center whitespace-nowrap">{record.mta}</td>
+          {/if}
+          {#if record.ca}
+            <td class="py-3 px-6 text-center whitespace-nowrap">{record.ca}</td>
+          {/if}
+          {#if record.report}
+            <td class="py-3 px-6 text-center whitespace-nowrap">{record.report}</td>
+          {/if}
+          {#if record.exam}
+            <td class="py-3 px-6 text-center whitespace-nowrap">{record.exam}</td>
+          {/if}
+          {#if record.score}
+            <td class="py-3 px-6 text-center whitespace-nowrap">{record.score}</td>
+          {/if}
+
+          {#if record.grade}
+            <td class="py-3 px-6 text-center">
+              <span class="{record.color} text-violet-600 py-1 px-3 rounded-full text-xs">
+                {record.grade}
+              </span>
+            </td>
+          {/if}
+          <td class="py-3 px-6 flex justify-center print:hidden">
+            <!-- <div class="tooltip mx-2" data-tip="Edit">
             <button on:click={() => editRecord(record.id)} class="i-bx:bxs-edit text-lg" />
           </div> -->
-          <form action="?/record&id={record.id}" method="post" use:enhance={onSubmit}>
-            <div class="tooltip" data-tip="Delete">
-              <button class="i-bx:bxs-trash text-lg text-accent-focus" />
-            </div>
-          </form>
-        </td>
-      </tr>
-    {/each}
-  </tbody>
+            <form action="?/record&id={record.id}" method="post" use:enhance={onSubmit}>
+              <div class="tooltip" data-tip="Delete">
+                <button class="i-bx:bxs-trash text-lg text-accent-focus" />
+              </div>
+            </form>
+          </td>
+        </tr>
+      {/each}
+    </tbody>
+  {/if}
 </table>
 
-<Scores {records} />
+{#if recordId}
+  <Scores {records} />
+{/if}
 
 <input bind:checked type="checkbox" id="modal-rec" class="modal-toggle" />
 <div class="modal">
@@ -311,7 +315,7 @@
             </div>
           {/if}
           {#if $user?.arm == "eyfs"}
-            <div class="relative col-span-6 ">
+            <div class="relative col-span-6">
               <legend class="contents text-sm font-semibold leading-6 mb-3">Objectives</legend>
               <textarea
                 value={objective || ""}

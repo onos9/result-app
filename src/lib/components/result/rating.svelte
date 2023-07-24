@@ -115,7 +115,7 @@
   </label>
 </div>
 
-{#if ratings.length}
+{#if ratings?.length}
   <table class="min-w-max w-full table-auto mb-4 rounded">
     <tbody class="align-baseline">
       {#each ratings as rating}
