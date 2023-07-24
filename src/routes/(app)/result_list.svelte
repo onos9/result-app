@@ -17,7 +17,7 @@
       </label>
     </div>
 
-    <div class="card bg-base-100 shadow-xl col-span-2 w-screen">
+    <div class="card bg-base-100 shadow-xl col-span-2 md:w-full w-screen">
       <div class="card-body">
         {#if isNetAlert}
           <div class="alert alert-error shadow-lg mb-3">
@@ -33,7 +33,7 @@
           </div>
         {/if}
         <div class="overflow-x-auto md:overflow-hidden">
-          <table class=" table">
+          <table class="table">
             <thead>
               <tr>
                 <th />

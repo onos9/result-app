@@ -12,28 +12,32 @@ export const load: PageServerLoad = async ({ fetch, locals, params }) => {
   name = name?.toUpperCase().trim() as string;
   section = section?.toUpperCase().trim() as string;
 
-  const classId = locals.user.class?.id;
-  const local_students = await db.student.findMany({
-    where: { classId },
-    include: { Class: true },
-  });
+  const classId = locals?.user?.class?.id;
+  const local_students = () =>
+    db.student.findMany({
+      where: { classId },
+      include: { Class: true },
+    });
 
-  const grades = await db.grade.findMany({ where: { arm: locals.user?.arm } });
+  const grades = () => db.grade.findMany({ where: { arm: locals.user?.arm } });
 
-  const results = await db.result.findMany({
-    where: { classId },
-    include: { records: true, ratings: true, remarks: true, scores: true, student: true },
-  });
+  const results = () =>
+    db.result.findMany({
+      where: { classId },
+      include: { records: true, ratings: true, remarks: true, scores: true, student: true },
+    });
 
-  const subjects = await db.subject.findMany({
-    where: { arm: locals.user?.arm, classId } as any,
-  });
+  const subjects = () =>
+    db.subject.findMany({
+      where: { arm: locals.user?.arm, classId } as any,
+    });
 
-  const classes = await db.class.findMany({
-    where: { arm: locals.user?.arm } as any,
-  });
+  const classes = () =>
+    db.class.findMany({
+      where: { arm: locals.user?.arm } as any,
+    });
 
-  const resp = await fetch("/student-list.json")
+  const resp = await fetch("/student-list.json");
   const { data } = await resp.json();
 
   const rStudents = data.students.filter(
@@ -41,12 +45,12 @@ export const load: PageServerLoad = async ({ fetch, locals, params }) => {
   );
 
   return {
-    students: local_students,
+    students: await local_students(),
     rStudents,
-    grades,
-    results,
-    subjects,
-    classes,
+    grades: await grades(),
+    results: await results(),
+    subjects: await subjects(),
+    classes: await classes(),
   };
 };
 
