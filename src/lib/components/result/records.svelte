@@ -212,7 +212,7 @@
   {/if}
 </table>
 
-{#if recordId}
+{#if records?.length}
   <Scores {records} />
 {/if}
 
