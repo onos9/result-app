@@ -5,7 +5,7 @@ import type { Subject, Prisma } from "@prisma/client";
 
 export const load: PageServerLoad = async ({ locals }) => {
   if (!locals.user?.arm) throw redirect(302, "/settings");
-  
+
   return {
     subjects: await db.subject.findMany({ where: { arm: locals.user.arm } as any }),
     classes: await db.class.findMany({ where: { arm: locals.user.arm } as any }),
@@ -19,6 +19,22 @@ export const actions: Actions = {
 
     try {
       await db.subject.create({ data: { ...data, arm: locals.user?.arm } });
+    } catch (err) {
+      console.error(err);
+      return fail(500, { message: "Could not create the article." });
+    }
+
+    return {
+      status: 201,
+    };
+  },
+
+  update: async ({ request, locals, url }) => {
+    const id = url.searchParams.get("id") as string;
+    const data = Object.fromEntries(await request.formData()) as any;
+
+    try {
+      await db.subject.update({ where: { id }, data });
     } catch (err) {
       console.error(err);
       return fail(500, { message: "Could not create the article." });

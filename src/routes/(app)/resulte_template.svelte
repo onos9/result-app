@@ -55,7 +55,7 @@
 
 <iframe hidden class="w-full h-screen" bind:this={frame} title="printf" />
 
-{#if $result?.id}
+{#if $rStudent?.id}
   <div class="flex w-full justify-end mb-3">
     <button on:click={onPrint} class="btn btn-primary ms-1">Preview</button>
   </div>
@@ -72,7 +72,7 @@
       <div class="mt-5 md:col-span-2 md:mt-0">
         <div class="card bg-base-100 shadow-sm md:w-full w-screen mb-4">
           <div class="card-body overflow-x-auto">
-            {#if $result?.id}
+            {#if $rStudent?.id}
               <StudentInfo remote_student={$rStudent} local_student={$student} />
             {/if}
           </div>
@@ -95,7 +95,7 @@
       <div class="mt-5 md:col-span-2 md:mt-0">
         <div class="card bg-base-100 shadow-sm md:w-full w-screen mb-4">
           <div class="card-body overflow-x-auto">
-            {#if $result?.id}
+            {#if $rStudent?.id}
               <Records records={$result?.records} resultId={$result.id} />
             {/if}
           </div>
@@ -118,7 +118,7 @@
       <div class="mt-5 md:col-span-2 md:mt-0">
         <div class="card bg-base-100 shadow-sm md:w-full w-screen mb-4">
           <div class="card-body overflow-x-auto">
-            {#if $result?.id}
+            {#if $rStudent?.id}
               <Rating ratings={$result?.ratings} resultId={$result.id} />
             {/if}
           </div>
@@ -141,7 +141,7 @@
       <div class="mt-5 md:col-span-2 md:mt-0">
         <div class="card bg-base-100 shadow-sm md:w-full w-screen mb-4">
           <div class="card-body overflow-x-auto">
-            {#if $result?.id}
+            {#if $rStudent?.id}
               <Remark remarks={$result?.remarks} resultId={$result.id} />
             {/if}
           </div>
