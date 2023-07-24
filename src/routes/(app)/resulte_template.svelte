@@ -104,7 +104,7 @@
     </div>
   </div>
   <div class="divider" />
-  
+
   {#if $user?.arm == "primary"}
     <div class="mt-10 sm:mt-0">
       <div class="md:grid md:grid-cols-3 md:gap-6">
@@ -156,12 +156,12 @@
     <div class="i-bx:info-circle text-2xl" />
     <span>No student selected, click the button to select a student</span>
     <div>
-      <div class="dropdown dropdown-top md:dropdown-left md:dropdown-end">
+      <div class="dropdown dropdown-top md:dropdown-top md:dropdown-left">
         <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
         <label for="" tabindex="0" class="btn btn-sm btn-primary rounded-btn">Select Student</label>
         <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
         <ul
-          class="menu flex-row dropdown-content z-[1] p-2 shadow bg-base-200 rounded-box mt-4 overflow-y-auto w-full h-96"
+          class="menu flex-row dropdown-content z-[1] p-2 shadow bg-base-200 rounded-box mt-4 overflow-y-auto h-96"
         >
           {#each $rStudents as student}
             <li class="flex-row">

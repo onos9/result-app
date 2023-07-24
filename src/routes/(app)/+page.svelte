@@ -159,7 +159,7 @@
         </label>
         <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
         <ul
-          class="menu flex-row dropdown-content z-[1] p-2 shadow bg-base-200 rounded-box mt-4 overflow-y-auto w-full h-96"
+          class="menu flex-row dropdown-content z-[1] p-2 shadow bg-base-200 rounded-box mt-4 overflow-y-auto h-96"
         >
           {#each $rStudents as student}
             <li class="flex-row">
