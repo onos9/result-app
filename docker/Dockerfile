@@ -4,10 +4,10 @@
 FROM node:lts-alpine as builder
 WORKDIR /app
 
-COPY package*.json .
+COPY package*.json ./
 RUN npm ci
 
-COPY .env .
+COPY .env ./
 COPY prisma ./prisma
 RUN npx prisma db push
 RUN npx prisma db seed
