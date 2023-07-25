@@ -190,7 +190,9 @@ export const actions: Actions = {
         writeFileSync(`${dir}/${filename}`, Buffer.from(ab));
       }
 
-      data.admissionNo = `${data.admissionNo.split("-")[1].replace("00", "")}/${data.admissionNo}`;
+      data.admissionNo = `${data.admissionNo.split("-")[1].replace(/^0+/, "")}/${
+        data.admissionNo
+      }`;
       console.log({ id, data });
       const result = await db.student.update({ where: { id }, data });
       return { result };
