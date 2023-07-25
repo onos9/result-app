@@ -8,11 +8,6 @@
 
   export let records: Record[];
   export let resultId: string;
-  let subs = $subjects;
-
-  $: if ($user?.arm == "eyfs") {
-    subs = $subjects.filter((sub) => sub.classId == $user?.classId);
-  }
 
   type FormInput = {
     data: FormData;
