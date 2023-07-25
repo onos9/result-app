@@ -171,12 +171,14 @@ export const actions: Actions = {
 
   confirm: async ({ fetch, url, request }) => {
     const id = url.searchParams.get("id") as string;
+    const remoteId = url.searchParams.get("remoteId") as string;
+
     const formData = await request.formData();
     let file = formData.get("student_photo") as File;
     formData.delete("student_photo");
 
     const data = Object.fromEntries(formData) as any;
-    const student = Pupils.find((std) => std.id == data?.remoteId);
+    const student = Pupils.find((std) => std.id == Number(remoteId));
     const name = student?.full_name?.toLowerCase().trim().replace(" ", "_");
     const ext = file.name.split(".").pop();
     const filename = name + "_" + Date.now().toString() + "." + ext;
@@ -190,9 +192,7 @@ export const actions: Actions = {
         writeFileSync(`${dir}/${filename}`, Buffer.from(ab));
       }
 
-      data.admissionNo = `${data.admissionNo.split("-")[1].replace(/^0+/, "")}/${
-        data.admissionNo
-      }`;
+      data.admissionNo = `${remoteId}/${data.admissionNo}`;
       console.log({ id, data });
       const result = await db.student.update({ where: { id }, data });
       return { result };

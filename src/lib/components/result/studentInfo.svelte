@@ -115,7 +115,7 @@
 <input bind:checked type="checkbox" id="modal-info" class="modal-toggle" />
 <div class="modal">
   <form
-    action="?/confirm&id={local_student?.id}"
+    action="?/confirm&id={local_student?.id}&remoteId={remote_student?.id}"
     method="POST"
     class="modal-box md:w-3/12 w-10/12 max-w-5xl"
     use:enhance
