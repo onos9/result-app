@@ -237,7 +237,7 @@
               placeholder=" "
             >
               <option selected disabled>Choose Learning Area</option>
-              {#each $subjects as subject}
+              {#each $subjects.filter((sub) => sub.classId == $user?.classId) as subject}
                 <option>{subject.name}</option>
               {/each}
             </select>

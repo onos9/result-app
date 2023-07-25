@@ -11,18 +11,22 @@ import type {
   Record,
   Comment,
 } from "@prisma/client";
+import { browser } from "$app/environment";
 
 export const grades = writable<Grade[]>([]);
 export const classes = writable<Class[]>([]);
 export const subjects = writable<Subject[]>([]);
 export const comments = writable<Comment[]>([]);
 
+const defaultValue: any = null;
+const initialStudent = JSON.parse(browser ? localStorage.rStudent ?? defaultValue : defaultValue);
+const initialResult = JSON.parse(browser ? localStorage.result ?? defaultValue : defaultValue);
+
 export const students = writable<Student[]>();
 export const student = writable<Student & { Class: Class }>();
 
 export const rStudent = writable<any>();
 export const rStudents = writable<any[]>();
-
 export const results = writable<
   (Result & {
     student: Student | null;
@@ -42,3 +46,15 @@ export const result = writable<
     remarks: Remark[];
   }
 >();
+
+rStudent.subscribe((value) => {
+  if (browser) {
+    localStorage.student = JSON.stringify(value);
+  }
+});
+
+result.subscribe((value) => {
+  if (browser) {
+    localStorage.result = JSON.stringify(value);
+  }
+});

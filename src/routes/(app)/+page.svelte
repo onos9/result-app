@@ -25,7 +25,7 @@
 
   export let form: ActionData;
   $: if (browser) {
-    console.log({ form, $user });
+    console.log({ form, $user, $rStudent });
   }
 
   let items = [
