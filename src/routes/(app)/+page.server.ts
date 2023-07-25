@@ -27,10 +27,12 @@ export const load: PageServerLoad = async ({ fetch, locals, params }) => {
       include: { records: true, ratings: true, remarks: true, scores: true, student: true },
     });
 
-  const subjects = () =>
-    db.subject.findMany({
-      where: { arm: locals.user?.arm } as any,
-    });
+  let subjects = () => db.subject.findMany({ where: { arm: locals?.user?.arm } as any });
+  if (locals.user.arm == "eyfs")
+    subjects = () =>
+      db.subject.findMany({
+        where: { arm: locals?.user?.arm, classId: locals?.user?.classId } as any,
+      });
 
   const classes = () =>
     db.class.findMany({

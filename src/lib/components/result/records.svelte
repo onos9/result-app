@@ -242,7 +242,7 @@
               placeholder=" "
             >
               <option selected disabled>Choose Learning Area</option>
-              {#each subs as subject}
+              {#each $subjects as subject}
                 <option>{subject.name}</option>
               {/each}
             </select>
