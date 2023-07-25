@@ -18,9 +18,9 @@ export const classes = writable<Class[]>([]);
 export const subjects = writable<Subject[]>([]);
 export const comments = writable<Comment[]>([]);
 
-const defaultValue: any = null;
-const initialStudent = JSON.parse(browser ? localStorage.rStudent ?? defaultValue : defaultValue);
-const initialResult = JSON.parse(browser ? localStorage.result ?? defaultValue : defaultValue);
+// const defaultValue: any = null;
+// const initialStudent = JSON.parse(browser ? localStorage.rStudent ?? defaultValue : defaultValue);
+// const initialResult = JSON.parse(browser ? localStorage.result ?? defaultValue : defaultValue);
 
 export const students = writable<Student[]>();
 export const student = writable<Student & { Class: Class }>();
@@ -47,14 +47,14 @@ export const result = writable<
   }
 >();
 
-rStudent.subscribe((value) => {
-  if (browser) {
-    localStorage.student = JSON.stringify(value);
-  }
-});
+// rStudent.subscribe((value) => {
+//   if (browser) {
+//     localStorage.student = JSON.stringify(value);
+//   }
+// });
 
-result.subscribe((value) => {
-  if (browser) {
-    localStorage.result = JSON.stringify(value);
-  }
-});
+// result.subscribe((value) => {
+//   if (browser) {
+//     localStorage.result = JSON.stringify(value);
+//   }
+// });
