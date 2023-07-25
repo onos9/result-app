@@ -6,8 +6,14 @@ import type { Subject, Prisma } from "@prisma/client";
 export const load: PageServerLoad = async ({ locals }) => {
   if (!locals.user?.arm) throw redirect(302, "/settings");
 
+  let subjects = await db.subject.findMany({ where: { arm: locals.user.arm } as any });
+  if (locals.user.arm == "eyfs")
+    subjects = await db.subject.findMany({
+      where: { arm: locals.user.arm, classId: locals.user.classId } as any,
+    });
+
   return {
-    subjects: await db.subject.findMany({ where: { arm: locals.user.arm } as any }),
+    subjects,
     classes: await db.class.findMany({ where: { arm: locals.user.arm } as any }),
     user: locals.user,
   };

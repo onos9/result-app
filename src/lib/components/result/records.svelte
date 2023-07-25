@@ -8,6 +8,11 @@
 
   export let records: Record[];
   export let resultId: string;
+  let subs = $subjects;
+
+  $: if ($user?.arm == "eyfs") {
+    subs = $subjects.filter((sub) => sub.classId == $user?.classId);
+  }
 
   type FormInput = {
     data: FormData;
@@ -237,7 +242,7 @@
               placeholder=" "
             >
               <option selected disabled>Choose Learning Area</option>
-              {#each $subjects.filter((sub) => sub.classId == $user?.classId) as subject}
+              {#each subs as subject}
                 <option>{subject.name}</option>
               {/each}
             </select>

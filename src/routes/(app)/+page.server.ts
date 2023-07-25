@@ -78,7 +78,7 @@ export const actions: Actions = {
     const data = Object.fromEntries(formData) as any;
     const { term, academicYear } = data;
     let result: Result;
-    console.log({ data });
+
     try {
       if (id) {
         result = await db.result.delete({ where: { id } });

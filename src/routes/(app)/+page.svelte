@@ -97,11 +97,15 @@
           </span>
           <span class="flex mr-3">
             <div class="i-bx:map text-lg leading-1 mr-1 text-primary" />
-            <p class="leading-1">{$user?.address || "Makurdi"}</p>
+            <p class="leading-1">{$user?.city || "Makurdi"}</p>
           </span>
           <span class="flex mr-3">
             <div class="i-bx:envelope text-lg leading-1 mr-1 text-primary" />
             <p class="">{$user?.email}</p>
+          </span>
+          <span class="flex mr-3">
+            <div class="i-bx:home text-lg leading-1 mr-1 text-primary" />
+            <p class="">{`${$user?.class?.name}(${$user?.class?.section})`}</p>
           </span>
         </div>
 
