@@ -34,9 +34,9 @@
     { id: "result", title: "Template", component: ResulteTemplate },
   ];
 
-  const getStudent = (remoteId: number, admin_no: string) => {
+  const getStudent = (remoteId: number, id: string) => {
     $rStudent = $rStudents.find((std) => std.id === remoteId);
-    $student = $students.find((std) => std.admissionNo?.split("/")[0] == admin_no) as Student & {
+    $student = $students.find((std) => std.admissionNo?.split("/")[0] == id) as Student & {
       Class: Class;
     };
 
@@ -48,7 +48,7 @@
     ) as typeof $result;
 
     isDropdown = true;
-    // console.log({ $result, $student, $rStudent, $configs });
+    console.log({ $result, $student, $rStudent, $configs });
   };
 
   const isComplete = (id: string) => {
@@ -163,7 +163,7 @@
         >
           {#each $rStudents as student}
             <li class="flex-row">
-              <a class="" href=" " on:click={() => getStudent(student.id, student.admission_no)}>
+              <a class="" href=" " on:click={() => getStudent(student.id, student.id)}>
                 <div class="flex items-center space-x-3">
                   {#if student?.student_photo}
                     <div class="avatar">
