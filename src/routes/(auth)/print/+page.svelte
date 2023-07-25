@@ -9,12 +9,12 @@
 
   import StudentInfo from "$lib/components/result/studentInfo.svelte";
   import { user } from "$lib/stores/user";
-  import type { PageData } from "./[id]/$types";
+  import type { PageData } from "./$types";
 
   export let data: PageData;
   let { rStudent, student, result } = data;
 
-  $: if (browser) console.log({ result });
+  // $: if (browser) console.log({ result });
 </script>
 
 <div data-theme="light" class="container mx-auto w-full h-full bg-custom">

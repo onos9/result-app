@@ -24,7 +24,6 @@ FROM node:lts-alpine as runner
 
 WORKDIR /app
 
-COPY --from=builder /app/.env ./.env
 COPY --from=builder /app/build ./build/
 COPY --from=builder /app/prisma ./prisma/
 COPY --from=builder /app/package.json ./package.json

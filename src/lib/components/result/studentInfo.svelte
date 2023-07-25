@@ -8,7 +8,7 @@
   // import type { student } from "$lib/stores/data_store";
 
   export let remote_student: any = null;
-  export let local_student: Student;
+  export let local_student: any;
   let admin_no: string;
   let checked = false;
 
@@ -53,7 +53,9 @@
           <span> Admission No </span>
         </td>
         <td class="py-2 pl-2 text-xs print:text-slate-500">
-          {admin_no}
+          {`${remote_student.year.slice(1, 3)}${remote_student.school_code}-${String(
+            remote_student?.admission_no
+          ).padStart(4, "0")}`}
         </td>
       </tr>
       <tr class="border-b">
@@ -191,7 +193,7 @@
               placeholder=" "
             />
             <label for="absent" class="floating-label peer-focus:text-accent-focus">
-                Days Absent
+              Days Absent
             </label>
           </div>
           <div class="relative col-span-6 sm:col-span-3">

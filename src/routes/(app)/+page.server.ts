@@ -100,7 +100,6 @@ export const actions: Actions = {
     }
 
     let record: Record;
-    console.log({ data });
     try {
       if (id && !edit) {
         record = await db.record.delete({ where: { id } });

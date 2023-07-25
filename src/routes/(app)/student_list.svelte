@@ -11,7 +11,7 @@
   let isNetAlert: boolean = false;
   let message: string;
   let checked: boolean;
-  $: if (browser) console.log({ $rStudents });
+  // $: if (browser) console.log({ $rStudents });
   let student:
     | (Student & {
         Class: Class | null;
