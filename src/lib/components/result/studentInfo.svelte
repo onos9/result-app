@@ -4,10 +4,11 @@
   import type { Class, Result, Student } from "@prisma/client";
   import { configs } from "$lib/stores/configs";
   import { onMount } from "svelte";
+  import { student } from "$lib/stores/data_store";
   // import type { student } from "$lib/stores/data_store";
 
   export let remote_student: any = null;
-  export let local_student: any;
+  export let local_student: Student;
   let admin_no: string;
   let checked = false;
 
@@ -19,7 +20,7 @@
     const id = String(remote_student?.admission_no).padStart(4, "0");
     const year = remote_student.year.slice(1, 3);
     const school = remote_student.school_code;
-    console.log({ id, year, school });
+    // console.log({ id, year, school });
     admin_no = `${year}${school}-${id}`;
   });
 </script>
@@ -62,7 +63,7 @@
           <span> Class </span>
         </td>
         <td class="py-2 text-xs print:text-slate-500 uppercase w-44"
-          >{remote_student?.class_name}
+          >{`${remote_student?.class_name}(${remote_student?.section_name})`}
         </td>
 
         <td
@@ -104,7 +105,7 @@
   </table>
   <div class="avatar flex flex-col px-4 justify-center items-center">
     <div class="w-24 rounded-full ring ring-neutral print:ring-violet-900 ring-offset-2 mb-4">
-      <img src="/{local_student?.avatarUrl}" alt="" />
+      <img src="/{local_student?.avatarUrl}" alt=" " />
     </div>
   </div>
 </div>
@@ -118,19 +119,13 @@
     use:enhance
   >
     <label for="modal-info" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
-    <p class="font-bold text-sm mb-3">Confirm Student Data</p>
+    <p class="font-bold text-sm mb-3">Update Student Data</p>
     <div class="mt-5 md:col-span-2 md:mt-0">
-      <p>
-        Are the data below correct for <span class="text-primary">{remote_student?.full_name}</span>
-      </p>
-      <div class="divider" />
-
       <div class="">
         <div class="avatar flex flex-col p-0 px-4 justify-center items-center">
           <div class="w-24 rounded-full ring ring-neutral ring-offset-base-100 ring-offset-2 mb-4">
             <img src="/{local_student?.avatarUrl}" alt="" />
-            <input hidden type="text" name="photo_url" value={local_student?.avatarUrl} />
-            <input hidden type="text" name="remoteId" value={remote_student?.id} />
+            <!-- <input hidden type="text" name="remoteId" value={remote_student?.id} /> -->
           </div>
         </div>
         <div class="grid grid-row-3 gap-4">
@@ -150,7 +145,7 @@
           <div class="relative col-span-6 sm:col-span-3">
             <input
               value={remote_student?.parents?.guardians_email}
-              name="email"
+              name="parentEmail"
               type="text"
               id="parentEmail"
               class=" input input-bordered floating-input peer focus:border-accent-focus"
@@ -171,6 +166,32 @@
             />
             <label for="admissionNo" class="floating-label peer-focus:text-accent-focus">
               Admission No
+            </label>
+          </div>
+          <div class="relative col-span-6 md:col-span-1">
+            <input
+              value={local_student?.present}
+              name="present"
+              type="text"
+              id="present"
+              class=" input input-bordered floating-input peer focus:border-accent-focus"
+              placeholder=" "
+            />
+            <label for="present" class="floating-label peer-focus:text-accent-focus">
+              Days Present
+            </label>
+          </div>
+          <div class="relative col-span-6 md:col-span-1">
+            <input
+              value={local_student?.absent}
+              name="absent"
+              type="text"
+              id="absent"
+              class=" input input-bordered floating-input peer focus:border-accent-focus"
+              placeholder=" "
+            />
+            <label for="absent" class="floating-label peer-focus:text-accent-focus">
+                Days Absent
             </label>
           </div>
           <div class="relative col-span-6 sm:col-span-3">

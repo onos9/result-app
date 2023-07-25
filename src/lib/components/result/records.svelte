@@ -4,6 +4,7 @@
   import { user } from "$lib/stores/user";
   import type { Grade, Record } from "@prisma/client";
   import Scores from "./scores.svelte";
+  import { onMount } from "svelte";
 
   export let records: Record[];
   export let resultId: string;
@@ -39,23 +40,24 @@
   let keys: any[] = [];
   let blacklist = ["id", "arm", "resultId", "createdAt", "updatedAt", "color"];
 
-  $: if (records?.length) {
+  onMount(() => {
     const record = records.filter((record) => record.arm == $user?.arm);
     keys = Object.entries(record[0] || {}).map(([key, value]) =>
       value && !blacklist.includes(key) ? key : null
     );
 
     if (keys.length) keys.push("action");
-  }
+    console.log({ $subjects });
+  });
 
   const onSubmit = async ({ form, action, data, cancel }: FormInput) => {
     data.set("resultId", resultId);
     data.set("arm", $user?.arm as string);
 
-    const gradePoint = data.get("grade") as never;
-    const outcome = data.get("outcome") as never;
-    if (gradePoint) data.set("color", colors[gradePoint]);
-    if (outcome) data.set("color", colors[outcome]);
+    const gradePoint = data.get("grade") as string;
+    const outcome = data.get("outcome") as string;
+    if (gradePoint) data.set("color", colors[gradePoint as never]);
+    if (outcome) data.set("color", colors[outcome.toLowerCase() as never]);
 
     return async ({ result, update }: any) => {
       console.log(result);
@@ -212,9 +214,7 @@
   {/if}
 </table>
 
-{#if records?.length}
-  <Scores {records} />
-{/if}
+<Scores {records} />
 
 <input bind:checked type="checkbox" id="modal-rec" class="modal-toggle" />
 <div class="modal">

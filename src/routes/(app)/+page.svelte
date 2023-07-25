@@ -48,7 +48,7 @@
     ) as typeof $result;
 
     isDropdown = true;
-    console.log({ $result, $student, $rStudent, $configs });
+    // console.log({ $result, $student, $rStudent, $configs });
   };
 
   const isComplete = (id: string) => {

@@ -29,7 +29,7 @@ export const load: PageServerLoad = async ({ fetch, locals, params }) => {
 
   const subjects = () =>
     db.subject.findMany({
-      where: { arm: locals.user?.arm, classId } as any,
+      where: { arm: locals.user?.arm } as any,
     });
 
   const classes = () =>
@@ -79,9 +79,6 @@ export const actions: Actions = {
     const { term, academicYear } = data;
     let result: Result;
     try {
-      const hasRe = await db.result.count({ where: { id, term, academicYear } });
-      if (hasRe && !id) return fail(500, { message: `${term} term result already exists` });
-
       if (id) {
         result = await db.result.delete({ where: { id } });
         return { deleted: result.id };
@@ -103,7 +100,7 @@ export const actions: Actions = {
     }
 
     let record: Record;
-
+    console.log({ data });
     try {
       if (id && !edit) {
         record = await db.record.delete({ where: { id } });
@@ -173,10 +170,7 @@ export const actions: Actions = {
   confirm: async ({ fetch, url, request }) => {
     const id = url.searchParams.get("id") as string;
     const formData = await request.formData();
-    const photo_url = formData.get("photo_url") as string;
     let file = formData.get("student_photo") as File;
-
-    formData.delete("photo_url");
     formData.delete("student_photo");
 
     const data = Object.fromEntries(formData) as any;
@@ -184,25 +178,18 @@ export const actions: Actions = {
     const name = student?.full_name?.toLowerCase().trim().replace(" ", "_");
     const ext = file.name.split(".").pop();
     const filename = name + "_" + Date.now().toString() + "." + ext;
-    let ab: ArrayBuffer;
 
     try {
-      if (!file.size) {
-        const blob = await (await fetch(photo_url)).blob();
-        file = new File([blob], filename, {
-          type: "image/jpeg",
-          lastModified: new Date().getTime(),
-        });
-        ab = await file.arrayBuffer();
-      } else {
-        ab = await file.arrayBuffer();
+      if (file.size) {
+        const dir = `static/uploads`;
+        const ab = await file.arrayBuffer();
+        data.avatarUrl = `uploads/${filename}`;
+        mkdirSync(dir, { recursive: true });
+        writeFileSync(`${dir}/${filename}`, Buffer.from(ab));
       }
 
-      let dir = `static/uploads`;
-      data.avatarUrl = `uploads/${filename}`;
-      mkdirSync(dir, { recursive: true });
-      writeFileSync(`${dir}/${filename}`, Buffer.from(ab));
-
+      data.admissionNo = `${data.admissionNo.split("-")[1].replace("00", "")}/${data.admissionNo}`;
+      console.log({ id, data });
       const result = await db.student.update({ where: { id }, data });
       return { result };
     } catch (err: any) {
