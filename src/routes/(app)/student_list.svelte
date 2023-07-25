@@ -106,7 +106,7 @@
             <tbody>
               {#each $rStudents as student, i}
                 <tr>
-                  <td>{i + 1}</td>
+                  <td>{student.id}</td>
                   <td>
                     <div class="flex items-center space-x-3">
                       {#if student?.student_photo}
