@@ -83,7 +83,7 @@ model Student {
 }
 
 model Subject {
-  id             String   @id @unique @default(uuid())
+  id             String  @id @unique @default(uuid())
   arm            String
   classId        String?
   name           String
@@ -91,9 +91,23 @@ model Subject {
   max_report     String?
   max_oral_point String?
   max_exam       String?
-  objective      String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+
+  objective   String?
+  objectiveId String?
+  obj         Objective? @relation(fields: [objectiveId], references: [id])
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Objective {
+  id        String    @id @unique @default(uuid())
+  arm       String?
+  term      String?
+  name      String?
+  text      String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Subject   Subject[]
 }
 
 model Grade {

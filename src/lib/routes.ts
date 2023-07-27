@@ -15,6 +15,12 @@ export const routes = [
       //   roles: ["SUPER_ADMIN", "ADMIN", "USER"],
       // },
       {
+        name: "Objectives",
+        badge: null,
+        url: "/objectives",
+        roles: ["SUPER_ADMIN", "ADMIN"],
+      },
+      {
         name: "Subjects",
         badge: null,
         url: "/subjects",
@@ -36,7 +42,7 @@ export const routes = [
         name: "Users",
         badge: null,
         url: "/users",
-        roles: ["SUPER_ADMIN","ADMIN"],
+        roles: ["SUPER_ADMIN", "ADMIN"],
       },
     ],
   },

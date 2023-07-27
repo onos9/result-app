@@ -8,6 +8,9 @@ import { mkdirSync, readFileSync, writeFileSync } from "fs";
 export const load: PageServerLoad = async ({ fetch, locals, params }) => {
   if (!locals.user?.arm) throw redirect(302, "/settings");
 
+  const term = locals.configs.find((cfg) => cfg.key == "term");
+  const academicYear = locals.configs.find((cfg) => cfg.key == "academicYear");
+
   let { name, section } = locals.user.class as Class;
   name = name?.toUpperCase().trim() as string;
   section = section?.toUpperCase().trim() as string;
@@ -23,7 +26,7 @@ export const load: PageServerLoad = async ({ fetch, locals, params }) => {
 
   const results = () =>
     db.result.findMany({
-      where: { classId },
+      where: { classId, term: term?.value, academicYear: academicYear?.value },
       include: { records: true, ratings: true, remarks: true, scores: true, student: true },
     });
 

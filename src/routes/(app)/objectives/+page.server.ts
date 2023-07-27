@@ -1,43 +1,38 @@
 import type { Actions, PageServerLoad } from "./$types";
 import { db } from "$lib/server/database";
 import { fail, redirect } from "@sveltejs/kit";
-import type { Subject, Prisma } from "@prisma/client";
+import type { Subject, Prisma, Objective } from "@prisma/client";
 
 export const load: PageServerLoad = async ({ locals }) => {
   if (!locals.user?.arm) throw redirect(302, "/settings");
-
-  let subjects = await db.subject.findMany({ where: { arm: locals.user.arm } as any });
-  if (locals.user.arm == "eyfs")
-    subjects = await db.subject.findMany({
-      where: { arm: locals.user.arm, classId: locals.user.classId } as any,
-      include: { obj: true },
-    });
 
   const term = locals.configs.find((cfg) => cfg.key == "term");
   let objectives = () => db.objective.findMany({ where: { term: term?.value } });
 
   return {
-    objectives: objectives(),
-    subjects,
-    classes: await db.class.findMany({ where: { arm: locals.user.arm } as any }),
-    user: locals.user,
+    objectives: await objectives(),
   };
 };
 
 export const actions: Actions = {
-  subject: async ({ request, locals, url }) => {
+  objective: async ({ request, locals, url }) => {
     const id = url.searchParams.get("id") as string;
     const data = Object.fromEntries(await request.formData()) as any;
-    let subject: Subject;
+    const term = locals.configs.find((cfg) => cfg.key == "term");
+
+    let objective: Objective;
     try {
-      if (!id) subject = await db.subject.create({ data: { ...data, arm: locals.user?.arm } });
-      else subject = await db.subject.update({ where: { id }, data });
+      if (!id)
+        objective = await db.objective.create({
+          data: { ...data, arm: locals.user?.arm, term: term?.value },
+        });
+      else objective = await db.objective.update({ where: { id }, data });
     } catch (err) {
       console.error(err);
       return fail(500, { message: "Could not create the article." });
     }
 
-    return { status: 200, subject };
+    return { status: 200, objective };
   },
 
   delete: async ({ url }) => {
@@ -47,7 +42,7 @@ export const actions: Actions = {
     }
 
     try {
-      await db.subject.delete({ where: { id } });
+      await db.objective.delete({ where: { id } });
     } catch (err) {
       console.error(err);
       return fail(500, {
@@ -55,6 +50,8 @@ export const actions: Actions = {
       });
     }
 
-    return { status: 200 };
+    return {
+      status: 200,
+    };
   },
 };
