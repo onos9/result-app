@@ -8,10 +8,10 @@
   export let data: PageData;
   let checked: boolean;
   let subject: Subject;
-  $: ({ subjects, objectives, classes } = data);
+  $: ({ subjects, classes } = data);
 
   const objs =
-    "Be confident to try new activities and speak in a familiar group |Work as part of a group or class taking turns and sharing fairly |Has an understanding of what is right, wrong and why, Responds to significant experiences showing a range of feelings when appropriate., Have a developing awareness of their own needs, feelings and are sensitive to the needs of others.";
+    "Be confident to try new activities and speak in a familiar group, Work as part of a group or class taking turns and sharing fairly, Has an understanding of what is right, wrong and why, Responds to significant experiences showing a range of feelings when appropriate., Have a developing awareness of their own needs, feelings and are sensitive to the needs of others.";
 
   const getSubject = (id: string) => {
     subject = subjects.find((sub) => sub.id == id) as Subject;
@@ -108,14 +108,17 @@
         class="input input-bordered input-info w-full max-w-lg mb-3"
       />
       {#if $user?.arm == "eyfs"}
-        <select name="objectiveId" class="select select-bordered w-full mb-3">
-          <option disabled selected>Select a Objective</option>
-          {#each objectives as obj}
-            <option value={obj.id}>
-              <span class="uppercase">{obj.name}</span>
-            </option>
-          {/each}
-        </select>
+        <div class="form-control mb-3">
+          <textarea
+            value={""}
+            name="objective"
+            placeholder="Objectives"
+            class="input input-bordered input-info w-full h-24"
+          />
+          <label for="obj" class="label">
+            <span class="label-text-alt text-info">Ratings should be comma seperated </span>
+          </label>
+        </div>
       {/if}
 
       {#if $user?.arm == "primary"}

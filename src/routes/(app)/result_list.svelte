@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { browser } from "$app/environment";
   import { enhance } from "$app/forms";
   import { configs } from "$lib/stores/configs";
   import { rStudent, results, student } from "$lib/stores/data_store";
@@ -7,6 +8,8 @@
   let message: string;
   let checked: boolean;
   let resultId: string;
+
+  if (browser) console.log({ $results, $configs });
 </script>
 
 <div class="md:container md:mx-auto">
