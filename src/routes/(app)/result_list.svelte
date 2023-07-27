@@ -51,7 +51,7 @@
                 <tr>
                   <th>
                     <label>
-                      <input checked={!!result.remoteId} type="checkbox" class="checkbox" />
+                      <input checked={!!result?.remoteId} type="checkbox" class="checkbox" />
                     </label>
                   </th>
                   <td>
