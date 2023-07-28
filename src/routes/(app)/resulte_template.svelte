@@ -37,7 +37,6 @@
     ) as typeof $result;
 
     disabled = !(!!$result && !!$student);
-    console.log({ $result, $student, disabled });
   };
 
   const isComplete = (id: string) => {
@@ -69,7 +68,7 @@
       <input hidden name="term" value={$configs?.term} type="text" />
       <input hidden name="classId" value={$user?.classId} type="text" />
       <input hidden name="studentId" value={$student?.id} type="text" />
-      <button disabled={!(!!$result && !!$student)} class="btn btn-primary ms-1">
+      <button disabled={!(!$result && !!$student)} class="btn btn-primary ms-1">
         New Result
       </button>
     </form>
