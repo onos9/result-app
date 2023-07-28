@@ -192,7 +192,7 @@ export const actions: Actions = {
       }
 
       data.admissionNo = `${remoteId}/${data.admissionNo}`;
-      console.log({ id, data });
+      // console.log({ id, data });
       const result = await db.student.update({ where: { id }, data });
       return { result };
     } catch (err: any) {
