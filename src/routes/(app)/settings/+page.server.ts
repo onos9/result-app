@@ -42,6 +42,7 @@ export const actions: Actions = {
       if (!response.ok) return fail(400, { loaded: true });
 
       const data = await response.json();
+      console.log({ data });
       writeFileSync("static/student-list.json", JSON.stringify({ ...data }));
       return { ...data };
     } catch (err) {
