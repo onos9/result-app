@@ -2,7 +2,7 @@
 	"name": "resultify",
 	"version": "0.0.1",
 	"scripts": {
-		"start": "rm -rf .svelte-kit; vite dev --host --open",
+		"start": "vite dev --host --open",
 		"prod": "node ./build",
 		"build": "vite build",
 		"preview": "vite preview --host",
