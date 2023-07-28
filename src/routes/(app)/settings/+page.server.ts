@@ -1,8 +1,7 @@
-import type { Actions, PageServerLoad } from "./$types";
 import { db } from "$lib/server/database";
 import { fail } from "@sveltejs/kit";
-import type { Subject, Prisma } from "@prisma/client";
-import { mkdirSync, writeFileSync } from "fs";
+import { writeFileSync } from "fs";
+import type { Actions, PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ locals }) => {
   const classes = await db.class.findMany();
@@ -30,10 +29,6 @@ export const actions: Actions = {
         message: "Something went wrong deleting your article",
       });
     }
-
-    return {
-      status: 200,
-    };
   },
 
   studentData: async ({ url, request, fetch }) => {
@@ -42,7 +37,6 @@ export const actions: Actions = {
       if (!response.ok) return fail(400, { loaded: true });
 
       const data = await response.json();
-      console.log({ data });
       writeFileSync("static/student-list.json", JSON.stringify({ ...data }));
       return { ...data };
     } catch (err) {
