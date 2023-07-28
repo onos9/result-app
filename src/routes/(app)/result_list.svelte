@@ -101,15 +101,15 @@
                       </span>
                     </div>
                   </td>
-                  <td class="flex text-xl justify-center">
-                    <div class="dropdown dropdown-end dropdown-left mb-3">
+                  <td class="flex text-xl justify-center ">
+                    <div class="dropdown dropdown-end dropdown-left mb-3 ">
                       <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
                       <label for="" tabindex="0" class="btn btn-ghost btn-sm p-0">
                         <div class="i-bx:dots-vertical-rounded text-xl" />
                       </label>
                       <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
                       <ul
-                        class="menu flex-row dropdown-content z-[1] p-2 shadow bg-base-200 rounded-box mt-4"
+                        class="menu dropdown-content z-[1] p-2 shadow bg-base-200 rounded-box "
                       >
                         <li>
                           <form action="?/upload&id={result.id}" method="post" use:enhance>
