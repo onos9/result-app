@@ -5,12 +5,15 @@ import type { Role, User } from "@prisma/client";
 
 import type { PageServerLoad } from "./$types";
 
-export const load: PageServerLoad = async ({ params, locals, url }) => {
+export const load: PageServerLoad = async ({ fetch, locals, url }) => {
   const id = url.searchParams.get("id") as string;
   const remoteId = url.searchParams.get("remoteId") as string;
   const term = locals.configs.find((cfg) => cfg.key == "term");
   const year = locals.configs.find((cfg) => cfg.key == "academicYear");
-  const rStudent = Pupils.find((std) => std.id === Number(remoteId));
+
+  const resp = await fetch("/student-list.json");
+  const { data } = await resp.json();
+  const rStudent = data.students.find((std: any) => std.id == remoteId);
 
   const student = await db.student.findUnique({
     where: { id },

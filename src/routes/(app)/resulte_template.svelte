@@ -9,12 +9,9 @@
   import { rStudents, results, students, result, rStudent, student } from "$lib/stores/data_store";
   import { user } from "$lib/stores/user";
   import type { Class, Student } from "@prisma/client";
-  import { onMount } from "svelte";
 
   let frame: HTMLIFrameElement;
   let disabled: boolean;
-
-  console.log($page.url)
 
   const onPrint = () => {
     // goto(`/print?id=${$student.id}&remoteId=${$rStudent?.id}`);
