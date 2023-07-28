@@ -5,7 +5,7 @@ import type { RequestEvent, RequestHandler } from "./$types";
 
 export const POST = (async ({ locals, request, fetch }: RequestEvent) => {
   const { dataUrl, id, remoteId, mimeType } = await request.json();
-  const blob = await(await fetch(dataUrl)).blob();
+  const blob = await (await fetch(dataUrl)).blob();
 
   const student = await db.student.findUnique({
     where: { id },
@@ -28,11 +28,13 @@ export const POST = (async ({ locals, request, fetch }: RequestEvent) => {
   const res = student?.result.find(
     (res) => res.studentId == id && res.term == term?.value
   ) as Result;
-  
+
   const data = await db.result.update({
     where: { id: res.id },
     data: { resultUrl, remoteId: remoteId },
   });
+
+  console.log({ data });
 
   return new Response(JSON.stringify({ success: true, data }), { status: 200 });
 }) satisfies RequestHandler;

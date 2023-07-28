@@ -61,20 +61,36 @@ export const load: PageServerLoad = async ({ fetch, locals, params }) => {
 
 export const actions: Actions = {
   student: async ({ request, url }) => {
-    const id = url.searchParams.get("id") as string;
-    const formData = await request.formData();
-    const data = Object.fromEntries(formData) as any;
-    let result: Student;
+   const id = url.searchParams.get("id") as string;
+   const remoteId = url.searchParams.get("remoteId") as string;
 
-    try {
-      if (id) result = await db.student.update({ where: { id }, data });
-      result = await db.student.create({ data });
+   const formData = await request.formData();
+   let file = formData.get("student_photo") as File;
+   formData.delete("student_photo");
 
-      return { result };
-    } catch (err) {
-      console.error(err);
-      return fail(500, { message: "Could not create the student." });
-    }
+   const data = Object.fromEntries(formData) as any;
+   const student = Pupils.find((std) => std.id == Number(remoteId));
+   const name = student?.full_name?.toLowerCase().trim().replace(" ", "_");
+   const ext = file.name.split(".").pop();
+   const filename = name + "_" + Date.now().toString() + "." + ext;
+
+   try {
+     if (file.size) {
+       const dir = `static/uploads`;
+       const ab = await file.arrayBuffer();
+       data.avatarUrl = `uploads/${filename}`;
+       mkdirSync(dir, { recursive: true });
+       writeFileSync(`${dir}/${filename}`, Buffer.from(ab));
+     }
+
+     data.admissionNo = `${remoteId}/${data.admissionNo}`;
+     console.log({ id, data });
+     const result = await db.student.update({ where: { id }, data });
+     return { result };
+   } catch (err) {
+     console.error(err);
+     return fail(500, { message: "Could not create the student." });
+   }
   },
 
   result: async ({ request, url }) => {
