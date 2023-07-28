@@ -1,11 +1,7 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import { compressImg } from "$lib/utils";
-  import type { Class, Result, Student } from "@prisma/client";
   import { configs } from "$lib/stores/configs";
   import { onMount } from "svelte";
-  import { student } from "$lib/stores/data_store";
-  // import type { student } from "$lib/stores/data_store";
 
   export let remote_student: any = null;
   export let local_student: any;
