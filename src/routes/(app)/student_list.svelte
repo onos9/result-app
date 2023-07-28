@@ -15,10 +15,6 @@
     const school = $rStudent.school_code;
     admin_no = `${year}${school}-${id}`;
     disabled = !!$rStudent && !!$student;
-    // if (!$student) {
-    //   const name = new RegExp($rStudent.full_name.replace(" ", "|")).text();
-    //   const std = $students.find((std) => std.fullName?.split(" ").some);
-    // }
 
     // console.log({ admin_no, id, $student,disabled });
   }
