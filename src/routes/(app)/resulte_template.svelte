@@ -2,24 +2,34 @@
   import { browser } from "$app/environment";
   import { enhance } from "$app/forms";
   import { goto } from "$app/navigation";
+  import { page } from "$app/stores";
   import { Rating, Remark, StudentInfo } from "$lib/components/result";
   import Records from "$lib/components/result/records.svelte";
   import { configs } from "$lib/stores/configs";
   import { rStudents, results, students, result, rStudent, student } from "$lib/stores/data_store";
   import { user } from "$lib/stores/user";
   import type { Class, Student } from "@prisma/client";
+  import { onMount } from "svelte";
 
   let frame: HTMLIFrameElement;
   let disabled: boolean;
 
+  console.log($page.url)
+
   const onPrint = () => {
     // goto(`/print?id=${$student.id}&remoteId=${$rStudent?.id}`);
     // return;
-    frame.src = `/print?id=${$student.id}&remoteId=${$rStudent?.id}`;
+    const params = `?id=${$student?.id}&remoteId=${$rStudent?.id}`;
+    window.history.pushState(null, $student?.fullName as string, `${$page.url.href}${params}`);
+
+    frame.src = `/print${params}`;
     frame.onload = () => {
       const content = frame.contentWindow;
-      content?.focus();
-      content?.print();
+      if (!content) return;
+      content.focus();
+      content.print();
+      content.onafterprint = () =>
+        window.history.pushState(null, $student?.fullName as string, $page.url.href);
     };
   };
 
