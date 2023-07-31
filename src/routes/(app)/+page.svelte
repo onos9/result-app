@@ -24,9 +24,6 @@
   let termNum = $configs.term == "first" ? 0 : $configs.term == "second" ? 1 : 2;
 
   export let form: ActionData;
-  $: if (browser) {
-    console.log({ form, $user, $rStudent });
-  }
 
   let items = [
     { id: "second", title: "Students", component: StudentList },
