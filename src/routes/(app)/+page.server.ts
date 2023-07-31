@@ -42,7 +42,7 @@ export const load: PageServerLoad = async ({ fetch, locals, params }) => {
       where: { arm: locals.user?.arm } as any,
     });
 
-  const { data } = await(await fetch("/student-list.json")).json();
+  const { data } = await (await fetch("/student-list.json")).json();
   const rStudents = data.students.filter(
     (std: any) => std.class_name == name && std.section_name == section
   );
@@ -209,7 +209,7 @@ export const actions: Actions = {
     if (!result) return fail(500, { message: "Could not find result." });
 
     const remoteId = Number(result?.remoteId);
-    const { data } = await(await fetch("/student-list.json")).json();
+    const { data } = await (await fetch("/student-list.json")).json();
     const student = data.students.find((std: any) => std.id == remoteId);
 
     const body = await request.formData();
@@ -253,9 +253,9 @@ export const actions: Actions = {
           where: { id: result?.id },
           data: { remoteId: result?.remoteId as any, status: "uploaded" },
         });
-      }
+      } else return fail(500, { ...data });
 
-      return { data };
+      return { ...data };
     } catch (err: any) {
       console.error(err);
       return fail(500, { error: err.code });

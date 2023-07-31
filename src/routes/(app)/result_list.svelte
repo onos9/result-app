@@ -8,6 +8,7 @@
   let message: string;
   let checked: boolean;
   let resultId: string;
+  let loading: boolean = true;
 
   if (browser) console.log({ $results, $configs });
 </script>
@@ -102,26 +103,38 @@
                     </div>
                   </td>
                   <td class="flex text-xl justify-center">
-                    <div class="dropdown dropdown-end dropdown-left mb-3">
-                      <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-                      <label for="" tabindex="0" class="btn btn-ghost btn-sm p-0">
-                        <div class="i-bx:dots-vertical-rounded text-xl" />
-                      </label>
-                      <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+                    <form
+                      action="?/upload&id={result.id}"
+                      method="post"
+                      use:enhance={() => {
+                        return ({ result, update }) => {
+                          update();
+                          console.log({ result });
+                          if (result?.type == "success") loading = false;
+                        };
+                      }}
+                    >
+                      <button>
+                        <span class:hidden={loading} class="loading loading-spinner loading-sm" />
+                        <div class="i-bx:cloud-upload text-primary text-xl" />
+                      </button>
+                    </form>
+                    <!-- <div class="dropdown dropdown-end dropdown-left mb-3">
+                      <button  tabindex="0" class="btn btn-ghost btn-sm p-0">
+                        <div class="i-bx:cloud-upload text-xl" />
+                      </button>
                       <ul class="menu dropdown-content z-[1] p-2 shadow bg-base-200 rounded-box">
                         <li>
                           <form action="?/upload&id={result.id}" method="post" use:enhance>
                             <a target="_blank" href="/{result.resultUrl}">View</a>
                           </form>
-                          <form action="?/upload&id={result.id}" method="post" use:enhance>
-                            <button>Upload</button>
-                          </form>
+                
                           <form action="?/result&id={result.id}" method="post" use:enhance>
                             <button class="btn-link text-error">Delete</button>
                           </form>
                         </li>
                       </ul>
-                    </div>
+                    </div> -->
                   </td>
                 </tr>
               {/each}
