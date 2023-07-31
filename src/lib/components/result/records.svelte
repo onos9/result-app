@@ -47,7 +47,7 @@
     );
 
     if (keys.length) keys.push("action");
-    console.log({ $subjects });
+    // console.log({ $subjects });
   });
 
   const onSubmit = async ({ form, action, data, cancel }: FormInput) => {

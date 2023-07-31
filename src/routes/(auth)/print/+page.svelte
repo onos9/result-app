@@ -14,7 +14,7 @@
   export let data: PageData;
   let { rStudent, student, result } = data;
 
-  $: console.log({ result });
+  // $: console.log({ result, rStudent, student });
 </script>
 
 <div data-theme="light" class="container mx-auto w-full h-full bg-custom">

@@ -8,6 +8,7 @@
   let message: string;
   let checked: boolean;
   let resultId: string;
+  let loading: boolean = false;
 
   if (browser) console.log({ $results, $configs });
 </script>
@@ -101,29 +102,39 @@
                       </span>
                     </div>
                   </td>
-                  <td class="flex text-xl justify-center ">
-                    <div class="dropdown dropdown-end dropdown-left mb-3 ">
-                      <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-                      <label for="" tabindex="0" class="btn btn-ghost btn-sm p-0">
-                        <div class="i-bx:dots-vertical-rounded text-xl" />
-                      </label>
-                      <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-                      <ul
-                        class="menu dropdown-content z-[1] p-2 shadow bg-base-200 rounded-box "
-                      >
-                        <li>
-                          <form action="?/upload&id={result.id}" method="post" use:enhance>
-                            <a target="_blank" href="/{result.resultUrl}">View</a>
-                          </form>
-                          <form action="?/upload&id={result.id}" method="post" use:enhance>
-                            <button>Upload</button>
-                          </form>
-                          <form action="?/result&id={result.id}" method="post" use:enhance>
-                            <button class="btn-link text-error">Delete</button>
-                          </form>
-                        </li>
-                      </ul>
-                    </div>
+                  <td class="flex text-xl justify-center">
+                    <form
+                      action="?/upload&id={result.id}"
+                      method="post"
+                      use:enhance={() => {
+                        loading = true;
+                        return ({ result, update }) => {
+                          update();
+                          if (result?.type == "success") loading = false;
+                        };
+                      }}
+                    >
+                      <button class:hidden={!result?.remoteId}>
+                        {#if loading}
+                          <span class="loading loading-spinner loading-sm" />
+                        {:else}
+                          <div class="i-bx:cloud-upload text-primary text-xl" />
+                        {/if}
+                      </button>
+                    </form>
+                    {#if !result?.remoteId}
+                      <div class="tooltip" data-tip="Delete">
+                        <button
+                          on:click={() => {
+                            checked = true;
+                            resultId = result.id;
+                          }}
+                          class="btn-link text-error"
+                        >
+                          <div class="i-bx:trash text-xl" />
+                        </button>
+                      </div>
+                    {/if}
                   </td>
                 </tr>
               {/each}
@@ -149,42 +160,13 @@
         };
       }}
     >
-      <div class="mt-5 md:col-span-2 md:mt-0">
-        <label for="modal-result" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
-        <div class="font-bold text-sm mb-5">Add a New Result</div>
-
-        <div class="grid grid-cols-6 gap-4">
-          <fieldset class="col-span-6">
-            <legend class="contents text-sm font-semibold leading-6">Select Term</legend>
-            <input hidden type="text" name="academicYear" value={$configs?.academicYear} />
-            <input hidden type="text" name="classId" value={$student?.classId} />
-            <input hidden type="text" name="studentId" value={$student?.id} />
-            <!-- <input hidden type="text" name="remoteId" value={$rStudent?.id} /> -->
-            <div class="mt-4 space-y-4">
-              <div class="flex items-center">
-                <input type="radio" name="term" value="first" class="radio" />
-                <label for="mail" class="ml-3 block text-sm font-medium leading-6">
-                  First Term
-                </label>
-              </div>
-              <div class="flex items-center">
-                <input type="radio" name="term" value="second" class="radio" />
-                <label for="femail" class="ml-3 block text-sm font-medium leading-6">
-                  Second Term
-                </label>
-              </div>
-              <div class="flex items-center">
-                <input type="radio" name="term" value="third" class="radio" />
-                <label for="femail" class="ml-3 block text-sm font-medium leading-6">
-                  Third Term
-                </label>
-              </div>
-            </div>
-          </fieldset>
-        </div>
+      <div class="flex justify-center border">
+        <p>Are yot sure you want to delete this result?</p>
       </div>
+
       <div class="modal-action">
-        <button class="btn btn-sm">Submit</button>
+        <button type="button" class="btn btn-sm">No</button>
+        <button class="btn btn-sm">Yes</button>
       </div>
     </form>
   </div>

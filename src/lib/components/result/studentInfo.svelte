@@ -1,24 +1,19 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import { configs } from "$lib/stores/configs";
-  import { onMount } from "svelte";
 
   export let remote_student: any = null;
   export let local_student: any;
   let admin_no: string;
   let checked = false;
-
   let isCorrect: boolean;
 
-  onMount(() => {
-    // if (remote_student?.admission_no !== local_student?.admissionNo) checked = true;
-
+  $: {
     const id = String(remote_student?.admission_no).padStart(4, "0");
     const year = remote_student.year.slice(1, 3);
     const school = remote_student.school_code;
-    // console.log({ id, year, school });
     admin_no = `${year}${school}-${id}`;
-  });
+  }
 </script>
 
 <div class="text-sm flex mb-3 print:hidden">
@@ -49,9 +44,7 @@
           <span> Admission No </span>
         </td>
         <td class="py-2 pl-2 text-xs print:text-slate-500">
-          {`${remote_student.year.slice(1, 3)}${remote_student.school_code}-${String(
-            remote_student?.admission_no
-          ).padStart(4, "0")}`}
+          {admin_no}
         </td>
       </tr>
       <tr class="border-b">

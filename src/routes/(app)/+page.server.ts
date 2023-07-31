@@ -42,9 +42,7 @@ export const load: PageServerLoad = async ({ fetch, locals, params }) => {
       where: { arm: locals.user?.arm } as any,
     });
 
-  const resp = await fetch("/student-list.json");
-  const { data } = await resp.json();
-
+  const { data } = await (await fetch("/student-list.json")).json();
   const rStudents = data.students.filter(
     (std: any) => std.class_name == name && std.section_name == section
   );
@@ -177,7 +175,8 @@ export const actions: Actions = {
     formData.delete("student_photo");
 
     const data = Object.fromEntries(formData) as any;
-    const student = Pupils.find((std) => std.id == Number(remoteId));
+    const json = await (await fetch("/student-list.json")).json();
+    const student = json.data.students.find((std: any) => std.id == remoteId);
     const name = student?.full_name?.toLowerCase().trim().replace(" ", "_");
     const ext = file.name.split(".").pop();
     const filename = name + "_" + Date.now().toString() + "." + ext;
@@ -209,8 +208,10 @@ export const actions: Actions = {
     });
     if (!result) return fail(500, { message: "Could not find result." });
 
-    const remoteId = Number(result?.student?.remoteId);
-    const student = Pupils.find((std) => std.id == remoteId);
+    const remoteId = Number(result?.remoteId);
+    const { data } = await (await fetch("/student-list.json")).json();
+    const student = data.students.find((std: any) => std.id == remoteId);
+
     const body = await request.formData();
 
     let cfgEntries = locals?.configs?.map((cfg: any) => [cfg.key, cfg.value]);
@@ -219,6 +220,7 @@ export const actions: Actions = {
 
     body.append("id", student?.id as any);
     body.append("full_name", student?.full_name as any);
+    body.append("guardians_email", student?.parents?.guardians_email as any);
 
     try {
       const date = new Date(cfg.resumptionDate);
@@ -245,15 +247,15 @@ export const actions: Actions = {
       if (data.success) {
         await db.student.update({
           where: { id: result?.student?.id as string },
-          data: { remoteId: student?.id as any },
+          data: { remoteId: result?.remoteId as any },
         });
         await db.result.update({
           where: { id: result?.id },
-          data: { remoteId: student?.id as any, status: "uploaded" },
+          data: { remoteId: result?.remoteId as any, status: "uploaded" },
         });
-      }
+      } else return fail(500, { ...data });
 
-      return { data };
+      return { ...data };
     } catch (err: any) {
       console.error(err);
       return fail(500, { error: err.code });

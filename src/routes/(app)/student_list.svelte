@@ -8,6 +8,7 @@
   let message: string;
   let admin_no: string;
   let disabled: boolean = true;
+  let loading: boolean = true;
 
   $: if (browser && $rStudent) {
     const id = String($rStudent.admission_no).padStart(4, "0");
@@ -23,13 +24,25 @@
 <div class="md:container md:mx-auto">
   <div class="flex flex-col w-full">
     <div class="flex justify-end w-full">
-      <form action="?/student" method="POST" use:enhance>
+      <form
+        action="?/student"
+        method="POST"
+        use:enhance={() => {
+          return ({ result, update }) => {
+            update();
+            if (result?.type == "success") loading = false;
+          };
+        }}
+      >
         <input hidden value={$user?.classId} name="classId" type="text" />
         <input hidden value={$user?.id} name="userId" type="text" />
         <input hidden value={$rStudent?.full_name} name="fullName" type="text" />
         <input hidden value={`${$rStudent?.id}/${admin_no}`} name="admissionNo" />
         <input hidden value={$rStudent?.parents?.guardians_email} name="parentEmail" />
-        <button hidden {disabled} class="btn btn-primary mb-3"> Add Student to list </button>
+        <button hidden {disabled} class="btn btn-primary mb-3">
+          <span class:hidden={loading} class="loading loading-spinner loading-sm" />
+          Add Student to list
+        </button>
       </form>
     </div>
 
