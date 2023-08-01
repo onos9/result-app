@@ -114,7 +114,7 @@
                         };
                       }}
                     >
-                      <button class:hidden={!result?.remoteId}>
+                      <button class:hidden={!result?.remoteId && resultId == result.id}>
                         {#if loading}
                           <span class="loading loading-spinner loading-sm" />
                         {:else}
