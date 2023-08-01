@@ -42,7 +42,7 @@
     highest = averages.pop();
     lowest = averages.reverse().pop();
 
-    fetch(`api/result/${resultId}`, {
+    fetch(`/api/result/${resultId}`, {
       method: "POST",
       body: JSON.stringify({ lowest, highest }),
     }).then((resp) =>
@@ -73,13 +73,13 @@
       >
         <span> High Class Average </span>
       </td>
-      <td class="py-2 text-xs print:text-slate-500 px-10">{(result?.highest ?? highest) || 0}</td>
+      <td class="py-2 text-xs print:text-slate-500 px-10">{result?.highest || 0}</td>
       <td
         class="print:bg-violet-900 whitespace-nowrap capitalize btn btn-xs border print:text-slate-300 cursor-default rounded-full"
       >
         <span> Low Class Average </span>
       </td>
-      <td class="py-2 text-xs print:text-slate-500 px-10">{(result?.lowest ?? highest) || 0}</td>
+      <td class="py-2 text-xs print:text-slate-500 px-10">{result?.lowest || 0}</td>
     </tr>
     <tr class="border-b">
       <td
