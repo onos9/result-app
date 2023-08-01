@@ -32,8 +32,8 @@
 
       {#if result?.id}
         <StudentRecords records={result?.records} resultId={result.id} />
-        <Scores {lowest} {highest} records={result?.records} />
-
+        <Scores records={result?.records} resultId={result.id} {result} />
+x
         {#if $user?.arm == "primary"}
           <StudentRating ratings={result?.ratings} resultId={result.id} />
         {/if}
