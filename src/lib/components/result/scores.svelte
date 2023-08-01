@@ -1,10 +1,13 @@
 <script lang="ts">
+  import hi from "$lib/datepicker/i18n/locales/hi";
   import { configs } from "$lib/stores/configs";
   import { results, student } from "$lib/stores/data_store";
   import { user } from "$lib/stores/user";
-  import type { Record } from "@prisma/client";
+  import type { Record, Result } from "@prisma/client";
 
   export let records: Record[];
+  export let resultId: string;
+  export let result: Result | null = null;
 
   type FormInput = {
     data: FormData;
@@ -13,8 +16,8 @@
     cancel(): void;
   };
 
-  export let highest: number | undefined;
-  export let lowest: number | undefined;
+  let highest: number | undefined;
+  let lowest: number | undefined;
   let totalScore: number;
   let averageScore: number;
 
@@ -38,6 +41,15 @@
     averages = averages.sort((a, b) => a - b);
     highest = averages.pop();
     lowest = averages.reverse().pop();
+
+    fetch(`api/result/${resultId}`, {
+      method: "POST",
+      body: JSON.stringify({ lowest, highest }),
+    }).then((resp) =>
+      resp.json().then((body) => {
+        console.log({ body });
+      })
+    );
   }
 </script>
 
@@ -61,13 +73,13 @@
       >
         <span> High Class Average </span>
       </td>
-      <td class="py-2 text-xs print:text-slate-500 px-10">{highest || 0}</td>
+      <td class="py-2 text-xs print:text-slate-500 px-10">{result?.highest || 0}</td>
       <td
         class="print:bg-violet-900 whitespace-nowrap capitalize btn btn-xs border print:text-slate-300 cursor-default rounded-full"
       >
         <span> Low Class Average </span>
       </td>
-      <td class="py-2 text-xs print:text-slate-500 px-10">{lowest || 0}</td>
+      <td class="py-2 text-xs print:text-slate-500 px-10">{result?.lowest || 0}</td>
     </tr>
     <tr class="border-b">
       <td
