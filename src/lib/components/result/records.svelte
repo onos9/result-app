@@ -214,8 +214,6 @@
   {/if}
 </table>
 
-<Scores {records} />
-
 <input bind:checked type="checkbox" id="modal-rec" class="modal-toggle" />
 <div class="modal">
   <div class="modal-box md:w-3/12 w-10/12 relative">

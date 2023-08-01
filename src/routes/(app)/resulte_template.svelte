@@ -3,7 +3,7 @@
   import { enhance } from "$app/forms";
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
-  import { Rating, Remark, StudentInfo } from "$lib/components/result";
+  import { Rating, Remark, Scores, StudentInfo } from "$lib/components/result";
   import Records from "$lib/components/result/records.svelte";
   import { configs } from "$lib/stores/configs";
   import { rStudents, results, students, result, rStudent, student } from "$lib/stores/data_store";
@@ -120,6 +120,7 @@
           <div class="card-body overflow-x-auto">
             {#if $result?.id}
               <Records records={$result?.records} resultId={$result?.id} />
+              <Scores records={$result?.records} />
             {/if}
           </div>
         </div>
