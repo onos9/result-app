@@ -127,6 +127,8 @@ model Result {
   term         String
   lowest       String?
   highest      String?
+  totalScore   String?
+  averageScore String?
   academicYear String?
   studentId    String
   remoteId     String?

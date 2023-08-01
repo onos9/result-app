@@ -44,7 +44,12 @@
 
     const resp = await fetch(`/api/result/${resultId}`, {
       method: "POST",
-      body: JSON.stringify({ lowest: String(lowest), highest: String(highest) }),
+      body: JSON.stringify({
+        lowest: String(lowest),
+        highest: String(highest),
+        totalScore: String(totalScore),
+        averageScore: String(averageScore),
+      }),
     });
 
     const body = await resp.json();
@@ -60,13 +65,13 @@
       >
         <span> Total Score </span>
       </td>
-      <td class="py-2 text-xs print:text-slate-500">{totalScore || 0}</td>
+      <td class="py-2 text-xs print:text-slate-500">{res?.totalScore || 0}</td>
       <td
         class="print:bg-violet-900 whitespace-nowrap capitalize btn btn-xs border print:text-slate-300 cursor-default rounded-full"
       >
         <span> Average Score </span>
       </td>
-      <td class="py-2 text-xs print:text-slate-500 px-5">{averageScore || 0}</td>
+      <td class="py-2 text-xs print:text-slate-500 px-5">{res?.averageScore || 0}</td>
       <td
         class="print:bg-violet-900 whitespace-nowrap capitalize btn btn-xs border print:text-slate-300 cursor-default rounded-full"
       >
