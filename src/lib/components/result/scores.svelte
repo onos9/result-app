@@ -18,7 +18,7 @@
   let totalScore: number;
   let averageScore: number;
 
-  const average = (el: any) => {
+  $: {
     const scores = records.map((record) => Number(record.score));
     if (scores) {
       totalScore = scores?.reduce((sum, score) => sum + score, 0);
@@ -38,13 +38,10 @@
     averages = averages.sort((a, b) => a - b);
     highest = averages.pop();
     lowest = averages.reverse().pop();
-    return {
-      destroy() {},
-    };
-  };
+  }
 </script>
 
-<table use:average class="min-w-max w-full table-fixed mb-5 rounded print:break-inside-avoid">
+<table class="min-w-max w-full table-fixed mb-5 rounded print:break-inside-avoid">
   <tbody class="align-baseline">
     <tr class="border-b">
       <td
@@ -79,7 +76,7 @@
         <span> Grading System </span>
       </td>
       <td colspan="4" class="py-2 px-5 text-xs print:text-slate-500 uppercase">
-        {#if $user?.arm == "eyfs"}
+        {#if $user.arm == "eyfs"}
           {`Emerging(0-80) Expected(81-90) Exceeding(91-100)`}
         {:else}
           {`A(94-100) B(86-93) C(77-85) D(70-76) E(0-69)`}
