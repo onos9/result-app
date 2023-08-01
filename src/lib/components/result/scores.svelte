@@ -13,8 +13,8 @@
     cancel(): void;
   };
 
-  let highest: number | undefined;
-  let lowest: number | undefined;
+  export let highest: number | undefined;
+  export let lowest: number | undefined;
   let totalScore: number;
   let averageScore: number;
 
@@ -76,7 +76,7 @@
         <span> Grading System </span>
       </td>
       <td colspan="4" class="py-2 px-5 text-xs print:text-slate-500 uppercase">
-        {#if $user.arm == "eyfs"}
+        {#if $user?.arm == "eyfs"}
           {`Emerging(0-80) Expected(81-90) Exceeding(91-100)`}
         {:else}
           {`A(94-100) B(86-93) C(77-85) D(70-76) E(0-69)`}

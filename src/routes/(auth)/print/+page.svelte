@@ -1,7 +1,9 @@
 <script lang="ts">
   import { browser } from "$app/environment";
+  import { page } from "$app/stores";
   import {
     Header,
+    Scores,
     Rating as StudentRating,
     Records as StudentRecords,
     Remark as StudentRemark,
@@ -12,6 +14,8 @@
   import type { PageData } from "./$types";
 
   export let data: PageData;
+  let lowest: number = Number($page.url.searchParams.get("lowest"));
+  let highest: number = Number($page.url.searchParams.get("highest"));
   let { rStudent, student, result } = data;
 
   // $: console.log({ result, rStudent, student });
@@ -28,6 +32,7 @@
 
       {#if result?.id}
         <StudentRecords records={result?.records} resultId={result.id} />
+        <Scores {lowest} {highest} records={result?.records} />
 
         {#if $user?.arm == "primary"}
           <StudentRating ratings={result?.ratings} resultId={result.id} />
