@@ -12,11 +12,13 @@
 
   let frame: HTMLIFrameElement;
   let disabled: boolean;
+  let lowest: number;
+  let highest: number;
 
   const onPrint = () => {
     // goto(`/print?id=${$student.id}&remoteId=${$rStudent?.id}`);
     // return;
-    const params = `?id=${$student?.id}&remoteId=${$rStudent?.id}`;
+    const params = `?id=${$student?.id}&remoteId=${$rStudent?.id}&lowest=${lowest}&highest=${highest}`;
     window.history.pushState(null, $student?.fullName as string, `${$page.url.href}${params}`);
 
     frame.src = `/print${params}`;
@@ -120,7 +122,7 @@
           <div class="card-body overflow-x-auto">
             {#if $result?.id}
               <Records records={$result?.records} resultId={$result?.id} />
-              <Scores records={$result?.records} />
+              <Scores bind:lowest bind:highest records={$result?.records} />
             {/if}
           </div>
         </div>

@@ -13,8 +13,8 @@
     cancel(): void;
   };
 
-  let highest: number | undefined;
-  let lowest: number | undefined;
+  export let highest: number | undefined;
+  export let lowest: number | undefined;
   let totalScore: number;
   let averageScore: number;
 
