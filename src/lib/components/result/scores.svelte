@@ -1,13 +1,12 @@
 <script lang="ts">
-  import hi from "$lib/datepicker/i18n/locales/hi";
   import { configs } from "$lib/stores/configs";
-  import { results, student } from "$lib/stores/data_store";
+  import { results, student, result } from "$lib/stores/data_store";
   import { user } from "$lib/stores/user";
   import type { Record, Result } from "@prisma/client";
 
   export let records: Record[];
   export let resultId: string;
-  export let result: Result | null = null;
+  export let res: Result | null = $result;
 
   type FormInput = {
     data: FormData;
@@ -73,13 +72,13 @@
       >
         <span> High Class Average </span>
       </td>
-      <td class="py-2 text-xs print:text-slate-500 px-10">{result?.highest || 0}</td>
+      <td class="py-2 text-xs print:text-slate-500 px-10">{res?.highest || 0}</td>
       <td
         class="print:bg-violet-900 whitespace-nowrap capitalize btn btn-xs border print:text-slate-300 cursor-default rounded-full"
       >
         <span> Low Class Average </span>
       </td>
-      <td class="py-2 text-xs print:text-slate-500 px-10">{result?.lowest || 0}</td>
+      <td class="py-2 text-xs print:text-slate-500 px-10">{res?.lowest || 0}</td>
     </tr>
     <tr class="border-b">
       <td
