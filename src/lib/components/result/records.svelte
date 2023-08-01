@@ -3,7 +3,6 @@
   import { grades, subjects } from "$lib/stores/data_store";
   import { user } from "$lib/stores/user";
   import type { Grade, Record } from "@prisma/client";
-  import Scores from "./scores.svelte";
   import { onMount } from "svelte";
 
   export let records: Record[];
