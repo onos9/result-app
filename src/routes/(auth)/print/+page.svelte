@@ -32,7 +32,7 @@
 
       {#if result?.id}
         <StudentRecords records={result?.records} resultId={result.id} />
-        <Scores records={result?.records} resultId={result.id} {result} />
+        <Scores records={result?.records} resultId={result.id} res={result} />
 x
         {#if $user?.arm == "primary"}
           <StudentRating ratings={result?.ratings} resultId={result.id} />
