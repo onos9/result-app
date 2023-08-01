@@ -44,7 +44,7 @@
 
     fetch(`/api/result/${resultId}`, {
       method: "POST",
-      body: JSON.stringify({ lowest, highest }),
+      body: JSON.stringify({ lowest: String(lowest), highest: String(highest) }),
     }).then((resp) =>
       resp.json().then((body) => {
         console.log({ body });
