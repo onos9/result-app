@@ -3,6 +3,7 @@
   import { results, student, result } from "$lib/stores/data_store";
   import { user } from "$lib/stores/user";
   import type { Record, Result } from "@prisma/client";
+  import { onMount } from "svelte";
 
   export let records: Record[];
   export let resultId: string;
@@ -20,7 +21,7 @@
   let totalScore: number;
   let averageScore: number;
 
-  $: {
+  onMount(async () => {
     const scores = records.map((record) => Number(record.score));
     if (scores) {
       totalScore = scores?.reduce((sum, score) => sum + score, 0);
@@ -41,15 +42,14 @@
     highest = averages.pop();
     lowest = averages.reverse().pop();
 
-    fetch(`/api/result/${resultId}`, {
+    const resp = await fetch(`/api/result/${resultId}`, {
       method: "POST",
       body: JSON.stringify({ lowest: String(lowest), highest: String(highest) }),
-    }).then((resp) =>
-      resp.json().then((body) => {
-        console.log({ body });
-      })
-    );
-  }
+    });
+
+    const body = await resp.json();
+    console.log({ body });
+  });
 </script>
 
 <table class="min-w-max w-full table-fixed mb-5 rounded print:break-inside-avoid">
