@@ -42,7 +42,7 @@
     highest = averages.pop();
     lowest = averages.reverse().pop();
 
-    fetch(`api/result/${resultId}`, {
+    fetch(`/api/result/${resultId}`, {
       method: "POST",
       body: JSON.stringify({ lowest, highest }),
     }).then((resp) =>
