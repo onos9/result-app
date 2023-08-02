@@ -25,7 +25,7 @@
 
       {#if $result?.id}
         <StudentRecords records={$result?.records} resultId={$result.id} />
-        <Scores records={$result?.records} resultId={$result.id} />
+        <Scores />
         x
         {#if $user?.arm == "primary"}
           <StudentRating ratings={$result?.ratings} resultId={$result.id} />
