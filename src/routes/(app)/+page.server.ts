@@ -243,7 +243,7 @@ export const actions: Actions = {
 
       const resp = await fetch(`/api/update-student`, { method: "POST", body });
       const data = await resp.json();
-
+      console.log({ data, file });
       if (data.success) {
         await db.student.update({
           where: { id: result?.student?.id as string },
