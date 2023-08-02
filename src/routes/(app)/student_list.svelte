@@ -41,7 +41,7 @@
         <input hidden value={$rStudent?.parents?.guardians_email} name="parentEmail" />
         <button hidden {disabled} class="btn btn-primary mb-3">
           <span class:hidden={loading} class="loading loading-spinner loading-sm" />
-          Add Student to list
+          Add Student to class
         </button>
       </form>
     </div>
