@@ -15,11 +15,11 @@
 
 <div class="md:container md:mx-auto">
   <div class="flex flex-col w-full">
-    <!-- <div class="flex justify-end w-full">
+    <div class="flex justify-end w-full">
       <label class:btn-disabled={!$student} for="modal-result" class="btn btn-primary mb-3">
         New Result
       </label>
-    </div> -->
+    </div>
 
     <div class="card bg-base-100 shadow-xl col-span-2 md:w-full w-screen">
       <div class="card-body">
