@@ -23,7 +23,7 @@ export const comments = writable<Comment[]>([]);
 // const initialResult = JSON.parse(browser ? localStorage.result ?? defaultValue : defaultValue);
 
 export const students = writable<Student[]>();
-export const student = writable<(Student & { Class: Class }) | null>();
+export const student = writable<(Student & { Class: Class }) | Student | null>();
 
 export const rStudent = writable<any>();
 export const rStudents = writable<any[]>();

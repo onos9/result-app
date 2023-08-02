@@ -8,7 +8,7 @@ export const load = (async ({ data }) => {
 
   configs.set(Object.fromEntries(cfg) || {});
   user.set(data?.user);
+  student.set(data.student);
   rStudent.set(data?.rStudent);
   result.set(data.result);
-
 }) satisfies PageLoad;

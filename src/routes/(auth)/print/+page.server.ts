@@ -17,7 +17,7 @@ export const load: PageServerLoad = async ({ fetch, locals, url }) => {
 
   const student = await db.student.findUnique({
     where: { id },
-    include: { Class: true, result: true },
+    include: { Class: true },
   });
 
   const result = await db.result.findFirst({
