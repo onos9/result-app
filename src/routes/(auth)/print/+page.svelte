@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { browser } from "$app/environment";
-  import { page } from "$app/stores";
   import {
     Header,
     Scores,
@@ -10,13 +8,8 @@
   } from "$lib/components/result";
 
   import StudentInfo from "$lib/components/result/studentInfo.svelte";
+  import { rStudent, result } from "$lib/stores/data_store";
   import { user } from "$lib/stores/user";
-  import type { PageData } from "./$types";
-
-  export let data: PageData;
-  let lowest: number = Number($page.url.searchParams.get("lowest"));
-  let highest: number = Number($page.url.searchParams.get("highest"));
-  let { rStudent, student, result } = data;
 
   // $: console.log({ result, rStudent, student });
 </script>
@@ -26,19 +19,19 @@
     <Header />
 
     <div class="font-san">
-      {#if result?.id}
-        <StudentInfo remote_student={rStudent} local_student={student} />
+      {#if $result?.id}
+        <StudentInfo remote_student={$rStudent} local_student={$rStudent} />
       {/if}
 
-      {#if result?.id}
-        <StudentRecords records={result?.records} resultId={result.id} />
-        <Scores records={result?.records} resultId={result.id} res={result} />
-x
+      {#if $result?.id}
+        <StudentRecords records={$result?.records} resultId={$result.id} />
+        <Scores records={$result?.records} resultId={$result.id} />
+        x
         {#if $user?.arm == "primary"}
-          <StudentRating ratings={result?.ratings} resultId={result.id} />
+          <StudentRating ratings={$result?.ratings} resultId={$result.id} />
         {/if}
 
-        <StudentRemark remarks={result?.remarks} resultId={result.id} />
+        <StudentRemark remarks={$result?.remarks} resultId={$result.id} />
       {/if}
 
       <div class="h-96" />

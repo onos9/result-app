@@ -120,7 +120,7 @@
           <div class="card-body overflow-x-auto">
             {#if $result?.id}
               <Records records={$result?.records} resultId={$result?.id} />
-              <Scores records={$result?.records} resultId={$result?.id} />
+              <Scores/>
             {/if}
           </div>
         </div>

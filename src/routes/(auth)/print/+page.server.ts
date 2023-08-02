@@ -20,15 +20,15 @@ export const load: PageServerLoad = async ({ fetch, locals, url }) => {
     include: { Class: true, result: true },
   });
 
-  const result = await db.result.findMany({
+  const result = await db.result.findFirst({
     where: { studentId: id, term: term?.value, academicYear: year?.value },
-    include: { records: true, ratings: true, remarks: true, scores: true },
+    include: { records: true, ratings: true, remarks: true, scores: true, student:true },
   });
 
   return {
     student,
     rStudent,
-    result: result[0],
+    result: result,
     configs: locals.configs,
     user: locals.user,
   };
