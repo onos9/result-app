@@ -1,9 +1,9 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import { configs } from "$lib/stores/configs";
+  import { student } from "$lib/stores/data_store";
 
   export let remote_student: any = null;
-  export let local_student: any;
   let admin_no: string;
   let checked = false;
   let isCorrect: boolean;
@@ -82,21 +82,21 @@
         >
           <span> Days Absent </span>
         </td>
-        <td class="py-2 pl-2 text-xs print:text-slate-500 capitalize"> {local_student?.absent}</td>
+        <td class="py-2 pl-2 text-xs print:text-slate-500 capitalize"> {$student?.absent}</td>
         <td
           class="print:print:bg-violet-900 capitalize btn btn-xs border print:text-slate-300 cursor-default rounded-full"
         >
           <span> Days Present </span>
         </td>
         <td class="py-2 pl-2 text-xs print:text-slate-500 capitalize">
-          {local_student?.present}
+          {$student?.present}
         </td>
       </tr>
     </tbody>
   </table>
   <div class="avatar flex flex-col px-4 justify-center items-center">
     <div class="w-24 rounded-full ring ring-neutral print:ring-violet-900 ring-offset-2 mb-4">
-      <img src="/{local_student?.avatarUrl}" alt=" " />
+      <img src="/{$student?.avatarUrl}" alt=" " />
     </div>
   </div>
 </div>
@@ -104,7 +104,7 @@
 <input bind:checked type="checkbox" id="modal-info" class="modal-toggle" />
 <div class="modal">
   <form
-    action="?/confirm&id={local_student?.id}&remoteId={remote_student?.id}"
+    action="?/confirm&id={$student?.id}&remoteId={remote_student?.id}"
     method="POST"
     class="modal-box md:w-3/12 w-10/12 max-w-5xl"
     use:enhance
@@ -115,7 +115,7 @@
       <div class="">
         <div class="avatar flex flex-col p-0 px-4 justify-center items-center">
           <div class="w-24 rounded-full ring ring-neutral ring-offset-base-100 ring-offset-2 mb-4">
-            <img src="/{local_student?.avatarUrl}" alt="" />
+            <img src="/{$student?.avatarUrl}" alt="" />
             <!-- <input hidden type="text" name="remoteId" value={remote_student?.id} /> -->
           </div>
         </div>
@@ -161,7 +161,7 @@
           </div>
           <div class="relative col-span-6 md:col-span-1">
             <input
-              value={local_student?.present}
+              value={$student?.present}
               name="present"
               type="text"
               id="present"
@@ -174,7 +174,7 @@
           </div>
           <div class="relative col-span-6 md:col-span-1">
             <input
-              value={local_student?.absent}
+              value={$student?.absent}
               name="absent"
               type="text"
               id="absent"

@@ -96,7 +96,7 @@
         <div class="card bg-base-100 shadow-sm md:w-full w-screen mb-4">
           <div class="card-body overflow-x-auto">
             {#if $result?.id}
-              <StudentInfo remote_student={$rStudent} local_student={$student} />
+              <StudentInfo remote_student={$rStudent}/>
             {/if}
           </div>
         </div>

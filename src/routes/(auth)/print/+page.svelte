@@ -20,7 +20,7 @@
 
     <div class="font-san">
       {#if $result?.id}
-        <StudentInfo remote_student={$rStudent} local_student={$rStudent} />
+        <StudentInfo remote_student={$rStudent}/>
       {/if}
 
       {#if $result?.id}
