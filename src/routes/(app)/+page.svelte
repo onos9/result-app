@@ -155,7 +155,7 @@
       <div class:dropdown-close={isDropdown} class="dropdown md:dropdown-left mb-3">
         <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
         <label for="" tabindex="0" class="btn btn-neutral rounded-btn">
-          {$student?.fullName || "Student not added to class" || "Select Student"}
+          {$student?.fullName || "Select Student"}
           <div class="i-bx:bxs-chevron-down text-xl" />
         </label>
         <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
