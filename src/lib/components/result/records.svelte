@@ -1,6 +1,7 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import { grades, subjects } from "$lib/stores/data_store";
+  import { configs } from "$lib/stores/configs";
+  import { grades, results, subjects, result } from "$lib/stores/data_store";
   import { user } from "$lib/stores/user";
   import type { Grade, Record } from "@prisma/client";
   import { onMount } from "svelte";
@@ -59,6 +60,7 @@
     if (outcome) data.set("color", colors[outcome.toLowerCase() as never]);
 
     return async ({ result, update }: any) => {
+      update();
       console.log(result);
       if (result.type == "success") {
         grade = undefined;
@@ -75,21 +77,19 @@
         if (index === -1) return;
         records[index] = result.data.record;
         recordId = null;
-        update();
         return;
       }
 
       if (result.data?.id) {
         const newRecords = records.filter((record) => record.id != result.data?.id);
         records = [...newRecords];
-        update();
         return;
       }
 
       if (result.data.record) {
         records = [...records, result.data.record];
+        await computScores();
       }
-      update();
     };
   };
 
@@ -116,6 +116,36 @@
     recordId = record?.id as string;
     isEdit = true;
     checked = !checked;
+  };
+
+  const computScores = async () => {
+    const scores = records.map((record) => Number(record.score));
+    if (scores && $result) {
+      let totalScore = String(scores?.reduce((sum, score) => sum + score, 0) || 0);
+      let averageScore = String(Math.round(Number(totalScore) / scores?.length) || 0);
+
+      const allScores = $results
+        .filter((result) => result.term == $configs?.term)
+        .map((result) => result.records)
+        .map((records) => records.map((record) => Number(record.score)));
+
+      let averages = allScores.map((scores) =>
+        Math.round(scores.reduce((a, b) => a + b, 0) / scores?.length)
+      );
+
+      averages = averages.sort((a, b) => a - b);
+      console.log(averages);
+      let highest = String(averages.pop() || 0);
+      let lowest = String(averages.reverse().pop() || 0);
+
+      const resp = await fetch(`/api/result/${resultId}`, {
+        method: "POST",
+        body: JSON.stringify({ totalScore, averageScore, highest, lowest }),
+      });
+      const { result } = await resp.json();
+      $result = { ...$result, ...result };
+      console.log({ $result });
+    }
   };
 </script>
 
